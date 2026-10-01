@@ -1,4 +1,4 @@
-# Spammish — Never see another B2B cold email.
+# Spammish — Never see another cold/spam email.
 
 **Make B2B cold email disappear.** Spammish is an open-source email agent that identifies unsolicited B2B sales email and obvious spam, then quietly moves high-confidence matches from your Gmail inbox to **The Abyss**.
 
