@@ -21,7 +21,7 @@ function render() {
   ui.status.dataset.on = String(state.enabled && !error);
   ui.email.hidden = !state.connected;
   ui.email.textContent = state.email || '';
-  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser.' : !state.canConnect ? 'Gmail connection isn’t available in this preview.' : state.enabled ? 'Watching new mail. You can close this window.' : state.connected ? 'Turn it on to watch new mail. Existing inbox mail stays untouched.' : 'Connect Gmail, then turn Spammish on.';
+  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser.' : !state.canConnect ? 'Gmail connection isn’t available in this preview.' : state.enabled ? state.sweeping ? 'Checking your existing inbox. You can close this window.' : 'Watching new mail. You can close this window.' : state.connected ? 'Turn it on to clear existing cold email and watch new arrivals.' : 'Connect Gmail, then turn Spammish on.';
   ui.primary.textContent = busy ? state.connecting ? 'Waiting for Google…' : 'Working…' : !state.connected || error === 'reconnect_required' ? 'Connect Gmail' : state.enabled ? 'Pause Spammish' : 'Turn on Spammish';
   ui.primary.disabled = busy || state.connecting || !state.canConnect || error === 'secure_storage_unavailable';
   ui.cancel.hidden = !state.connecting;

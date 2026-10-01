@@ -6,7 +6,7 @@ One job. Uncertain mail stays in your inbox. Moved mail stays recoverable, with 
 
 ## Current release status
 
-**Experimental desktop preview; not yet a ready-to-install public release.** The desktop app and deterministic mail-handling code are available here. A public installer still requires a configured and approved Google OAuth app, Mac signing/notarization, and a real Gmail acceptance test. Automated tests use simulated Gmail responses; they do not establish real-world classification accuracy.
+**Experimental desktop preview; not yet a ready-to-install public release.** The desktop app and deterministic mail-handling code are available here. A public installer still requires a configured and approved Google OAuth app, Mac signing/notarization, and complete real Gmail acceptance testing. A private dogfooding account has connected successfully. Message disposition and classification tests still use simulated Gmail responses; they do not establish real-world classification accuracy.
 
 The intended user setup is:
 
@@ -22,7 +22,7 @@ A completed packaged release will include the runtime and Google app configurati
 - Protects messages with important account, payment, security, delivery, and other legitimate-message signals. Incomplete or uncertain messages stay in Inbox.
 - Creates the recoverable Gmail label **The Abyss** if needed. A match gains that label and loses only the Inbox label.
 - Preserves read/unread state. Gmail content is fetched for local inspection; this does not mark it read.
-- Processes new arrivals while enabled; turning it on establishes a fresh baseline, without sweeping old inbox mail.
+- On first enable, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. Existing desktop accounts receive one sweep when upgraded to this version.
 - Runs in the background while the Mac is awake and online. Pause stops processing; disconnect removes the stored credential and attempts Google revocation. Quit stops processing until the app runs again.
 
 Gmail delivers messages before Spammish can act. The app checks approximately every 20 seconds, so mail or notifications may appear first. It cannot guarantee that every cold email will disappear, or disappear before you see it. Conservative rules intentionally let ambiguous messages through.
@@ -50,4 +50,4 @@ npm run check
 npm audit
 ```
 
-Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, and OAuth state/PKCE. Real Gmail verification and representative accuracy evaluation remain release requirements. See the [maintainer release guide](docs/releasing.md).
+Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, initial inbox pagination/checkpoint recovery, and OAuth state/PKCE. Real Gmail verification and representative accuracy evaluation remain release requirements. See the [maintainer release guide](docs/releasing.md).

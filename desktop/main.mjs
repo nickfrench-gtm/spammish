@@ -21,6 +21,7 @@ let connecting = false;
 let quitting = false;
 let quitStarted = false;
 let interval;
+let sweepTimer;
 let fatalError;
 
 if (!app.requestSingleInstanceLock()) app.quit();
@@ -33,6 +34,12 @@ else {
 const status = () => ({ ...(agent?.status() || { connected: false, enabled: false, canConnect: Boolean(client), email: null, lastCheck: null }), connecting, error: fatalError || agent?.status().error || null });
 function showWindow() { if (window) { window.show(); window.focus(); } }
 function publish() {
+  clearTimeout(sweepTimer);
+  const state = agent?.status();
+  if (state?.enabled && state.sweeping && !state.error && !quitting && !quitStarted) {
+    sweepTimer = setTimeout(() => { if (agent) void agent.sync().catch(() => { fatalError = 'secure_storage_unavailable'; publish(); }); }, 2000);
+    sweepTimer.unref();
+  }
   if (window && !window.isDestroyed()) window.webContents.send('spammish:status', status());
   updateTray();
 }
@@ -140,6 +147,7 @@ app.on('before-quit', (event) => {
   if (quitStarted) return;
   quitStarted = true;
   clearInterval(interval);
+  clearTimeout(sweepTimer);
   oauthAttempt?.cancel();
   Promise.resolve(agent?.stop()).finally(() => { quitting = true; app.quit(); });
 });
