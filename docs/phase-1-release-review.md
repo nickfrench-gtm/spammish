@@ -1,8 +1,8 @@
-# Phase 1 release review — 0.4.0 candidate
+# Phase 1 release review — 0.4.0
 
-**SPAMMISH OSS BLOCKED — complete real Gmail acceptance and public installer approval/signing are outstanding.**
+**Spammish OSS 0.4.0 source release: qualified for publication.** See the [final acceptance record](acceptance-0.4.0.md). Public turnkey distribution is separate and remains outstanding.
 
-This report is a review checkpoint, not a certification claim. No Chrome extension or Cloud service is implemented by this candidate. Source is MIT and free forever. The existing public repository remains available; this candidate is held locally for owner approval before publication.
+This report is a review checkpoint, not a certification claim. No Chrome extension or Cloud service is implemented by this candidate. Source is MIT and free forever. The owner has authorized source publication after the acceptance and source-audit gates pass. No public production binary is included.
 
 ## What changed
 
@@ -17,17 +17,17 @@ This report is a review checkpoint, not a certification claim. No Chrome extensi
 
 ## Verification completed
 
-- 61 automated tests passed; source syntax checks passed for 28 files.
+- 64 automated tests passed; source syntax checks passed for 30 files.
 - Fresh separate source folder: dependency install, configuration generation, all tests and source checks passed. Browser startup showed the expected zero-account configuration page. This validates local setup/startup, not a fresh stranger's Google approval flow.
 - Local unsigned arm64 desktop preview built and launched. Both existing authorized Gmail connections remained enabled. Counter and collapsed review empty state were inspected in the native app.
 - Dependency audit reported zero vulnerabilities. Some build-tool transitive packages emit deprecation notices; this is not equivalent to zero maintenance risk.
-- Pattern scan found zero matches across 62 source files and 135 historical Git blobs for private keys, Google credentials/tokens, GitHub tokens and common AI keys. No real account data is tracked. This is a targeted scan, not proof no possible secret exists.
+- Targeted source/history scans cover private keys, Google credentials/tokens, GitHub tokens and common AI keys. Exact final counts/results are recorded in the release notes. No real account data is tracked. This is a targeted scan, not proof no possible secret exists.
 - Gmail provider code has only bounded reads, label creation and message label modification; there are no send/reply/trash/delete operations. Automated tests verify only Inbox/Abyss labels change and unread/other labels survive.
-- Earlier authorized real-Gmail integration verified a genuine label move and unchanged unread/other labels. That integration evidence predates this scoring candidate; it is not acceptance of the new policy's accuracy.
+- The current policy passed 27 controlled Gmail checks across the broader intended scope. See the acceptance record for injected failure boundaries and actual protected/moved categories. This is integration qualification, not measured accuracy.
 
-## Exit gate still open
+## Distribution and evaluation work still open
 
-1. **Real mailbox acceptance for this candidate.** Run the documented controlled cold/legitimate lookalike cases, initial cleanup, new arrivals, reciprocal history, Abyss/Rescue, offline/restart, revocation and multi-account scenarios against explicitly authorized test mailboxes. No emails are sent by Spammish. The synthetic test suite is not a substitute for these cases.
+1. **Controlled real-Gmail acceptance completed.** The final record contains 27 passing checks using two authorized mailboxes. Offline/401/acknowledgement-loss boundaries were injected and are labeled as such. A representative corpus, external SMTP delivery, fresh stranger onboarding and comprehensive native sleep/wake checks are not claimed.
 2. **Accuracy evaluation.** We have no representative labeled mailbox corpus, measured false-positive rate or calibrated threshold. Do not claim perfect detection or a numerical accuracy rate. Conservative misses are expected; false positives remain possible.
 3. **Public Google sign-in.** Obtain/document applicable approval for the maintainer's public OAuth registration. Gmail modify is restricted. Self-hosters can register their own personal/test client under Google's applicable exceptions; this is already documented. No approval evidence has been verified for the maintainer's app.
 4. **Public Mac installer.** This machine has only an Apple Development signing identity. Supply a Developer ID Application identity and notarization credentials, build the reviewed source as signed/notarized universal artifact, inspect it and complete clean-Mac installer acceptance. The current preview is unsigned and not a public installer.
@@ -40,6 +40,6 @@ Only gmail.modify is requested. Google describes this scope broadly, including s
 
 The computer and app/process must stay awake, online and running. Closing the desktop window leaves the menu-bar worker running; Quit stops it. Gmail delivers before polling, so a notification can appear before filtering. Quota errors back off and preserve progress; no design can prevent all future Google outages or throttling. Relationship queries add work, so large inbox cleanup can take time. External Gmail feedback requires available history; expired history cannot reconstruct every missed user action.
 
-## Owner review / publication
+## Source publication
 
-Review the candidate's source and local preview. Source publication can proceed separately from a certified Mac installer, with the limitations above clearly stated. At this checkpoint no new public tag, installer upload or candidate push is made. After owner approval: push the reviewed commit, confirm CI, complete acceptance/Google/Apple gates, and publish the exact signed artifact with checksum and source commit. Do not begin Phase 2 or Phase 3 without the next instruction.
+Publish the reviewed source commit and v0.4.0 tag after CI and the final source audit pass. Release notes must say source only, free forever, own Google OAuth configuration, no public production Mac installer. Do not upload the unsigned preview as a production binary. Turnkey distribution requires the Google/Apple/installer work above. Stop after the source release; Phase 2 and Cloud require the next explicit instruction.

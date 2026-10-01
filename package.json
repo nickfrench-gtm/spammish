@@ -1,7 +1,7 @@
 {
   "name": "spammish",
   "version": "0.4.0",
-  "description": "A deterministic, local-first Gmail agent that moves confirmed cold sales and obvious spam to The Abyss.",
+  "description": "Make unwanted email disappear with local, deterministic Gmail filtering.",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -14,7 +14,9 @@
     "desktop": "electron .",
     "package:preview": "node scripts/package-desktop.mjs --preview",
     "package:desktop": "node scripts/package-desktop.mjs --universal",
-    "configure": "node scripts/configure-local.mjs"
+    "configure": "node scripts/configure-local.mjs",
+    "setup": "node scripts/configure-local.mjs",
+    "doctor": "node scripts/doctor.mjs"
   },
   "devDependencies": {
     "electron": "44.5.1",

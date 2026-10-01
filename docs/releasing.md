@@ -2,7 +2,7 @@
 
 Do not publish an unsigned or unconfigured preview as a working public installer.
 
-## Google app registration (once for maintainers)
+## Future maintainer-managed Google app registration
 
 1. Use a dedicated Spammish Google Cloud project, enable Gmail API, and configure external consent with accurate Spammish branding, support contact, and publicly accessible privacy information. Preserve unrelated existing app credentials.
 2. Create a **Desktop app** OAuth client; download installed-client JSON into the ignored `desktop/oauth-client.json`. Never embed an existing web client secret. Desktop credentials are distributed with installed applications and are not an authentication secret protecting end-user access. User refresh tokens are secret and must never be packaged.
@@ -11,9 +11,9 @@ Do not publish an unsigned or unconfigured preview as a working public installer
 
 References: [Google installed-app OAuth](https://developers.google.com/identity/protocols/oauth2/native-app), [Gmail scopes](https://developers.google.com/workspace/gmail/api/auth/scopes), [Google verification](https://support.google.com/cloud/answer/9110914).
 
-## Real Gmail acceptance (still outstanding)
+## Real Gmail acceptance
 
-For the current candidate, see [Phase 1 review](phase-1-release-review.md). Include relationship hydration, recent explanation display, explicit Abyss/Rescue and contradictory sender corrections; verify the single lifetime counter counts confirmed moves once and survives restart/disconnect.
+0.4.0 source acceptance is recorded in the [Phase 1 review](phase-1-release-review.md) and [controlled acceptance record](acceptance-0.4.0.md). The following remains a checklist for future changes and consumer distribution, not an uncompleted source-release gate. Include relationship hydration, recent explanation display, explicit Abyss/Rescue and contradictory sender corrections; verify the single lifetime counter counts confirmed moves once and survives restart/disconnect.
 
 Use a disposable or explicitly authorized test mailbox. Before enabling Spammish, populate the Inbox with synthetic cold email and legitimate lookalikes; also keep control messages outside Inbox. Enable Spammish and verify the initial sweep, checkpoint recovery, and pause/resume. Deliver synthetic cold email, obvious spam, legitimate business replies, security/account notifications, receipts, ambiguous pitches, and read/unread examples from a separately controlled sender. Spammish itself must never send them. Verify only expected high-confidence existing Inbox matches and new arrivals gain The Abyss and lose Inbox, preserve all other labels and read state, and are recoverable in Gmail. Verify pause, reconnect, restart, sleep/wake, offline recovery, and account revocation. Record anonymized results, not message contents or credentials.
 

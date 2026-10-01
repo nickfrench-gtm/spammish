@@ -1,68 +1,104 @@
-# Spammish — Never see another B2B cold email.
+# Spammish
 
-**Make B2B cold email disappear.** Spammish is an open-source email agent that identifies unsolicited B2B sales email and obvious spam, then quietly moves high-confidence matches from your Gmail inbox to **The Abyss**.
+## Make unwanted email disappear.
 
-One job. Uncertain mail stays in your inbox. Moved mail stays recoverable, with its read/unread state unchanged. No replies, sending, deletion, link clicking, unsubscribing, summaries, or dashboards.
+Spammish watches Gmail and moves mail that earns enough **deterministic, explainable evidence** to **The Abyss**. Cold outreach, unwanted promotions, obvious spam and other qualifying automated mail. Real relationships and important legitimate mail receive strong protection.
 
-## Current release status
+Wrong decision? **Rescue it.** The message returns to Inbox and Spammish records a narrow, local correction.
 
-**Source release candidate 0.4.0; desktop distribution is still a preview.** Developers can self-host with their own Google OAuth registration. A public Mac installer still requires Google approval, Apple signing/notarization, and the full acceptance checklist. Authorized real mailboxes have connected and a real label move has been verified; this does not establish classification accuracy or complete end-user onboarding acceptance.
+**Free forever. Open source. MIT. No AI API.**
 
-The intended user setup is:
+## Install with your AI builder
 
-1. Install and open Spammish.
-2. Click **Connect Gmail** and approve Google access in your browser.
-3. Cleanup starts automatically: existing Inbox first, then new arrivals. Use **Pause** to stop it.
+Give [this repository](https://github.com/nickfrench-gtm/spammish) to Codex, Claude Code, Cursor or another capable coding agent:
 
-Use **Add Gmail account** to connect another Gmail. Each account has its own Turn on/Pause, Open The Abyss, and Disconnect controls. Successful connections start cleanup automatically. Connecting another Gmail leaves existing accounts’ settings unchanged. Reconnecting the same Gmail refreshes that connection and preserves its cleanup progress.
+> Install Spammish locally and get it ready to protect my Gmail. Follow AGENTS.md and docs/agent-install.md. Configure and verify everything you can; walk me through only steps requiring my Google authorization. Preserve existing credentials and never print secrets.
 
-A completed packaged release will include the runtime and Google app configuration. Users will not need Node, a terminal, an encryption key, or an AI API key. **That installer is not available yet.** Developers can run the current preview using [development instructions](docs/development.md).
+The repo includes [AGENTS.md](AGENTS.md), a [step-by-step installation contract](docs/agent-install.md), `setup`, `doctor`, and a shared desktop/browser worker. The AI builder helps install it; **it does not need to stay running**.
 
-## What a GitHub visitor does today
+**0.4.0 is a source release.** You currently need your own applicable Google OAuth client. An agent can assist configuration; the human completes Google sign-in and consent. There is no public signed/notarized Mac installer or frictionless Spammish-managed OAuth flow yet. Those are future distribution improvements, not source-release requirements.
 
-This repository contains the desktop app’s source, not a ready-to-install public download. Clone the repo or download its ZIP, install Node and dependencies, configure your own Google Desktop OAuth client, then run the app. The [development guide](docs/development.md) walks through this. Codex or Claude can help with setup; neither needs to stay running afterward.
+## Manual install
 
-Spammish itself must keep running on an awake, online Mac. Closing its window leaves it running in the menu bar. **Quit stops mail processing.** Cloud would remove that local runtime requirement, but is not available yet.
-
-## What it does out of the box
-
-- Classifies locally with weighted evidence: language, relationship history, commercial intent, follow-up sequences, headers and locally inspected URL patterns. A generic “Re: quick question” subject is insufficient. Broader unsolicited promotions and obvious spam can qualify too. See [how detection works](docs/detection.md).
-- Protects messages with important account, payment, security, delivery, and other legitimate-message signals. Incomplete or uncertain messages stay in Inbox.
-- Supports multiple Gmail accounts in the desktop app, with isolated credentials, cursors, The Abyss labels, and processing state. One revoked or slow connection does not stop the others.
-- Creates the recoverable Gmail label **The Abyss** if needed. A match gains that label and loses only the Inbox label.
-- Preserves read/unread state. Gmail content is fetched for local inspection; this does not mark it read.
-- On connection, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. This scoring update schedules one fresh Inbox pass using the new policy. Existing paused accounts remain paused on upgrade; reconnect or click Turn on to resume them.
-- Shows one lifetime total: confirmed emails sent to The Abyss. It survives restarts and disconnects. Older desktop moves are not guessed or backfilled.
-- Offers recent move explanations and **Rescue** under Review filtering. In Gmail, moving missed unwanted mail to The Abyss supplies narrow sender rejection evidence; restoring it to Inbox supplies protection. No domain-wide block is learned from one correction.
-- Runs in the background while the Mac is awake and online. Pause stops processing; disconnect removes the stored credential and attempts Google revocation. Quit stops processing until the app runs again.
-
-Gmail delivers messages before Spammish can act. The app checks approximately every 20 seconds, so mail or notifications may appear first. It cannot guarantee that every cold email will disappear, or disappear before you see it. Conservative rules intentionally let ambiguous messages through.
-
-## Local, with no AI bill
-
-The same message and relationship/feedback evidence receive the same rule-based classification. Mailbox history and your corrections can change that evidence. No AI API calls, maintainer-funded service, telemetry, or paid subscription are required. The OSS default has no model integration. Fork authors can build their own; maintainers do not fund their usage. OSS is free forever under MIT, including the complete core filtering and correction engine.
-
-The desktop app stores its Gmail credential using the operating system's secure storage. It does not save email bodies or send them to an AI service. Content is fetched only for classification, with bounded parsing; truncated messages are left alone. Attachments and remote images are not fetched.
-
-Google's `gmail.modify` permission is broader than this app's behavior: it technically permits sending and other modifications. There is no narrower Gmail scope that permits these recoverable moves. The shipped code contains no Gmail sending, replying, trashing, or permanent deletion operation. [Privacy notes](PRIVACY.md) explain the data flow and [security notes](SECURITY.md) describe reporting and access.
-
-## Open source
-
-Spammish is released under the [MIT License](LICENSE). You can inspect, modify, and build on the code. The behavior described here applies to the published default version. Forks and third-party modifications are operated at their authors' and users' responsibility; Spammish's maintainers do not control them. The license contains the warranty and liability terms.
-
-Contributions should preserve this narrow purpose. See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Verification
+Primary qualified path: macOS/Linux local browser worker, Node **22.13+** (24 recommended).
 
 ```sh
-npm ci
+git clone https://github.com/nickfrench-gtm/spammish.git
+cd spammish
+npm ci --ignore-scripts
+npm run setup
+```
+
+Create your own **Web application** OAuth client with Gmail API enabled and the redirect `http://127.0.0.1:8080/auth/callback`. Configure permitted Google test users as applicable, then:
+
+```sh
+npm run setup -- --web-client /absolute/path/to/downloaded-client.json
+npm run doctor
+npm start
+```
+
+Open **http://127.0.0.1:8080**, connect Gmail, and complete Google's consent yourself. From another terminal, `npm run doctor -- --json` verifies setup, runtime, stored connection, recent authorization and enabled worker state. [Full Google configuration and recovery instructions](docs/agent-install.md). [Optional desktop source app](docs/development.md).
+
+![Current Spammish local-server setup before Google configuration](docs/images/source-setup-0.4.0.jpg)
+
+*Current source interface with no mailbox connected; no private data.*
+
+## What it does
+
+- Checks the existing Inbox on connection, then polls new arrivals. Cleanup resumes after interruptions.
+- Supports multiple Gmail accounts with isolated credentials, history, corrections and Pause/Disconnect controls.
+- Moves qualifying messages to the recoverable **The Abyss** label, removing only Inbox. Read/unread state and other labels remain unchanged.
+- Shows one lifetime total: confirmed emails sent to The Abyss, with recent reasons available under Review filtering. Older desktop moves are not guessed.
+- Implements no sending, replying, trashing, deletion, link clicking, unsubscribing, summaries or general inbox dashboard.
+
+## How it works
+
+Message features + mailbox relationship evidence + your corrections → **Spammish Score** → protective gates → Inbox or The Abyss.
+
+Evidence includes sender/domain familiarity, prior outbound communication, actual thread participation, commercial/promotional language, outreach CTAs, verified unanswered sequences, bulk headers, locally inspected tracking/calendar URLs, Spam-labeled history and explicit corrections.
+
+Current automatic threshold: **70**, with corroboration requirements and hard protections. Existing relationships, important transactional/account messages, Rescue feedback and incomplete content can keep a message in Inbox even with a high score. **Score ≠ probability.** [Inspect the model and limitations](docs/detection.md).
+
+This is broader than a B2B-only filter, but it is not a blanket category cleaner. A social-network notification, newsletter or promotion does **not** qualify merely because of its category. Legitimate subscription context is protected. Other messages need sufficient supported evidence; conservative misses are intentional. Spammish does not know your preferences magically.
+
+## The Abyss and Rescue
+
+Gmail has Inbox and Spam. Spammish adds a recoverable destination for mail its own evidence model says should leave normal Inbox attention; Gmail does not have to call it spam.
+
+**Abyss:** move missed unwanted mail to The Abyss in Gmail while Spammish is enabled. This records narrow exact-sender rejection evidence. The core exposes an explicit Abyss method as well.
+
+**Rescue:** use Review filtering → Rescue, or move a recorded message back to Inbox. It retracts that sender's rejection and strongly protects it. A later explicit Abyss can supersede that protection. One correction never blocks or whitelists an entire domain. Own automatic moves do not reinforce themselves as explicit rejection.
+
+## Why Spammish
+
+Local, deterministic, explainable and correctable. No AI bill, maintainer-funded classifier, telemetry, paid gate or subscription. The complete core is MIT and free forever; forks can extend it at their operators' responsibility.
+
+It started with B2B cold email: “It isn't technically spam. We don't care.” That remains an example of the larger purpose: **make unwanted email disappear**.
+
+## Privacy and permissions
+
+Bodies are inspected transiently on your machine. Attachments and remote images are not fetched; message URLs are never visited. No mailbox content is sent to an AI provider or maintainer. Local state retains credentials, checkpoints, counts, narrow hashed feedback/receipts and bounded recent decision records, not bodies. Desktop tokens use OS encryption; the browser worker encrypts its saved state with a private local vault key. Protect your machine and key.
+
+Only **gmail.modify** is requested. Google's grant technically permits broader operations, including sending. Spammish implements no send/reply/trash/delete operation. Do not confuse a code boundary with a narrower OAuth capability. [Privacy](PRIVACY.md) · [Security and private reporting](SECURITY.md).
+
+## Limitations and verification
+
+Keep Spammish running on an awake, online computer. Closing the browser is fine; stopping Node stops filtering. The desktop window can close while its menu-bar worker remains running; Quit stops it.
+
+Gmail delivers before Spammish polls, so mail or notifications may appear before filtering. Large inboxes take time, and Google throttling can delay checks. No claim of perfect detection, complete spam coverage, calibrated probability or numerical accuracy is made.
+
+[0.4.0 acceptance record](docs/acceptance-0.4.0.md): controlled real-Gmail integration, existing-mail observations, and explicitly labeled injected failure/recovery boundaries. This is not a representative accuracy benchmark or public installer certification.
+
+```sh
 npm test
 npm run check
 npm audit
 ```
 
-Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, initial inbox pagination/checkpoint recovery, OAuth state/PKCE, multiple-account isolation, duplicate connections, and migration from the single-account preview. Full real Gmail acceptance and representative accuracy evaluation remain release requirements. Current synthetic tests cover scoring, sender corrections, crash-safe counts, and the loopback server’s security boundaries as well. See the [maintainer release guide](docs/releasing.md).
+## Contributing and license
 
-## Website and Cloud
+[Contributing](CONTRIBUTING.md) · [MIT License](LICENSE) · [Maintainer release guide](docs/releasing.md).
 
-The [marketing site](https://spammish.fly.dev) offers the open-source repo and a Cloud waitlist. Cloud is coming soon. Optional bring-your-own AI keys are planned for Cloud; no AI usage is included or subsidized. The open-source app uses no AI API; contributors may build their own extensions. Website operations are documented in [marketing/README.md](marketing/README.md).
+These descriptions apply to the published default source. Third-party modifications are their authors'/operators' responsibility; see the license's warranty and liability terms. Please use synthetic examples in issues, never private mail or credentials.
+
+The [website](https://spammish.fly.dev) links to OSS and a Cloud waitlist. No Chrome extension or Cloud service is included in this source release.

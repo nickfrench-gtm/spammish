@@ -38,6 +38,10 @@ const server=createServer(async(req,res)=>{
   const url=new URL(req.url,base());
   const staticFiles={'/style.css':['desktop/ui/style.css','text/css'],'/shield.png':['desktop/ui/shield.png','image/png']};
   if(req.method==='GET'&&staticFiles[url.pathname]){const [path,type]=staticFiles[url.pathname];send(res,200,readFileSync(new URL(path,import.meta.url)),{'content-type':type});return;}
+  if(req.method==='GET'&&url.pathname==='/health'){
+   const state=agent.status(),healthy=state.accounts.filter(a=>!a.error&&a.lastCheck&&a.lastCheck<=Date.now()&&Date.now()-a.lastCheck<120000);
+   send(res,200,JSON.stringify({application:'spammish',version:JSON.parse(readFileSync(new URL('./package.json',import.meta.url),'utf8')).version,connectedAccounts:state.accounts.length,gmailAuthorized:state.accounts.length>0&&healthy.length===state.accounts.length,workerActive:state.enabled,reconnectRequired:state.accounts.some(a=>a.error==='reconnect_required'),lastSuccessfulCheck:Math.max(0,...state.accounts.filter(a=>!a.error).map(a=>a.lastCheck||0))||null}),{'content-type':'application/json; charset=utf-8'});return;
+  }
   for(const [token,state] of states)if(state.expires<Date.now())states.delete(token);
   for(const [token,session] of sessions)if(session.expires<Date.now())sessions.delete(token);
   let session=sessionFor(req);

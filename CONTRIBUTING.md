@@ -1,6 +1,6 @@
 # Contributing
 
-Keep Spammish focused on one task: confidently identify unsolicited commercial outreach and obvious spam, then move it to the recoverable **The Abyss** label.
+Keep Spammish focused on one task: identify unwanted email using corroborated evidence and protective gates, then move it to the recoverable **The Abyss** label.
 
 - Uncertain messages must remain in the inbox.
 - Never permanently delete email, mark it read, click links, unsubscribe, or send messages.

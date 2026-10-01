@@ -65,7 +65,7 @@ function render() {
     }
     row.querySelector('.account-state').textContent = account.error ? 'Needs attention' : account.enabled ? 'On' : 'Paused';
     row.querySelector('.account-state').dataset.on = String(account.enabled && !account.error);
-    row.querySelector('.account-instruction').textContent = account.enabled && account.error ? 'Waiting to retry this inbox. You can pause at any time.' : account.enabled ? account.sweeping ? 'Checking this inbox. You can close this window.' : 'Watching new mail. You can close this window.' : 'Turn on to clear cold email and watch new arrivals.';
+    row.querySelector('.account-instruction').textContent = account.enabled && account.error ? 'Waiting to retry this inbox. You can pause at any time.' : account.enabled ? account.sweeping ? 'Checking this inbox. You can close this window.' : 'Watching new mail. You can close this window.' : 'Turn on to check unwanted mail and watch new arrivals.';
     const message = row.querySelector('.notice'); message.textContent = account.error === 'connection_interrupted' && ['rateLimitExceeded', 'userRateLimitExceeded', 'dailyLimitExceeded', 'quotaExceeded'].includes(account.failureReason)
       ? 'Google is limiting Gmail requests. Spammish will retry while this account is on.'
       : account.error === 'connection_interrupted' && ['forbidden', 'domainPolicy', 'insufficientPermissions'].includes(account.failureReason)

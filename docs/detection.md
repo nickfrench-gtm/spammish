@@ -20,11 +20,11 @@ No model, AI agent service, Codex session or AI API key runs this pipeline. The 
 
 There is no Contacts permission, deletion-history inference, external reputation service, DKIM validation or proof of subscription intent. Contacts can be represented by the pure policy interface but the shipped provider does not collect them. Unknown evidence contributes zero. Shared consumer domains such as gmail.com never acquire domain-wide reputation/protection. Gmail Spam labels do not prove a user reported spam.
 
-## Score and disposition
+## Spammish Score and disposition
 
-`lib/spammish-policy.mjs` is the authoritative weight table. Score is the evidence sum clamped to 0–100, with a current threshold of **70**. It is a rule score, not a calibrated probability. Positive features must corroborate across at least three independent families and include a CTA or rejection evidence. Narrow obvious-spam/warmup detectors have their own sufficient-evidence path.
+`lib/spammish-policy.mjs` is the authoritative weight table. The public label is **Spammish Score**. Score is the evidence sum clamped to 0–100, with a current threshold of **70**. It is a rule score, not a calibrated probability. Positive features must corroborate across at least three independent families and include a CTA or rejection evidence. Narrow obvious-spam/warmup detectors have their own sufficient-evidence path.
 
-Examples: unknown exact sender +10, unknown private domain +8, no prior outbound +8, meeting CTA +15, commercial category +15, cold opening +8, commercial headers +5, tracking +4. Compound patterns add +25 for a cold sales sequence, +35 for automated personalized outreach, and +40 for verified unanswered commercial follow-up. These compounds are deliberately inspectable, not independent statistical observations.
+Examples: unknown exact sender +10, unknown private domain +8, no prior outbound +8 (the same lookup never also adds no-reply points), meeting CTA +15, commercial category +15, cold opening +8, commercial headers +5, tracking +4. Compound patterns add +25 for a cold sales sequence, +35 for automated personalized outreach, and +40 for verified unanswered commercial follow-up. These compounds are deliberately inspectable, not independent statistical observations.
 
 Prior outbound/replies, rescued senders, established threads, important transactions and other hard protections defeat a high score. A fake-looking Re: subject gets additional weight only with corroborated first-contact/no-outbound evidence and no reply-reference headers. First contact, a tracked newsletter or a sales word alone never suffices.
 
