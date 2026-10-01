@@ -37,12 +37,27 @@ function publish() {
   clearTimeout(sweepTimer);
   const state = agent?.status();
   if (state?.enabled && state.sweeping && !quitting && !quitStarted) {
-    sweepTimer = setTimeout(() => { if (agent) void agent.sync().catch(() => { fatalError = 'secure_storage_unavailable'; publish(); }); }, 2000);
+    sweepTimer = setTimeout(() => { if (agent) void syncBackground(); }, 2000);
     sweepTimer.unref();
   }
   if (window && !window.isDestroyed()) window.webContents.send('spammish:status', status());
   loginItem(Boolean(state?.enabled));
   updateTray();
+}
+async function syncBackground() {
+  if (!agent) return;
+  try {
+    await agent.sync();
+    if (['secure_storage_unavailable', 'local_storage_full', 'local_storage_error', 'background_interrupted'].includes(fatalError)) {
+      fatalError = null;
+      publish();
+    }
+  } catch (error) {
+    fatalError = error.message === 'secure_storage_unavailable' ? 'secure_storage_unavailable'
+      : error.code === 'ENOSPC' ? 'local_storage_full'
+      : ['EIO', 'EACCES', 'EPERM'].includes(error.code) ? 'local_storage_error' : 'background_interrupted';
+    publish();
+  }
 }
 let loginEnabled;
 function loginItem(enabled) {
@@ -61,8 +76,8 @@ function updateTray() {
   tray.setToolTip(`Spammish — ${state.error ? 'Needs attention' : state.enabled ? 'On' : state.connected ? 'Paused' : 'Not connected'}`);
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: 'Open Spammish', click: showWindow },
-    ...(state.accounts || []).map((account) => ({ label: account.email, submenu: [{ label: account.enabled ? 'Pause' : 'Turn on', enabled: (!connecting || account.enabled) && !fatalError && account.error !== 'reconnect_required', click: () => { void invoke(async () => { if (account.enabled) await agent.pause(account.id); else { await agent.enable(account.id); void agent.sync(); } }); } }] })),
-    { label: 'Pause all accounts', enabled: state.enabled && !fatalError, click: () => { void invoke(() => agent.pauseAll()); } },
+    ...(state.accounts || []).map((account) => ({ label: account.email, submenu: [{ label: account.enabled ? 'Pause' : 'Turn on', enabled: account.enabled || (!connecting && !fatalError && account.error !== 'reconnect_required'), click: () => { void invoke(async () => { if (account.enabled) await agent.pause(account.id); else { await agent.enable(account.id); void syncBackground(); } }); } }] })),
+    { label: 'Pause all accounts', enabled: state.enabled, click: () => { void invoke(() => agent.pauseAll()); } },
     { type: 'separator' },
     { label: 'Quit Spammish', click: () => app.quit() },
   ]));
@@ -124,12 +139,12 @@ async function start() {
       const tokens = await oauthAttempt.result;
       const result = await agent.connect(tokens, id);
       // Begin cleanup immediately without keeping the connection screen waiting.
-      void agent.sync().catch(() => { fatalError = 'connection_interrupted'; publish(); });
+      void syncBackground();
       return result;
     } finally { connecting = false; oauthAttempt = null; publish(); }
   }));
   handler('cancel', () => invoke(async () => { oauthAttempt?.cancel(); await agent?.cancelConnection(); }));
-  handler('enable', (id) => invoke(async () => { await agent.enable(id); void agent.sync(); }));
+  handler('enable', (id) => invoke(async () => { await agent.enable(id); void syncBackground(); }));
   handler('pause', (id) => invoke(async () => { await agent.pause(id); }));
   handler('retry', () => invoke(async () => { await agent.sync(); }));
   handler('disconnect', (id) => invoke(async () => { const result = await agent.disconnect(id); return { revokePending: result.revokePending || false }; }));
@@ -140,10 +155,10 @@ async function start() {
   }));
   await window.loadURL(origin);
   if (!app.isPackaged || !app.getLoginItemSettings().wasOpenedAtLogin) showWindow();
-  interval = setInterval(() => { if (agent) void agent.sync().catch(() => { fatalError = 'secure_storage_unavailable'; publish(); }); }, 20_000);
+  interval = setInterval(() => { if (agent) void syncBackground(); }, 20_000);
   interval.unref();
-  if (agent) void agent.sync().catch(() => { fatalError = 'secure_storage_unavailable'; publish(); });
-  powerMonitor.on('resume', () => { if (agent) void agent.sync().catch(() => { fatalError = 'secure_storage_unavailable'; publish(); }); });
+  if (agent) void syncBackground();
+  powerMonitor.on('resume', () => { if (agent) void syncBackground(); });
   powerMonitor.on('suspend', () => { if (agent) void agent.stop().catch(() => { fatalError = 'secure_storage_unavailable'; publish(); }); });
 }
 

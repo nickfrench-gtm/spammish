@@ -3,7 +3,7 @@ const ui = Object.fromEntries(['status', 'accounts', 'instruction', 'connect', '
 let state;
 let connectingBusy = false;
 const busyAccounts = new Set();
-const blocked = (name, id) => Boolean(state.error) || busyAccounts.has(id) || ((state.connecting || connectingBusy) && name !== 'pause');
+const blocked = (name, id) => (Boolean(state.error) && name !== 'pause' && name !== 'abyss') || busyAccounts.has(id) || ((state.connecting || connectingBusy) && name !== 'pause');
 let notice = '';
 const errors = {
   oauth_cancelled: 'Connection cancelled. You can try again whenever you’re ready.',
@@ -14,7 +14,10 @@ const errors = {
   refresh_token_missing: 'Google could not keep this connection. Reconnect Gmail and approve access.',
   reconnect_required: 'Google access has expired or been revoked. Reconnect this Gmail to continue.',
   history_expired: 'Spammish was offline too long. Existing mail was left untouched. Turn this account on to watch new mail.',
-  connection_interrupted: 'Gmail is temporarily unreachable. Spammish will retry while this account is on.',
+  connection_interrupted: 'The last Gmail check failed. Spammish will retry while this account is on.',
+  local_storage_full: 'Your Mac is out of disk space. Free some space so Spammish can save its progress. Pause remains available.',
+  local_storage_error: 'Spammish could not save its progress on this Mac. Check disk access or reopen the app. Pause remains available.',
+  background_interrupted: 'A background check failed. Spammish will retry; you can pause it at any time.',
   wrong_gmail_account: 'Choose the same Gmail account when reconnecting. Use Add Gmail account for a different address.',
   account_not_found: 'This Gmail connection is no longer available. Reopen Spammish to refresh.',
 };
@@ -58,8 +61,12 @@ function render() {
     }
     row.querySelector('.account-state').textContent = account.error ? 'Needs attention' : account.enabled ? 'On' : 'Paused';
     row.querySelector('.account-state').dataset.on = String(account.enabled && !account.error);
-    row.querySelector('.account-instruction').textContent = account.enabled ? account.sweeping ? 'Checking this inbox. You can close this window.' : 'Watching new mail. You can close this window.' : 'Turn on to clear cold email and watch new arrivals.';
-    const message = row.querySelector('.notice'); message.textContent = errors[account.error] || ''; message.hidden = !message.textContent;
+    row.querySelector('.account-instruction').textContent = account.enabled && account.error ? 'Waiting to retry this inbox. You can pause at any time.' : account.enabled ? account.sweeping ? 'Checking this inbox. You can close this window.' : 'Watching new mail. You can close this window.' : 'Turn on to clear cold email and watch new arrivals.';
+    const message = row.querySelector('.notice'); message.textContent = account.error === 'connection_interrupted' && ['rateLimitExceeded', 'userRateLimitExceeded', 'dailyLimitExceeded', 'quotaExceeded'].includes(account.failureReason)
+      ? 'Google is limiting Gmail requests. Spammish will retry while this account is on.'
+      : account.error === 'connection_interrupted' && ['forbidden', 'domainPolicy', 'insufficientPermissions'].includes(account.failureReason)
+        ? 'Google denied this Gmail request. Check the app’s Gmail access and your account’s Google policy.'
+        : errors[account.error] || ''; message.hidden = !message.textContent;
     const oldToggle = row.querySelector('.account-toggle');
     const actionName = account.error === 'reconnect_required' ? 'connect' : account.enabled ? 'pause' : 'enable';
     // Replace only when the action changes; ongoing sync keeps focused controls intact.
