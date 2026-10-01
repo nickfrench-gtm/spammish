@@ -83,7 +83,7 @@ async function start() {
 
   protocol.handle('spammish', (request) => {
     const url = new URL(request.url);
-    const allowed = { '/': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js' };
+    const allowed = { '/': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js', '/shield.png': 'shield.png' };
     if (url.host !== 'app' || !allowed[url.pathname]) return new Response('Not found', { status: 404 });
     return net.fetch(pathToFileURL(join(renderer, allowed[url.pathname])).toString());
   });
@@ -91,7 +91,7 @@ async function start() {
   session.defaultSession.setPermissionCheckHandler(() => false);
   window = new BrowserWindow({
     width: 540, height: 620, minWidth: 440, minHeight: 550,
-    title: 'Spammish', backgroundColor: '#f7f5ef', show: false,
+    title: 'Spammish', backgroundColor: '#080b10', show: false,
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     webPreferences: { preload: join(directory, 'preload.cjs'), sandbox: true, contextIsolation: true, nodeIntegration: false, webSecurity: true },
   });

@@ -1,0 +1,5 @@
+*
+!marketing/
+!marketing/**
+marketing/.impeccable/
+marketing/*.test.mjs

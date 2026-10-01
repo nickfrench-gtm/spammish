@@ -1,0 +1,394 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-01T20:48:41.333080+00:00",
+  "title": "Design System: Spammish",
+  "extensions": {
+    "colorMeta": {
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas",
+        "tonalRamp": [
+          "oklch(15% 0.0120 259.70)",
+          "oklch(26% 0.0120 259.70)",
+          "oklch(38% 0.0120 259.70)",
+          "oklch(49% 0.0120 259.70)",
+          "oklch(61% 0.0120 259.70)",
+          "oklch(72% 0.0120 259.70)",
+          "oklch(84% 0.0120 259.70)",
+          "oklch(95% 0.0120 259.70)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Foreground",
+        "tonalRamp": [
+          "oklch(15% 0.0045 258.32)",
+          "oklch(26% 0.0045 258.32)",
+          "oklch(38% 0.0045 258.32)",
+          "oklch(49% 0.0045 258.32)",
+          "oklch(61% 0.0045 258.32)",
+          "oklch(72% 0.0045 258.32)",
+          "oklch(84% 0.0045 258.32)",
+          "oklch(95% 0.0045 258.32)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(15% 0.0291 258.37)",
+          "oklch(26% 0.0291 258.37)",
+          "oklch(38% 0.0291 258.37)",
+          "oklch(49% 0.0291 258.37)",
+          "oklch(61% 0.0291 258.37)",
+          "oklch(72% 0.0291 258.37)",
+          "oklch(84% 0.0291 258.37)",
+          "oklch(95% 0.0291 258.37)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "tonalRamp": [
+          "oklch(15% 0.0302 258.34)",
+          "oklch(26% 0.0302 258.34)",
+          "oklch(38% 0.0302 258.34)",
+          "oklch(49% 0.0302 258.34)",
+          "oklch(61% 0.0302 258.34)",
+          "oklch(72% 0.0302 258.34)",
+          "oklch(84% 0.0302 258.34)",
+          "oklch(95% 0.0302 258.34)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Accent",
+        "tonalRamp": [
+          "oklch(15% 0.1460 235.47)",
+          "oklch(26% 0.1460 235.47)",
+          "oklch(38% 0.1460 235.47)",
+          "oklch(49% 0.1460 235.47)",
+          "oklch(61% 0.1460 235.47)",
+          "oklch(72% 0.1460 235.47)",
+          "oklch(84% 0.1460 235.47)",
+          "oklch(95% 0.1460 235.47)"
+        ]
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "Accent Hover",
+        "tonalRamp": [
+          "oklch(15% 0.1003 229.59)",
+          "oklch(26% 0.1003 229.59)",
+          "oklch(38% 0.1003 229.59)",
+          "oklch(49% 0.1003 229.59)",
+          "oklch(61% 0.1003 229.59)",
+          "oklch(72% 0.1003 229.59)",
+          "oklch(84% 0.1003 229.59)",
+          "oklch(95% 0.1003 229.59)"
+        ]
+      },
+      "action-ink": {
+        "role": "neutral",
+        "displayName": "Action Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0273 245.52)",
+          "oklch(26% 0.0273 245.52)",
+          "oklch(38% 0.0273 245.52)",
+          "oklch(49% 0.0273 245.52)",
+          "oklch(61% 0.0273 245.52)",
+          "oklch(72% 0.0273 245.52)",
+          "oklch(84% 0.0273 245.52)",
+          "oklch(95% 0.0273 245.52)"
+        ]
+      },
+      "field": {
+        "role": "neutral",
+        "displayName": "Field",
+        "tonalRamp": [
+          "oklch(15% 0.0248 259.25)",
+          "oklch(26% 0.0248 259.25)",
+          "oklch(38% 0.0248 259.25)",
+          "oklch(49% 0.0248 259.25)",
+          "oklch(61% 0.0248 259.25)",
+          "oklch(72% 0.0248 259.25)",
+          "oklch(84% 0.0248 259.25)",
+          "oklch(95% 0.0248 259.25)"
+        ]
+      },
+      "field-border": {
+        "role": "neutral",
+        "displayName": "Field Border",
+        "tonalRamp": [
+          "oklch(15% 0.0428 259.72)",
+          "oklch(26% 0.0428 259.72)",
+          "oklch(38% 0.0428 259.72)",
+          "oklch(49% 0.0428 259.72)",
+          "oklch(61% 0.0428 259.72)",
+          "oklch(72% 0.0428 259.72)",
+          "oklch(84% 0.0428 259.72)",
+          "oklch(95% 0.0428 259.72)"
+        ]
+      },
+      "placeholder": {
+        "role": "neutral",
+        "displayName": "Placeholder",
+        "tonalRamp": [
+          "oklch(15% 0.0354 255.25)",
+          "oklch(26% 0.0354 255.25)",
+          "oklch(38% 0.0354 255.25)",
+          "oklch(49% 0.0354 255.25)",
+          "oklch(61% 0.0354 255.25)",
+          "oklch(72% 0.0354 255.25)",
+          "oklch(84% 0.0354 255.25)",
+          "oklch(95% 0.0354 255.25)"
+        ]
+      },
+      "secondary": {
+        "role": "neutral",
+        "displayName": "Secondary",
+        "tonalRamp": [
+          "oklch(15% 0.0114 252.09)",
+          "oklch(26% 0.0114 252.09)",
+          "oklch(38% 0.0114 252.09)",
+          "oklch(49% 0.0114 252.09)",
+          "oklch(61% 0.0114 252.09)",
+          "oklch(72% 0.0114 252.09)",
+          "oklch(84% 0.0114 252.09)",
+          "oklch(95% 0.0114 252.09)"
+        ]
+      },
+      "secondary-ink": {
+        "role": "neutral",
+        "displayName": "Secondary Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0256 253.85)",
+          "oklch(26% 0.0256 253.85)",
+          "oklch(38% 0.0256 253.85)",
+          "oklch(49% 0.0256 253.85)",
+          "oklch(61% 0.0256 253.85)",
+          "oklch(72% 0.0256 253.85)",
+          "oklch(84% 0.0256 253.85)",
+          "oklch(95% 0.0256 253.85)"
+        ]
+      },
+      "secondary-hover": {
+        "role": "neutral",
+        "displayName": "Secondary Hover",
+        "tonalRamp": [
+          "oklch(15% 0.0274 249.87)",
+          "oklch(26% 0.0274 249.87)",
+          "oklch(38% 0.0274 249.87)",
+          "oklch(49% 0.0274 249.87)",
+          "oklch(61% 0.0274 249.87)",
+          "oklch(72% 0.0274 249.87)",
+          "oklch(84% 0.0274 249.87)",
+          "oklch(95% 0.0274 249.87)"
+        ]
+      },
+      "success": {
+        "role": "semantic",
+        "displayName": "Success",
+        "tonalRamp": [
+          "oklch(15% 0.1210 161.44)",
+          "oklch(26% 0.1210 161.44)",
+          "oklch(38% 0.1210 161.44)",
+          "oklch(49% 0.1210 161.44)",
+          "oklch(61% 0.1210 161.44)",
+          "oklch(72% 0.1210 161.44)",
+          "oklch(84% 0.1210 161.44)",
+          "oklch(95% 0.1210 161.44)"
+        ]
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Error",
+        "tonalRamp": [
+          "oklch(15% 0.0978 25.55)",
+          "oklch(26% 0.0978 25.55)",
+          "oklch(38% 0.0978 25.55)",
+          "oklch(49% 0.0978 25.55)",
+          "oklch(61% 0.0978 25.55)",
+          "oklch(72% 0.0978 25.55)",
+          "oklch(84% 0.0978 25.55)",
+          "oklch(95% 0.0978 25.55)"
+        ]
+      },
+      "selection": {
+        "role": "neutral",
+        "displayName": "Selection",
+        "tonalRamp": [
+          "oklch(15% 0.0920 238.70)",
+          "oklch(26% 0.0920 238.70)",
+          "oklch(38% 0.0920 238.70)",
+          "oklch(49% 0.0920 238.70)",
+          "oklch(61% 0.0920 238.70)",
+          "oklch(72% 0.0920 238.70)",
+          "oklch(84% 0.0920 238.70)",
+          "oklch(95% 0.0920 238.70)"
+        ]
+      },
+      "marketing-disabled": {
+        "role": "neutral",
+        "displayName": "Marketing Disabled",
+        "tonalRamp": [
+          "oklch(15% 0.0423 243.81)",
+          "oklch(26% 0.0423 243.81)",
+          "oklch(38% 0.0423 243.81)",
+          "oklch(49% 0.0423 243.81)",
+          "oklch(61% 0.0423 243.81)",
+          "oklch(72% 0.0423 243.81)",
+          "oklch(84% 0.0423 243.81)",
+          "oklch(95% 0.0423 243.81)"
+        ]
+      },
+      "marketing-disabled-ink": {
+        "role": "neutral",
+        "displayName": "Marketing Disabled Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0162 245.09)",
+          "oklch(26% 0.0162 245.09)",
+          "oklch(38% 0.0162 245.09)",
+          "oklch(49% 0.0162 245.09)",
+          "oklch(61% 0.0162 245.09)",
+          "oklch(72% 0.0162 245.09)",
+          "oklch(84% 0.0162 245.09)",
+          "oklch(95% 0.0162 245.09)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Marketing display",
+        "purpose": "Manrope hero headline; existing responsive overrides remain in CSS."
+      },
+      "marketing-body": {
+        "displayName": "Marketing body",
+        "purpose": "Website body copy."
+      },
+      "desktop-body": {
+        "displayName": "Desktop body",
+        "purpose": "Native compact app copy and controls."
+      },
+      "desktop-headline": {
+        "displayName": "Desktop headline",
+        "purpose": "App introduction."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "desktop-button",
+        "value": "background-color 120ms ease-out",
+        "purpose": "Enabled only when reduced motion is not requested."
+      },
+      {
+        "name": "marketing-scroll",
+        "value": "smooth",
+        "purpose": "Anchor scrolling; auto under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "marketing-compact",
+        "value": "800px"
+      },
+      {
+        "name": "marketing-stacked",
+        "value": "580px"
+      },
+      {
+        "name": "desktop-narrow",
+        "value": "470px"
+      }
+    ],
+    "rampNote": "Tonal ramps are synthesized preview metadata, not implemented color scales."
+  },
+  "components": [
+    {
+      "name": "Marketing primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Filled blue website action.",
+      "html": "<button class=\"ds-primary\">Join the Cloud waitlist</button>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:space-between;gap:24px;min-height:52px;padding:13px 20px;background:var(--blue,#36bdff);color:#05101a;font:650 16px/1.6 SpammishDisplay,sans-serif;border:0;border-radius:8px;cursor:pointer}.ds-primary:hover{background:#81d7ff}.ds-primary:disabled{background:#597185;color:#e3edf6;cursor:wait}.ds-primary:focus-visible,.ds-secondary:focus-visible,.ds-field:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--blue,#36bdff);outline-offset:5px}"
+    },
+    {
+      "name": "Source action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Pale neutral source link.",
+      "html": "<a class=\"ds-secondary\" href=\"#source\">Get the open-source version</a>",
+      "css": ".ds-secondary{display:inline-flex;align-items:center;min-height:52px;padding:13px 20px;background:#edf3fa;color:#111a25;font:650 16px/1.6 SpammishDisplay,sans-serif;border-radius:8px;text-decoration:none}.ds-secondary:hover{background:#cddcec}.ds-primary:focus-visible,.ds-secondary:focus-visible,.ds-field:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--blue,#36bdff);outline-offset:5px}"
+    },
+    {
+      "name": "Desktop primary action",
+      "kind": "button",
+      "refersTo": "button-desktop",
+      "description": "One full-width connect, enable, or pause action.",
+      "html": "<button class=\"ds-desktop\">Connect Gmail</button>",
+      "css": ".ds-desktop{display:block;width:100%;border:0;border-radius:8px;background:var(--accent,#36bdff);color:#05101a;padding:12px 18px;font:600 15px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif;cursor:pointer}.ds-desktop:hover:not(:disabled){background:#81d7ff}.ds-desktop:disabled{background:var(--line,#293342);color:var(--muted,#a7b3c5);cursor:default}.ds-desktop:focus-visible{outline:2px solid var(--accent,#36bdff);outline-offset:4px}@media(prefers-reduced-motion:no-preference){.ds-desktop{transition:background-color 120ms ease-out}}"
+    },
+    {
+      "name": "Email field",
+      "kind": "input",
+      "refersTo": "email-field",
+      "description": "Website waitlist email field with visible label.",
+      "html": "<label class=\"ds-label\" for=\"ds-email\">Email address</label><input class=\"ds-field\" id=\"ds-email\" type=\"email\" placeholder=\"you@company.com\">",
+      "css": ".ds-label{display:block;font:14px/1.6 SpammishDisplay,sans-serif;color:var(--ink,#f3f5f8);margin-bottom:8px}.ds-field{width:100%;padding:13px 14px;border:1px solid #53627a;background:var(--panel,#0e1520);color:var(--ink,#f3f5f8);font:16px/1.6 SpammishDisplay,sans-serif;border-radius:7px;caret-color:var(--blue,#36bdff)}.ds-field::placeholder{color:#9babc0}.ds-primary:focus-visible,.ds-secondary:focus-visible,.ds-field:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--blue,#36bdff);outline-offset:5px}"
+    },
+    {
+      "name": "Website navigation",
+      "kind": "nav",
+      "description": "Quiet text links with blue hover.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main navigation\"><a href=\"#source\">GitHub \u2197</a><a href=\"#cloud\">Join the waitlist</a></nav>",
+      "css": ".ds-nav{display:flex;gap:30px;font:14px/1.6 SpammishDisplay,sans-serif}.ds-nav a{color:var(--ink,#f3f5f8);text-decoration:none}.ds-nav a:hover{color:var(--blue,#36bdff)}.ds-primary:focus-visible,.ds-secondary:focus-visible,.ds-field:focus-visible,.ds-nav a:focus-visible{outline:3px solid var(--blue,#36bdff);outline-offset:5px}"
+    },
+    {
+      "name": "Desktop status",
+      "kind": "custom",
+      "description": "Text and dot make enabled status explicit.",
+      "html": "<p class=\"ds-status\" data-on=\"true\">On</p>",
+      "css": ".ds-status{margin:0;color:var(--muted,#a7b3c5);font:12px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif}.ds-status::before{content:\"\";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px;vertical-align:1px}.ds-status[data-on=\"true\"]{color:var(--success,#6ed6a5)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Spammish shield",
+    "overview": "The supplied Spammish shield defines the identity: black and gunmetal facets, an ascending electric-blue slash, and a bold white wordmark. The interface carries that contrast into a near-black canvas, bright blue actions, and restrained white type. Marketing uses self-hosted Manrope under the CSS family name SpammishDisplay; the desktop uses native system sans.\n\nThe shield supplies the material detail. Interface surfaces stay flat, with thin separators and generous space on the website and compact controls in the desktop app. Existing controls and typography provide the reusable system; the asset is preserved rather than redrawn.",
+    "keyCharacteristics": [
+      "Black canvas and gunmetal identity.",
+      "Electric blue for primary actions and emphasis.",
+      "Flat sections with visible separators.",
+      "Bold headlines and quiet supporting text."
+    ],
+    "rules": [
+      {
+        "name": "The Supplied Shield Rule",
+        "body": "Use the supplied shield asset; retain its gunmetal facets, black slash, and electric-blue edge. Pair it with the existing bold white Spammish wordmark.",
+        "section": "overview"
+      },
+      {
+        "name": "The Action Contrast Rule",
+        "body": "Use electric blue with dark lettering for primary actions. Keep supporting text muted and separators subordinate.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Interface Rule",
+        "body": "Keep interface surfaces flat. The metallic shield carries depth; sections and controls use tonal contrast and borders.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve the supplied shield and bold white wordmark.",
+      "Do use blue to identify actions, focus, and selected emphasis.",
+      "Do pair clear labels with visible interaction and status states.",
+      "Do preserve the desktop\u2019s simple connect, enable, and pause controls."
+    ],
+    "donts": [
+      "Don't replace the supplied mark with a new shield or symbol.",
+      "Don't apply shadows or decorative gradients to interface panels.",
+      "Don't carry the retired paper and rust palette into Spammish.",
+      "Don't represent planned Cloud AI as an available open-source feature."
+    ]
+  }
+}

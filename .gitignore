@@ -11,3 +11,6 @@ dist/
 desktop/oauth-client.json
 *.enc
 *.log
+
+.impeccable/review/
+.fly-bootstrap.toml

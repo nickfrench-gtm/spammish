@@ -51,3 +51,7 @@ npm audit
 ```
 
 Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, initial inbox pagination/checkpoint recovery, and OAuth state/PKCE. Real Gmail verification and representative accuracy evaluation remain release requirements. See the [maintainer release guide](docs/releasing.md).
+
+## Website and Cloud
+
+The [marketing site](https://spammish.fly.dev) offers the open-source repo and a Cloud waitlist. Cloud is coming soon. Optional bring-your-own AI keys are planned for Cloud; no AI usage is included or subsidized. The open-source app uses no AI API; contributors may build their own extensions. Website operations are documented in [marketing/README.md](marketing/README.md).
