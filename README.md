@@ -1,72 +1,53 @@
 # Spammish — Never see another B2B cold email.
 
-**Make B2B cold email disappear.** Spammish is an open-source email agent that identifies unsolicited B2B sales email and obvious spam, then moves high-confidence matches out of your inbox into Gmail's recoverable **The Abyss** label.
+**Make B2B cold email disappear.** Spammish is an open-source email agent that identifies unsolicited B2B sales email and obvious spam, then quietly moves high-confidence matches from your Gmail inbox to **The Abyss**.
 
-**Release status: experimental prototype.** Automated rule and label-operation tests pass, but this release has not been verified end to end with a real Gmail account. The tests do not establish classification accuracy on representative real email. Configure and inspect a test mailbox before relying on it.
+One job. Uncertain mail stays in your inbox. Moved mail stays recoverable, with its read/unread state unchanged. No replies, sending, deletion, link clicking, unsubscribing, summaries, or dashboards.
 
-It has one job: classify and move. It does not reply, click links, unsubscribe, delete messages, summarize mail, or manage your calendar. Uncertain messages stay in the inbox.
+## Current release status
 
-Spammish is released under the [MIT License](LICENSE). Out of the box, it uses local deterministic rules, requires no AI API key, and moves only high-confidence matches to **The Abyss**. It never sends or replies to messages. You may modify and redistribute the open-source code; if you run a modified copy or a fork, its behavior and operation are your responsibility. The Spammish maintainers do not control or assume responsibility for third-party modifications or deployments. See the license for the full warranty and liability terms.
+**Experimental desktop preview; not yet a ready-to-install public release.** The desktop app and deterministic mail-handling code are available here. A public installer still requires a configured and approved Google OAuth app, Mac signing/notarization, and a real Gmail acceptance test. Automated tests use simulated Gmail responses; they do not establish real-world classification accuracy.
 
-## Deterministic by default
+The intended user setup is:
 
-The local rules in `lib/spammish-policy.mjs` run without an AI service or API key. The same message always receives the same classification. No API usage is billed to the project maintainer. The classifier requires corroborating sales signals; a subject line such as “Re: quick question” is not sufficient on its own. Obvious spam is moved only when the message is not protected by account, security, payment, delivery, or other important-message signals.
+1. Install and open Spammish.
+2. Click **Connect Gmail** and approve Google access in your browser.
+3. Click **Turn on**.
 
-An optional user-supplied model key is not currently part of the release. The default classifier makes no outbound AI requests.
+A completed packaged release will include the runtime and Google app configuration. Users will not need Node, a terminal, an encryption key, or an AI API key. **That installer is not available yet.** Developers can run the current preview using [development instructions](docs/development.md).
 
-## Gmail behavior
+## What it does out of the box
 
-Gmail's API receives message content for local classification while the message remains unread. Spammish does not mark mail read. A match is moved by adding the **The Abyss** label and removing the `INBOX` label; this is reversible and does not permanently delete the message. Gmail calls these labels rather than folders.
+- Classifies locally using deterministic subject/body rules and corroborating sales signals. A generic “Re: quick question” subject is insufficient.
+- Protects messages with important account, payment, security, delivery, and other legitimate-message signals. Incomplete or uncertain messages stay in Inbox.
+- Creates the recoverable Gmail label **The Abyss** if needed. A match gains that label and loses only the Inbox label.
+- Preserves read/unread state. Gmail content is fetched for local inspection; this does not mark it read.
+- Processes new arrivals while enabled; turning it on establishes a fresh baseline, without sweeping old inbox mail.
+- Runs in the background while the Mac is awake and online. Pause stops processing; disconnect removes the stored credential and attempts Google revocation. Quit stops processing until the app runs again.
 
-Spammish processes incoming messages after they arrive. It cannot prevent Gmail from initially delivering a message to the inbox. The current sync is periodic, so a message may be visible before Spammish moves it.
+Gmail delivers messages before Spammish can act. The app checks approximately every 20 seconds, so mail or notifications may appear first. It cannot guarantee that every cold email will disappear, or disappear before you see it. Conservative rules intentionally let ambiguous messages through.
 
-## Run locally
+## Local, with no AI bill
 
-Requirements: Node.js 22.5 or newer (the application uses the built-in SQLite module). This first release runs as a single-user process on the local machine and binds to `127.0.0.1`.
+The same input receives the same rule-based classification. No AI API calls, maintainer-funded service, telemetry, or paid subscription are required. Optional model integrations are not included in this release.
 
-```sh
-cp .env.example .env
-npm start
-```
+The desktop app stores its Gmail credential using the operating system's secure storage. It does not save email bodies or send them to an AI service. Content is fetched only for classification, with bounded parsing; truncated messages are left alone. Attachments and remote images are not fetched.
 
-In your own Google Cloud project, enable the Gmail API, configure the OAuth consent screen for your account, and create a web OAuth client with `http://127.0.0.1:8080/auth/callback` as an authorized redirect URI. Copy its client ID and secret into `.env`; generate `SPAMMISH_TOKEN_VAULT_KEY` with the command shown in `.env.example`. Never commit `.env` or the `data/` directory. The server only listens on the local machine; remote hosting is outside the scope of this release. The Gmail `gmail.modify` scope is restricted and may require additional OAuth review if you distribute an OAuth client to other users; this project instead expects each operator to configure their own client. See [Google's scope guidance](https://developers.google.com/workspace/gmail/api/auth/scopes).
+Google's `gmail.modify` permission is broader than this app's behavior: it technically permits sending and other modifications. There is no narrower Gmail scope that permits these recoverable moves. The shipped code contains no Gmail sending, replying, trashing, or permanent deletion operation. [Privacy notes](PRIVACY.md) explain the data flow and [security notes](SECURITY.md) describe reporting and access.
 
-The classifier itself can be used independently:
+## Open source
 
-```js
-import { classifyForAbyss } from "./lib/spammish-policy.mjs";
+Spammish is released under the [MIT License](LICENSE). You can inspect, modify, and build on the code. The behavior described here applies to the published default version. Forks and third-party modifications are operated at their authors' and users' responsibility; Spammish's maintainers do not control them. The license contains the warranty and liability terms.
 
-const result = classifyForAbyss({
-  from: "sales@example.com",
-  subject: "A quick question",
-  body: "We help teams with lead generation. Open to a 15-minute call?",
-});
-console.log(result.destination); // The Abyss
-```
+Contributions should preserve this narrow purpose. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Configuration
-
-See [.env.example](.env.example). Google OAuth credentials and an encryption key are required for a connected deployment. Spammish does not require an AI API key.
-
-## Privacy and security
-
-- Message content (at most the first 12,000 decoded characters of plain text) is fetched for classification and processed locally by the deterministic rules. Spammish does not send it to an AI service.
-- Gmail content and OAuth tokens are sensitive. Protect the deployment's data directory and encryption key, and use HTTPS when connecting remotely.
-- Spammish does not send email, open links, unsubscribe, or permanently delete messages.
-- Uncertain messages remain in the inbox. The Abyss label keeps moved messages inspectable and recoverable.
-- Gmail OAuth `gmail.modify` is required to inspect message content and move it between Inbox and The Abyss. This is a restricted scope that technically permits more actions than Spammish uses. The published code contains no Gmail compose, send, reply, or delete operation. Review Google's consent and verification requirements before distributing or deploying the app.
-- This project is experimental. Test it with a Gmail account you can inspect before relying on it.
-
-Report security issues privately as described in [SECURITY.md](SECURITY.md).
-
-## Development
+## Verification
 
 ```sh
+npm ci
 npm test
+npm run check
+npm audit
 ```
 
-The tests use Node's built-in test runner and do not require external services or API keys.
-
-## License
-
-MIT. See [LICENSE](LICENSE).
+Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, and OAuth state/PKCE. Real Gmail verification and representative accuracy evaluation remain release requirements. See the [maintainer release guide](docs/releasing.md).

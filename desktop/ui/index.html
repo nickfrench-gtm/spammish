@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <title>Spammish</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/renderer.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><h1>Spammish</h1><p class="status" id="status" role="status">Starting…</p></header>
+    <section class="intro"><h2>Make B2B cold email disappear.</h2><p>Cold sales and obvious spam go to <strong>The Abyss.</strong> Everything uncertain stays in your inbox.</p></section>
+    <section class="connection" aria-label="Gmail connection">
+      <p class="email" id="email" hidden></p>
+      <p class="instruction" id="instruction">Connect Gmail, then turn Spammish on.</p>
+      <button id="primary" disabled>Connect Gmail</button>
+      <button class="text-button" id="cancel" hidden>Cancel</button>
+      <p class="notice" id="notice" role="status" aria-live="polite" hidden></p>
+      <div class="secondary-actions" id="secondary" hidden><button class="text-button" id="abyss">Open The Abyss</button><button class="text-button" id="disconnect">Disconnect</button></div>
+    </section>
+    <footer>
+      <p id="background">No AI subscription. Classification stays on this Mac.</p>
+      <details><summary>How it works</summary><p>Spammish checks new mail while your Mac is awake. It inspects message text locally without changing unread state, then moves only high-confidence matches to Gmail’s recoverable The Abyss label.</p><p>It never sends, replies, deletes, clicks email links, or unsubscribes. Gmail may show a message briefly before the next check.</p></details>
+    </footer>
+  </main>
+</body>
+</html>
