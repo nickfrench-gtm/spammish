@@ -72,7 +72,7 @@ function render() {
     }
     for (const button of row.querySelectorAll('button')) button.disabled = blocked(button.dataset.operation, account.id);
   }
-  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser. Existing accounts keep their own settings.' : !state.canConnect ? 'Gmail connection isn’t available in this preview.' : accounts.length ? 'Each account works independently. New connections start paused.' : 'Connect Gmail, then turn Spammish on.';
+  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser. Existing accounts keep their own settings.' : !state.canConnect ? 'Gmail connection isn’t available in this preview.' : accounts.length ? 'Connecting Gmail starts inbox cleanup. Each account has its own Pause control.' : 'Connecting Gmail starts inbox cleanup automatically.';
   ui.connect.textContent = state.connecting ? 'Waiting for Google…' : accounts.length ? 'Add Gmail account' : 'Connect Gmail';
   ui.connect.classList.toggle('add-account', accounts.length > 0);
   ui.connect.disabled = connectingBusy || busyAccounts.size > 0 || state.connecting || !state.canConnect || Boolean(state.error);
@@ -88,7 +88,7 @@ async function action(name, id) {
     const result = await window.spammish[name](id);
     if (result.status) state = result.status;
     if (!result.ok) notice = errors[result.error] || 'Something interrupted the connection. Please try again.';
-    else if (result.reconnected) notice = 'Gmail connection refreshed. Its existing progress is preserved; turn it on when ready.';
+    else if (result.reconnected) notice = 'Gmail reconnected. Cleanup is on and its existing progress is preserved.';
     if (result.revokePending) notice = 'This local connection was removed. Google was unreachable; you can also revoke Spammish in your Google Account.';
   } catch { notice = 'Spammish couldn’t finish that action. Reopen the app and try again.'; }
   finally { if (name === 'connect') connectingBusy = false; else busyAccounts.delete(id); render(); }

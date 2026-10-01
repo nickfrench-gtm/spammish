@@ -12,11 +12,17 @@ The intended user setup is:
 
 1. Install and open Spammish.
 2. Click **Connect Gmail** and approve Google access in your browser.
-3. Click **Turn on** for that account.
+3. Cleanup starts automatically: existing Inbox first, then new arrivals. Use **Pause** to stop it.
 
-Use **Add Gmail account** to connect another Gmail. Each account has its own Turn on/Pause, Open The Abyss, and Disconnect controls. New accounts start paused. Connecting another Gmail leaves existing accounts’ settings unchanged. Reconnecting the same Gmail refreshes that connection and preserves its cleanup progress.
+Use **Add Gmail account** to connect another Gmail. Each account has its own Turn on/Pause, Open The Abyss, and Disconnect controls. Successful connections start cleanup automatically. Connecting another Gmail leaves existing accounts’ settings unchanged. Reconnecting the same Gmail refreshes that connection and preserves its cleanup progress.
 
 A completed packaged release will include the runtime and Google app configuration. Users will not need Node, a terminal, an encryption key, or an AI API key. **That installer is not available yet.** Developers can run the current preview using [development instructions](docs/development.md).
+
+## What a GitHub visitor does today
+
+This repository contains the desktop app’s source, not a ready-to-install public download. Clone the repo or download its ZIP, install Node and dependencies, configure your own Google Desktop OAuth client, then run the app. The [development guide](docs/development.md) walks through this. Codex or Claude can help with setup; neither needs to stay running afterward.
+
+Spammish itself must keep running on an awake, online Mac. Closing its window leaves it running in the menu bar. **Quit stops mail processing.** Cloud would remove that local runtime requirement, but is not available yet.
 
 ## What it does out of the box
 
@@ -25,7 +31,7 @@ A completed packaged release will include the runtime and Google app configurati
 - Supports multiple Gmail accounts in the desktop app, with isolated credentials, cursors, The Abyss labels, and processing state. One revoked or slow connection does not stop the others.
 - Creates the recoverable Gmail label **The Abyss** if needed. A match gains that label and loses only the Inbox label.
 - Preserves read/unread state. Gmail content is fetched for local inspection; this does not mark it read.
-- On first enable, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. Existing desktop accounts receive one sweep when upgraded to this version.
+- On connection, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. Existing paused accounts remain paused on upgrade; reconnect or click Turn on to resume them.
 - Runs in the background while the Mac is awake and online. Pause stops processing; disconnect removes the stored credential and attempts Google revocation. Quit stops processing until the app runs again.
 
 Gmail delivers messages before Spammish can act. The app checks approximately every 20 seconds, so mail or notifications may appear first. It cannot guarantee that every cold email will disappear, or disappear before you see it. Conservative rules intentionally let ambiguous messages through.

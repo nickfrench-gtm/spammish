@@ -1,6 +1,6 @@
 # Privacy
 
-Spammish's default desktop version processes Gmail locally on your computer. It contacts Google's OAuth and Gmail endpoints to authorize access, refresh/revoke credentials, inspect the existing Inbox on first enable and new mail thereafter, create The Abyss label if missing, and move high-confidence matches by changing labels.
+Spammish's default desktop version processes Gmail locally on your computer. It contacts Google's OAuth and Gmail endpoints to authorize access, refresh/revoke credentials, inspect the existing Inbox automatically after connection and new mail thereafter, create The Abyss label if missing, and move high-confidence matches by changing labels.
 
 Subject, sender, and bounded message body content are processed in memory. Spammish does not store email bodies, load remote email images, fetch attachments, click message links, or transmit message content to an AI provider or maintainer. The local accounts file holds each connected email address, processing cursor, state, temporary message IDs/page checkpoints during the initial Inbox sweep, and a separate OS-encrypted refresh credential for each account. The first multi-account upgrade migrates the old single-account file without changing its paused/enabled state or sweep progress. Temporary sweep IDs are dropped after completion. No telemetry or analytics is included.
 

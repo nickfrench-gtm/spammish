@@ -10,7 +10,7 @@ People who want unsolicited B2B sales and obvious spam out of Gmail. One job: ma
 The MIT open source repository is public. Self-hosting requires the documented Google OAuth setup. Desktop builds are currently unsigned development previews, not approved public installers. Cloud is coming soon; this site collects an email waitlist only. No launch date, pricing, accuracy rate, or hosted functionality is promised.
 
 ## Confirmed brand and surface
-The user supplied a black/gunmetal shield with an electric blue slash and white Spammish wordmark and requested this branding for the marketing site and app icon/logo. Marketing has exactly two paths: self-hosted repository or Cloud waitlist. Preserve the desktop's simple controls. Multiple Gmail accounts each have independent connection, pause, recovery and disconnect controls; new connections start paused. Keep processing paused during this work.
+The user supplied a black/gunmetal shield with an electric blue slash and white Spammish wordmark and requested this branding for the marketing site and app icon/logo. Marketing has exactly two paths: self-hosted repository or Cloud waitlist. Preserve the desktop's simple controls. Multiple Gmail accounts each have independent connection, pause, recovery and disconnect controls; successful connections start cleanup automatically. Preserve existing paused accounts during upgrades; connection or Turn on explicitly starts processing.
 
 ## Stack
 Reuse Node and Fly.io. Marketing is isolated from mailbox processing and credentials; waitlist entries live on the private Fly volume.

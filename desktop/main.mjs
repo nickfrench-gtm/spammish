@@ -122,7 +122,10 @@ async function start() {
     try {
       oauthAttempt = await beginDesktopOAuth({ client, openBrowser: (url) => shell.openExternal(url) });
       const tokens = await oauthAttempt.result;
-      return await agent.connect(tokens, id);
+      const result = await agent.connect(tokens, id);
+      // Begin cleanup immediately without keeping the connection screen waiting.
+      void agent.sync().catch(() => { fatalError = 'connection_interrupted'; publish(); });
+      return result;
     } finally { connecting = false; oauthAttempt = null; publish(); }
   }));
   handler('cancel', () => invoke(async () => { oauthAttempt?.cancel(); await agent?.cancelConnection(); }));

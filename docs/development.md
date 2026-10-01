@@ -1,6 +1,6 @@
 # Development
 
-Node.js 22.13 or newer is required for source development. Users of a packaged desktop release will not need Node.
+First clone this repository or download and unzip its source, then open a terminal in that folder. An AI coding tool may help with setup but is not a runtime dependency. Node.js 22.13 or newer is required for source development. Users of a packaged desktop release will not need Node.
 
 ```sh
 npm ci
@@ -11,9 +11,11 @@ npm run desktop
 
 The desktop preview runs without a Google client, but Connect Gmail is disabled. For a private development connection, create a **Desktop app** OAuth client in your own Google Cloud project with Gmail API enabled. Download its installed-client JSON to `desktop/oauth-client.json` (ignored by Git). A web client is not compatible. Configure your consent screen and permitted test account in Google Cloud. Do not commit credentials or account data.
 
+Run the desktop app, click Connect Gmail and approve Google access. The connection immediately starts existing Inbox cleanup, then watches arrivals. Use Pause to stop. Closing the window keeps the app running in the menu bar; Quit, sleep, or going offline stops processing until the app is running and online again.
+
 ## Multiple Gmail accounts
 
-The desktop manager in `lib/desktop-accounts.mjs` routes each account to its own existing `DesktopAgent`. `DesktopAccountsStore` writes a versioned `accounts.json` using OS-encrypted credentials, and atomically migrates the legacy `account.json`. Renderer and tray operations pass an account ID; no token is exposed to the renderer. New and refreshed connections start paused.
+The desktop manager in `lib/desktop-accounts.mjs` routes each account to its own existing `DesktopAgent`. `DesktopAccountsStore` writes a versioned `accounts.json` using OS-encrypted credentials, and atomically migrates the legacy `account.json`. Renderer and tray operations pass an account ID; no token is exposed to the renderer. Successful new and refreshed connections start cleanup automatically, preserving an existing sweep checkpoint. Existing paused accounts remain paused when opening an upgraded app.
 
 ## Preview packaging
 

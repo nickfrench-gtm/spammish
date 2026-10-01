@@ -152,7 +152,7 @@ Website sections and desktop connection content use thin gunmetal rules instead 
 
 ### Gmail account rows
 
-Flat account rows pair the address (14px) with its state (12px) and a blue Turn on, Pause, or Reconnect action. Row headers align identity and action horizontally with a gap (12px); long addresses can wrap. Open The Abyss and Disconnect remain secondary text actions for that account. Account instructions use (13px) text. New connections start paused.
+Flat account rows pair the address (14px) with its state (12px) and a blue Turn on, Pause, or Reconnect action. Row headers align identity and action horizontally with a gap (12px); long addresses can wrap. Open The Abyss and Disconnect remain secondary text actions for that account. Account instructions use (13px) text. Successful connections start cleanup automatically; existing paused accounts stay paused on upgrade.
 
 Keep rows keyed to their account identity so status refreshes preserve focused controls. Action labels include the address for assistive technology. During Google sign-in, Pause remains available for enabled accounts; conflicting actions are disabled. Cancel connection is a global text action shown during connection.
 
