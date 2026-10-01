@@ -48,3 +48,7 @@ h1 { display: flex; align-items: center; gap: 8px; } h1 img { object-fit: contai
 .account-state[data-on='true'] { color: var(--success); }
 .account-instruction { font-size: 13px; margin: 12px 0 0; }
 .account .notice { margin-bottom: 0; }
+
+.abyss-total { margin-top: 18px; margin-bottom: 0; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+#review { margin-bottom: 16px; } .review-item { border-top: 1px solid var(--line); padding: 16px 0; } .review-subject { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; } .review-sender { overflow-wrap: anywhere; } .review-item ul { padding-left: 18px; color: var(--muted); }

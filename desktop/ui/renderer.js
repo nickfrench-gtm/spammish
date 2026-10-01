@@ -1,5 +1,6 @@
+import { explainDecision } from './explain.mjs';
 const byId = (id) => document.getElementById(id);
-const ui = Object.fromEntries(['status', 'accounts', 'instruction', 'connect', 'cancel', 'notice', 'background'].map((id) => [id, byId(id)]));
+const ui = Object.fromEntries(['status', 'moved', 'accounts', 'instruction', 'connect', 'cancel', 'notice', 'background'].map((id) => [id, byId(id)]));
 let state;
 let connectingBusy = false;
 const busyAccounts = new Set();
@@ -38,6 +39,9 @@ function control(label, name, id, className = 'text-button') {
 function render() {
   if (!state) return;
   const accounts = state.accounts || [];
+  const moved = Number.isSafeInteger(state.movedCount) ? state.movedCount : 0;
+  ui.moved.textContent = `${moved.toLocaleString()} ${moved === 1 ? 'email' : 'emails'} sent to The Abyss`;
+  ui.moved.title = 'Confirmed moves since this counter was introduced. Includes disconnected accounts; older moves are not guessed.';
   const enabled = accounts.filter((account) => account.enabled).length;
   ui.status.textContent = state.connecting ? 'Connecting' : state.error ? 'Needs attention' : enabled ? `${enabled} ${enabled === 1 ? 'account' : 'accounts'} on` : accounts.length ? 'Paused' : 'Not connected';
   ui.status.dataset.on = String(enabled > 0 && !state.error);
@@ -104,3 +108,37 @@ ui.connect.addEventListener('click', () => { void action('connect'); });
 ui.cancel.addEventListener('click', () => { void window.spammish.cancel(); });
 window.spammish.onStatus((next) => { state = next; render(); });
 window.spammish.status().then((next) => { state = next; render(); });
+
+const reviewLoad = byId('review-load'), reviewItems = byId('review-items'), reviewNotice = byId('review-notice');
+async function loadReview() {
+  reviewLoad.disabled = true; reviewNotice.hidden = false; reviewNotice.textContent = 'Loading recent moves…';
+  try {
+    const result = await window.spammish.review();
+    if (!result.ok) throw new Error(result.error);
+    reviewItems.replaceChildren();
+    reviewNotice.textContent = result.moves.length ? '' : 'No recorded moves yet. Recording starts with this update.';
+    reviewNotice.hidden = Boolean(result.moves.length);
+    for (const move of result.moves) {
+      const row = element('section','review-item');
+      row.append(element('p','review-subject',move.subject),element('p','review-sender',`${move.from || 'Sender unavailable'} · ${move.accountEmail}`));
+      const explanation = explainDecision(move.decision);
+      const details = element('details');details.append(element('summary','',explanation.title),element('p','',explanation.summary));
+      const list = element('ul');
+      for (const factor of explanation.factors) list.append(element('li','',`${factor.points > 0 ? '+' : ''}${factor.points} ${factor.label}`));
+      details.append(list);row.append(details);
+      if (move.inAbyss) {
+        const rescue = element('button','text-button','Rescue');rescue.type='button';
+        rescue.addEventListener('click',async()=>{
+          rescue.disabled=true;
+          try { const result=await window.spammish.rescueMessage(move.accountId,move.id);
+            if(!result.ok)throw new Error(result.error);
+            rescue.replaceWith(element('p','notice','Rescued. This sender is now protected.'));
+          } catch { rescue.disabled=false;reviewNotice.hidden=false;reviewNotice.textContent='Rescue failed. Try again, or move the email back to Inbox in Gmail.'; }
+        });row.append(rescue);
+      } else row.append(element('p','notice','Already outside The Abyss.'));
+      reviewItems.append(row);
+    }
+  } catch { reviewNotice.textContent='Could not load recent moves. Check your Gmail connection and try again.'; }
+  finally { reviewLoad.disabled=false; }
+}
+reviewLoad.addEventListener('click',()=>{void loadReview();});

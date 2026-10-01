@@ -6,7 +6,7 @@ One job. Uncertain mail stays in your inbox. Moved mail stays recoverable, with 
 
 ## Current release status
 
-**Experimental desktop preview; not yet a ready-to-install public release.** The desktop app and deterministic mail-handling code are available here. A public installer still requires a configured and approved Google OAuth app, Mac signing/notarization, and complete real Gmail acceptance testing. A private dogfooding account has connected successfully. Message disposition and classification tests still use simulated Gmail responses; they do not establish real-world classification accuracy.
+**Source release candidate 0.4.0; desktop distribution is still a preview.** Developers can self-host with their own Google OAuth registration. A public Mac installer still requires Google approval, Apple signing/notarization, and the full acceptance checklist. Authorized real mailboxes have connected and a real label move has been verified; this does not establish classification accuracy or complete end-user onboarding acceptance.
 
 The intended user setup is:
 
@@ -26,19 +26,21 @@ Spammish itself must keep running on an awake, online Mac. Closing its window le
 
 ## What it does out of the box
 
-- Classifies locally using deterministic subject/body rules and corroborating sales signals. A generic “Re: quick question” subject is insufficient.
+- Classifies locally with weighted evidence: language, relationship history, commercial intent, follow-up sequences, headers and locally inspected URL patterns. A generic “Re: quick question” subject is insufficient. Broader unsolicited promotions and obvious spam can qualify too. See [how detection works](docs/detection.md).
 - Protects messages with important account, payment, security, delivery, and other legitimate-message signals. Incomplete or uncertain messages stay in Inbox.
 - Supports multiple Gmail accounts in the desktop app, with isolated credentials, cursors, The Abyss labels, and processing state. One revoked or slow connection does not stop the others.
 - Creates the recoverable Gmail label **The Abyss** if needed. A match gains that label and loses only the Inbox label.
 - Preserves read/unread state. Gmail content is fetched for local inspection; this does not mark it read.
-- On connection, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. This parser update schedules one fresh Inbox pass to revisit messages previously skipped because of HTML size. Existing paused accounts remain paused on upgrade; reconnect or click Turn on to resume them.
+- On connection, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. This scoring update schedules one fresh Inbox pass using the new policy. Existing paused accounts remain paused on upgrade; reconnect or click Turn on to resume them.
+- Shows one lifetime total: confirmed emails sent to The Abyss. It survives restarts and disconnects. Older desktop moves are not guessed or backfilled.
+- Offers recent move explanations and **Rescue** under Review filtering. In Gmail, moving missed unwanted mail to The Abyss supplies narrow sender rejection evidence; restoring it to Inbox supplies protection. No domain-wide block is learned from one correction.
 - Runs in the background while the Mac is awake and online. Pause stops processing; disconnect removes the stored credential and attempts Google revocation. Quit stops processing until the app runs again.
 
 Gmail delivers messages before Spammish can act. The app checks approximately every 20 seconds, so mail or notifications may appear first. It cannot guarantee that every cold email will disappear, or disappear before you see it. Conservative rules intentionally let ambiguous messages through.
 
 ## Local, with no AI bill
 
-The same input receives the same rule-based classification. No AI API calls, maintainer-funded service, telemetry, or paid subscription are required. Optional model integrations are not included in this release.
+The same message and relationship/feedback evidence receive the same rule-based classification. Mailbox history and your corrections can change that evidence. No AI API calls, maintainer-funded service, telemetry, or paid subscription are required. The OSS default has no model integration. Fork authors can build their own; maintainers do not fund their usage. OSS is free forever under MIT, including the complete core filtering and correction engine.
 
 The desktop app stores its Gmail credential using the operating system's secure storage. It does not save email bodies or send them to an AI service. Content is fetched only for classification, with bounded parsing; truncated messages are left alone. Attachments and remote images are not fetched.
 
@@ -59,7 +61,7 @@ npm run check
 npm audit
 ```
 
-Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, initial inbox pagination/checkpoint recovery, OAuth state/PKCE, multiple-account isolation, duplicate connections, and migration from the single-account preview. Real Gmail verification and representative accuracy evaluation remain release requirements. See the [maintainer release guide](docs/releasing.md).
+Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, initial inbox pagination/checkpoint recovery, OAuth state/PKCE, multiple-account isolation, duplicate connections, and migration from the single-account preview. Full real Gmail acceptance and representative accuracy evaluation remain release requirements. Current synthetic tests cover scoring, sender corrections, crash-safe counts, and the loopback server’s security boundaries as well. See the [maintainer release guide](docs/releasing.md).
 
 ## Website and Cloud
 

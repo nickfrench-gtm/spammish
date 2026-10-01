@@ -1,131 +1,86 @@
-import { createServer } from "node:http";
-import { randomBytes, createCipheriv, createDecipheriv } from "node:crypto";
-import { mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { DatabaseSync } from "node:sqlite";
-import { classifyForAbyss } from "./lib/spammish-policy.mjs";
-import { createLabel, extractMessage, fullMessage, history, labels, messageMetadata, moveToAbyss, profile, googleTokenRequest } from "./lib/gmail-agent.mjs";
+import { createServer } from 'node:http';
+import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { DesktopAccounts } from './lib/desktop-accounts.mjs';
+import { HeadlessStore } from './lib/headless-store.mjs';
+import { googleTokenRequest } from './lib/gmail-agent.mjs';
+import { explainDecision } from './lib/explain.mjs';
 
-const port = Number(process.env.PORT || 8080);
-const clientId = process.env.GOOGLE_CLIENT_ID || "";
-const clientSecret = process.env.GOOGLE_CLIENT_SECRET || "";
-const redirectUri = process.env.GOOGLE_REDIRECT_URI || `http://127.0.0.1:${port}/auth/callback`;
-const key = Buffer.from(process.env.SPAMMISH_TOKEN_VAULT_KEY || "", "base64url");
-if (key.length !== 32) throw new Error("SPAMMISH_TOKEN_VAULT_KEY must decode to exactly 32 bytes");
-const dbPath = resolve(process.env.SPAMMISH_DATA_FILE || "./data/spammish.db");
 process.umask(0o077);
-mkdirSync(dirname(dbPath), { recursive: true, mode: 0o700 });
-const db = new DatabaseSync(dbPath);
-db.exec("PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY CHECK(id=1), email TEXT, token TEXT, iv TEXT, tag TEXT, history_id TEXT, label_id TEXT, enabled INTEGER NOT NULL DEFAULT 0, last_error TEXT, moved INTEGER NOT NULL DEFAULT 0);");
-const get = () => db.prepare("SELECT * FROM settings WHERE id=1").get() || null;
-const save = (fields) => {
-  const current = get() || { email: null, token: null, iv: null, tag: null, history_id: null, label_id: null, enabled: 0, last_error: null, moved: 0 };
-  const next = { ...current, ...fields };
-  db.prepare("INSERT INTO settings(id,email,token,iv,tag,history_id,label_id,enabled,last_error,moved) VALUES(1,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email,token=excluded.token,iv=excluded.iv,tag=excluded.tag,history_id=excluded.history_id,label_id=excluded.label_id,enabled=excluded.enabled,last_error=excluded.last_error,moved=excluded.moved")
-    .run(next.email, next.token, next.iv, next.tag, next.history_id, next.label_id, next.enabled, next.last_error, next.moved);
-  return next;
-};
-function encrypt(secret) { const iv = randomBytes(12); const cipher = createCipheriv("aes-256-gcm", key, iv); const token = Buffer.concat([cipher.update(secret, "utf8"), cipher.final()]); return { token: token.toString("base64url"), iv: iv.toString("base64url"), tag: cipher.getAuthTag().toString("base64url") }; }
-function decrypt(row) { const decipher = createDecipheriv("aes-256-gcm", key, Buffer.from(row.iv, "base64url")); decipher.setAuthTag(Buffer.from(row.tag, "base64url")); return Buffer.concat([decipher.update(Buffer.from(row.token, "base64url")), decipher.final()]).toString("utf8"); }
-const states = new Map();
-const cookies = (req) => Object.fromEntries(String(req.headers.cookie || "").split(/;\s*/).filter(Boolean).map((s) => { const i = s.indexOf("="); return [s.slice(0, i), decodeURIComponent(s.slice(i + 1))]; }));
-const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
-const headers = { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff", "referrer-policy": "no-referrer", "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'" };
-const page = (message = "") => {
-  const account = get();
-  const status = account?.email ? `Connected: ${escapeHtml(account.email)} · ${account.enabled ? "On" : "Paused"} · ${account.moved} moved${account.last_error ? ` · ${escapeHtml(account.last_error)}` : ""}` : "No Gmail account connected";
-  const action = account?.email ? `<form method="post" action="/toggle"><button>${account.enabled ? "Pause Spammish" : "Enable Spammish"}</button></form><form method="post" action="/disconnect"><button class="secondary">Disconnect Gmail</button></form>` : `<a class="button" href="/auth/connect">Connect Gmail</a>`;
-  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Spammish</title><style>body{margin:0;background:#f7f5ef;color:#25231f;font:16px/1.55 system-ui,sans-serif}.wrap{max-width:690px;margin:12vh auto;padding:28px}h1{font:400 clamp(42px,8vw,68px)/1 Georgia,serif;letter-spacing:-.05em;margin:0 0 20px}p{max-width:55ch;color:#625f58}.card{margin-top:38px;padding:22px;border:1px solid #d8d2c7;background:#fffdf8}button,.button{display:inline-block;padding:11px 15px;margin:10px 10px 0 0;background:#25231f;color:white;border:0;border-radius:4px;text-decoration:none;font:inherit;cursor:pointer}.secondary{background:transparent;color:#25231f;border:1px solid #aaa}.note{font-size:13px;color:#625f58}.status{font-weight:650}.flash{color:#8d3927}</style><main class="wrap"><p>SPAMMISH</p><h1>Never see another B2B cold email.</h1><p>Spammish checks incoming mail with deterministic local rules. High-confidence cold sales and obvious spam move to Gmail’s recoverable <b>The Abyss</b> label. Uncertain mail stays in your inbox.</p><section class="card"><div class="status">${status}</div><div>${action}</div>${message ? `<p class="flash">${escapeHtml(message)}</p>` : ""}</section><p class="note">Spammish does not send, reply, click links, unsubscribe, delete, or mark messages read. It reads message content locally for classification and leaves unread state unchanged. Gmail may show new mail briefly before the next check.</p><p class="note">Moved mail remains available under The Abyss in Gmail. This local-first open-source agent uses no paid AI API.</p></main></html>`;
-};
-function escapeHtml(value) { return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]); }
-function send(res, status, body, extra = {}) { res.writeHead(status, { ...headers, ...extra }); res.end(body); }
-function redirect(res, path, extra = {}) { res.writeHead(303, { location: path, "cache-control": "no-store", ...extra }); res.end(); }
-
-async function accessToken(row) {
-  const token = await googleTokenRequest({ refresh_token: decrypt(row), client_id: clientId, client_secret: clientSecret, grant_type: "refresh_token" });
-  return token.access_token;
+const requestedPort=Number(process.env.PORT||8080);
+if(!Number.isInteger(requestedPort)||requestedPort<0||requestedPort>65535)throw new Error('invalid_port');
+const client={clientId:process.env.GOOGLE_CLIENT_ID||'',clientSecret:process.env.GOOGLE_CLIENT_SECRET||''};
+const key=Buffer.from(process.env.SPAMMISH_TOKEN_VAULT_KEY||'','base64url');
+const store=new HeadlessStore(resolve(process.env.SPAMMISH_DATA_FILE||'./data/spammish.db'),key);
+const agent=new DesktopAccounts({store,client});
+const states=new Map(),sessions=new Map();
+const escape=(v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cookies=req=>Object.fromEntries(String(req.headers.cookie||'').split(/;\s*/).filter(Boolean).map(s=>{const i=s.indexOf('=');return [s.slice(0,i),s.slice(i+1)];}));
+const headers={'content-type':'text/html; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff','referrer-policy':'no-referrer','content-security-policy':"default-src 'none'; img-src 'self'; style-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"};
+const base=()=>`http://127.0.0.1:${server.address().port}`;
+const equal=(a,b)=>typeof a==='string'&&typeof b==='string'&&a.length===b.length&&timingSafeEqual(Buffer.from(a),Buffer.from(b));
+const redirect=(res,path,extra={})=>{res.writeHead(303,{location:path,'cache-control':'no-store',...extra});res.end();};
+function send(res,status,body,extra={}){res.writeHead(status,{...headers,...extra});res.end(body);}
+function fields(csrf,account,message){return `<input type="hidden" name="csrf" value="${escape(csrf)}">${account != null ? `<input type="hidden" name="account" value="${escape(account)}">` : ''}${message?`<input type="hidden" name="message" value="${escape(message)}">`:''}`;}
+const sessionFor=(req)=>{const token=cookies(req).spammish_session;return token&&sessions.get(token)?.expires>Date.now()?sessions.get(token):null;};
+function page(csrf,{notice='',review=[],explanation=null}={}){
+ const state=agent.status();
+ const rows=state.accounts.map(a=>`<section class="account"><div class="account-heading"><div><p class="email">${escape(a.email)}</p><p>${a.enabled?'On':'Paused'}${a.error?' · Needs attention':''}</p></div><form method="post" action="/toggle">${fields(csrf,a.id)}<button class="account-toggle">${a.enabled?'Pause':'Turn on'}</button></form></div><p>${a.error?'The last check failed. Retries preserve the checkpoint.':a.sweeping?'Checking the existing inbox.':'Watching new mail.'}</p><div class="secondary-actions"><a class="text-button" href="https://mail.google.com/mail/u/?authuser=${encodeURIComponent(a.email)}#label/The+Abyss" rel="noreferrer">Open The Abyss</a><form method="post" action="/disconnect">${fields(csrf,a.id)}<button class="text-button">Disconnect</button></form></div></section>`).join('');
+ const reviewRows=review.map(m=>{const e=explainDecision(m.decision);return `<section class="review-item"><p class="review-subject">${escape(m.subject)}</p><p>${escape(m.from)} · ${escape(m.accountEmail)}</p><details><summary>${escape(e.title)}</summary><p>${escape(e.summary)}</p><ul>${e.factors.map(f=>`<li>${f.points>0?'+':''}${f.points} ${escape(f.label)}</li>`).join('')}</ul></details>${m.inAbyss?`<form method="post" action="/rescue">${fields(csrf,m.accountId,m.id)}<button class="text-button">Rescue</button></form>`:'<p>Already outside The Abyss.</p>'}</section>`;}).join('');
+ const current=explanation?`<section><p class="review-subject">${escape(explanation.subject)}</p><p>${escape(explanation.from)}</p><p>${escape(explainDecision(explanation).title)}</p><ul>${explainDecision(explanation).factors.map(f=>`<li>${f.points>0?'+':''}${f.points} ${escape(f.label)}</li>`).join('')}</ul></section>`:'';
+ return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Spammish</title><link rel="stylesheet" href="/style.css"></head><body><main><header><h1><img src="/shield.png" width="42" height="42" alt="">Spammish</h1><p class="status">${state.enabled?'On':'Paused'}</p></header><section class="intro"><h2>Make unwanted email disappear.</h2><p>Deterministic evidence decides what goes to <strong>The Abyss</strong>. Uncertain mail stays.</p><p class="abyss-total">${state.movedCount} emails sent to The Abyss</p></section><section class="connection">${rows}${client.clientId&&client.clientSecret?'<a class="text-button" href="/auth/connect">Connect another Gmail</a>':'<p>Configure your Google web OAuth client to connect Gmail. See the <a href="https://github.com/nickfrench-gtm/spammish/blob/main/docs/development.md" rel="noreferrer">setup guide</a>.</p>'}${notice?`<p class="notice">${escape(notice)}</p>`:''}</section><footer><p>No AI API. Keep this process running to protect your inbox.</p><details><summary>Review filtering</summary><p>In Gmail, Move to → The Abyss records a rejection. Moving a message back to Inbox records a rescue while Spammish runs. Corrections protect or reject the exact sender, not an entire domain.</p><p>The counter records confirmed moves since this update. Older desktop moves are not guessed.</p><a class="text-button" href="/review">Show recent moves and reasons</a>${reviewRows||'<p>No recorded moves loaded.</p>'}</details><details><summary>Review a specific message (advanced)</summary><p>Use the Gmail API message ID. Gmail’s browser thread URL is not the same ID.</p><form method="post" action="/explain">${fields(csrf,null)}<label>Gmail account<select name="account">${state.accounts.map(a=>`<option value="${escape(a.id)}">${escape(a.email)}</option>`).join('')}</select></label><label>Message ID<input name="message" required maxlength="128" pattern="[A-Za-z0-9_-]+"></label><button class="text-button">Explain</button><button class="text-button" formaction="/abyss">Abyss</button><button class="text-button" formaction="/rescue">Rescue</button></form>${current}</details></footer></main></body></html>`;
 }
-let busy = false;
-async function sync() {
-  let row = get(); if (!row?.enabled || busy) return; busy = true;
-  try {
-    const token = await accessToken(row);
-    let cursor = row.history_id;
-    let nextCursor = cursor;
-    let pages = 0;
-    const ids = new Set();
-    let pageToken;
-    while (cursor && pages++ < 10) {
-      const result = await history(token, cursor, pageToken);
-      nextCursor = result.historyId || nextCursor;
-      for (const entry of result.history || []) for (const added of entry.messagesAdded || []) {
-        const item = added.message;
-        if (item.id) ids.add(item.id);
-      }
-      pageToken = result.nextPageToken;
-      if (!pageToken) break;
-    }
-    if (pageToken) throw new Error("gmail_history_backlog_exceeded");
-    for (const id of ids) {
-      const metadata = await messageMetadata(token, id);
-      if (!(metadata.labelIds || []).includes("INBOX")) continue;
-      const msg = extractMessage(await fullMessage(token, id));
-      if (!msg.inInbox) continue;
-      const result = classifyForAbyss(msg);
-      if (result.divert) {
-        await moveToAbyss(token, id, row.label_id);
-        row = save({ moved: row.moved + 1 });
-      }
-    }
-    if (nextCursor) save({ history_id: nextCursor, last_error: null });
-  } catch (error) {
-    if (/gmail_api_404/.test(error.message)) {
-      try { const token = await accessToken(row); const current = await profile(token); save({ history_id: current.historyId, last_error: "Gmail history cursor refreshed; older mail was left untouched." }); }
-      catch (nested) { save({ last_error: nested.message }); }
-    } else save({ last_error: error.message });
-  } finally { busy = false; }
-}
-
-const server = createServer(async (req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host || "127.0.0.1"}`);
-  if (req.method === "GET" && url.pathname === "/") { send(res, 200, page(url.searchParams.get("message") || "")); return; }
-  if (req.method === "GET" && url.pathname === "/auth/connect") {
-    if (!clientId || !clientSecret) { redirect(res, "/?message=Set+Google+OAuth+credentials+in+.env"); return; }
-    const state = randomBytes(24).toString("base64url"); states.set(state, Date.now() + 600000);
-    const params = new URLSearchParams({ client_id: clientId, redirect_uri: redirectUri, response_type: "code", scope: "https://www.googleapis.com/auth/gmail.modify", access_type: "offline", prompt: "consent", state });
-    res.writeHead(302, { location: `https://accounts.google.com/o/oauth2/v2/auth?${params}`, "set-cookie": `spammish_oauth=${state}; HttpOnly; SameSite=Lax; Path=/; Max-Age=600${secure}` }); res.end(); return;
+async function body(req){let value='';for await(const part of req){value+=part.toString('utf8');if(Buffer.byteLength(value)>8192)throw new Error('request_too_large');}return new URLSearchParams(value);}
+const server=createServer(async(req,res)=>{
+ try{
+  if(![`127.0.0.1:${server.address().port}`,`localhost:${server.address().port}`].includes(req.headers.host)){send(res,403,'Invalid host');return;}
+  const url=new URL(req.url,base());
+  const staticFiles={'/style.css':['desktop/ui/style.css','text/css'],'/shield.png':['desktop/ui/shield.png','image/png']};
+  if(req.method==='GET'&&staticFiles[url.pathname]){const [path,type]=staticFiles[url.pathname];send(res,200,readFileSync(new URL(path,import.meta.url)),{'content-type':type});return;}
+  for(const [token,state] of states)if(state.expires<Date.now())states.delete(token);
+  for(const [token,session] of sessions)if(session.expires<Date.now())sessions.delete(token);
+  let session=sessionFor(req);
+  if(!session){if(req.method!=='GET'){send(res,403,'Session required');return;}if(sessions.size>=128){send(res,429,'Too many local sessions');return;}const token=randomBytes(32).toString('hex');session={csrf:randomBytes(32).toString('hex'),expires:Date.now()+12*60*60*1000};sessions.set(token,session);res.setHeader('set-cookie',`spammish_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=43200`);}
+  if(req.method==='GET'&&url.pathname==='/'){send(res,200,page(session.csrf));return;}
+  if(req.method==='GET'&&url.pathname==='/review'){
+   const review=[];for(const account of agent.status().accounts)for(const row of await agent.get(account.id).recentMoves())review.push({...row,accountId:account.id,accountEmail:account.email});
+   send(res,200,page(session.csrf,{review:review.sort((a,b)=>b.time-a.time).slice(0,10)}));return;
   }
-  if (req.method === "GET" && url.pathname === "/auth/callback") {
-    const state = url.searchParams.get("state"); const cookieState = cookies(req).spammish_oauth;
-    const stateExpires = state ? states.get(state) : null;
-    if (!state || state !== cookieState || !stateExpires || stateExpires < Date.now()) { send(res, 400, page("OAuth state check failed.")); return; }
-    states.delete(state);
-    try {
-      const token = await googleTokenRequest({ code: url.searchParams.get("code"), client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri, grant_type: "authorization_code" });
-      if (!token.refresh_token) throw new Error("Google did not return a refresh token. Revoke access and reconnect with consent.");
-      const account = await profile(token.access_token);
-      const known = await labels(token.access_token);
-      const abyss = known.labels?.find((label) => label.name === "The Abyss") || await createLabel(token.access_token);
-      const encrypted = encrypt(token.refresh_token);
-      save({ email: account.emailAddress, ...encrypted, history_id: account.historyId, label_id: abyss.id, enabled: 0, last_error: null, moved: 0 });
-      redirect(res, "/", { "set-cookie": `spammish_oauth=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secure}` });
-    } catch (error) { send(res, 400, page(error.message)); }
-    return;
+  if(req.method==='GET'&&url.pathname==='/auth/connect'){
+   if(!client.clientId||!client.clientSecret){send(res,400,page(session.csrf,{notice:'Configure Google OAuth before connecting.'}));return;}
+   if(states.size>=32){send(res,429,page(session.csrf,{notice:'Too many pending connections.'}));return;}
+   const state=randomBytes(24).toString('base64url'),verifier=randomBytes(32).toString('base64url');
+   const redirectUri=process.env.GOOGLE_REDIRECT_URI||`${base()}/auth/callback`;
+   if(![`${base()}/auth/callback`,`http://localhost:${server.address().port}/auth/callback`].includes(redirectUri))throw new Error('loopback_redirect_required');
+   states.set(state,{expires:Date.now()+600000,verifier,redirectUri});
+   const params=new URLSearchParams({client_id:client.clientId,redirect_uri:redirectUri,response_type:'code',scope:'https://www.googleapis.com/auth/gmail.modify',access_type:'offline',prompt:'consent',state,code_challenge:createHash('sha256').update(verifier).digest('base64url'),code_challenge_method:'S256'});
+   res.writeHead(302,{location:`https://accounts.google.com/o/oauth2/v2/auth?${params}`,'set-cookie':`spammish_oauth=${state}; HttpOnly; SameSite=Lax; Path=/; Max-Age=600`});res.end();return;
   }
-  if (req.method === "POST" && (url.pathname === "/toggle" || url.pathname === "/disconnect")) {
-    const origin = req.headers.origin;
-    if (origin && new URL(origin).host !== req.headers.host) { send(res, 403, page("Request origin rejected.")); return; }
-    const row = get();
-    if (url.pathname === "/disconnect") { db.exec("DELETE FROM settings WHERE id=1"); redirect(res, "/"); return; }
-    if (!row?.email) { redirect(res, "/"); return; }
-    if (!row.enabled) {
-      try { const token = await accessToken(row); const current = await profile(token); save({ enabled: 1, history_id: current.historyId, last_error: null }); setTimeout(() => { void sync(); }, 0); }
-      catch (error) { save({ last_error: error.message }); }
-    } else save({ enabled: 0, last_error: null });
-    redirect(res, "/"); return;
+  if(req.method==='GET'&&url.pathname==='/auth/callback'){
+   const state=url.searchParams.get('state'),attempt=states.get(state);
+   if(!attempt||!equal(state,cookies(req).spammish_oauth)){send(res,400,page(session.csrf,{notice:'Connection state check failed. Try again.'}));return;}
+   states.delete(state);
+   if(url.searchParams.get('error')){redirect(res,'/');return;}
+   const tokens=await googleTokenRequest({code:url.searchParams.get('code'),client_id:client.clientId,client_secret:client.clientSecret,redirect_uri:attempt.redirectUri,code_verifier:attempt.verifier,grant_type:'authorization_code'});
+   await agent.connect(tokens);void agent.sync().catch(()=>{});redirect(res,'/',{'set-cookie':'spammish_oauth=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0'});return;
   }
-  send(res, 404, page("Not found."));
+  if(req.method==='POST'){
+   if(req.headers.origin&&![base(),`http://localhost:${server.address().port}`].includes(req.headers.origin)){send(res,403,'Origin rejected');return;}
+   const form=await body(req);if(!equal(form.get('csrf'),session.csrf)){send(res,403,'CSRF check failed');return;}
+   const id=form.get('account'),message=form.get('message'),account=agent.get(id);
+   if(url.pathname==='/toggle'){if(account.status().enabled)await agent.pause(id);else{await agent.enable(id);void agent.sync().catch(()=>{});}}
+   else if(url.pathname==='/disconnect')await agent.disconnect(id);
+   else if(url.pathname==='/abyss')await account.abyssMessage(message);
+   else if(url.pathname==='/rescue')await account.rescueMessage(message);
+   else if(url.pathname==='/explain'){send(res,200,page(session.csrf,{explanation:await account.explain(message)}));return;}
+   else{send(res,404,'Not found');return;}
+   redirect(res,'/');return;
+  }
+  send(res,404,'Not found');
+ }catch{send(res,400,page(sessionFor(req)?.csrf||'',{notice:'The action could not finish. Check your configuration or Gmail connection and try again.'}));}
 });
-
-server.listen(port, "127.0.0.1", () => console.log(`Spammish is listening at http://127.0.0.1:${port}`));
-setInterval(() => { void sync(); }, 20_000).unref();
+server.listen(requestedPort,'127.0.0.1',()=>{console.log(`Spammish is listening at ${base()}`);void agent.sync().catch(()=>{});});
+const interval=setInterval(()=>{void agent.sync().catch(()=>{});},20000);interval.unref();
+let closing=false;async function close(){if(closing)return;closing=true;clearInterval(interval);await agent.stop();server.close(()=>{store.close();process.exit(0);});}
+process.on('SIGINT',()=>{void close();});process.on('SIGTERM',()=>{void close();});

@@ -101,9 +101,9 @@ async function start() {
 
   protocol.handle('spammish', (request) => {
     const url = new URL(request.url);
-    const allowed = { '/': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js', '/shield.png': 'shield.png' };
+    const allowed = { '/': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js', '/shield.png': 'shield.png', '/explain.mjs': '../lib/explain.mjs' };
     if (url.host !== 'app' || !allowed[url.pathname]) return new Response('Not found', { status: 404 });
-    return net.fetch(pathToFileURL(join(renderer, allowed[url.pathname])).toString());
+    return net.fetch(pathToFileURL(url.pathname === '/explain.mjs' ? join(directory, '../lib/explain.mjs') : join(renderer, allowed[url.pathname])).toString());
   });
   session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
   session.defaultSession.setPermissionCheckHandler(() => false);
@@ -146,6 +146,16 @@ async function start() {
   handler('cancel', () => invoke(async () => { oauthAttempt?.cancel(); await agent?.cancelConnection(); }));
   handler('enable', (id) => invoke(async () => { await agent.enable(id); void syncBackground(); }));
   handler('pause', (id) => invoke(async () => { await agent.pause(id); }));
+  handler('review', () => invoke(async () => {
+    const moves = [];
+    for (const account of agent.status().accounts) {
+      for (const row of await agent.get(account.id).recentMoves()) moves.push({ ...row, accountId: account.id, accountEmail: account.email });
+    }
+    return { moves: moves.sort((a,b) => b.time - a.time).slice(0,10) };
+  }));
+  handler('explainMessage', (id, messageId) => invoke(async () => ({ decision: await agent.get(id).explain(messageId) })));
+  handler('abyssMessage', (id, messageId) => invoke(async () => { await agent.get(id).abyssMessage(messageId); return { corrected: true }; }));
+  handler('rescueMessage', (id, messageId) => invoke(async () => { await agent.get(id).rescueMessage(messageId); return { rescued: true }; }));
   handler('retry', () => invoke(async () => { await agent.sync(); }));
   handler('disconnect', (id) => invoke(async () => { const result = await agent.disconnect(id); return { revokePending: result.revokePending || false }; }));
   handler('abyss', (id) => invoke(async () => {

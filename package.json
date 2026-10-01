@@ -1,6 +1,6 @@
 {
   "name": "spammish",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "A deterministic, local-first Gmail agent that moves confirmed cold sales and obvious spam to The Abyss.",
   "license": "MIT",
   "type": "module",
@@ -13,7 +13,8 @@
     "check": "node scripts/check-source.mjs",
     "desktop": "electron .",
     "package:preview": "node scripts/package-desktop.mjs --preview",
-    "package:desktop": "node scripts/package-desktop.mjs --universal"
+    "package:desktop": "node scripts/package-desktop.mjs --universal",
+    "configure": "node scripts/configure-local.mjs"
   },
   "devDependencies": {
     "electron": "44.5.1",

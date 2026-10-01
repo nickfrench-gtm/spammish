@@ -27,14 +27,22 @@ This produces an unsigned Mac preview in `dist/`. It is not a public production 
 
 ## Advanced local server
 
-The original loopback server remains available for developers:
+The loopback server uses the **same multi-account engine** as the desktop app. It is suitable for an awake local machine with a running process; it is not a hosted service.
+
+1. Install Node 22.13+ (Node 24 recommended) and run `npm ci`.
+2. In your Google Cloud project enable Gmail API, configure the consent screen and test users, and create a **Web application** OAuth client. Register `http://127.0.0.1:8080/auth/callback` as its redirect URI. Download its JSON.
+3. Configure and run:
 
 ```sh
-cp .env.example .env
+npm run configure -- --web-client /absolute/path/to/downloaded-client.json
 npm start
 ```
 
-This legacy developer mode remains single-account per server instance; use the desktop app for multiple Gmail accounts. It uses a web OAuth client, the loopback redirect documented in `.env.example`, and a generated token-vault key. Protect `.env` and `data/`. Remote hosting is outside this release.
+Open **http://127.0.0.1:8080**, choose Connect another Gmail, and approve your own account. Cleanup starts immediately; Pause stops it. Add more Gmail accounts from the same page. Review filtering shows recent explanations and Rescue. In Gmail use Move to → The Abyss for missed mail; move mail back to Inbox for a correction. These external changes are observed while processing runs or on resume while Gmail history remains available.
+
+`configure` creates a private `.env` and vault key. It never overwrites an existing `.env`. Running it without a client creates a configuration template; add your web-client values before connecting. Protect `.env` and `data/`; the vault key encrypts all saved server state. Losing it prevents access to saved accounts. The server listens only on loopback, validates Host and protects actions against cross-site requests. Keep the process running to filter mail; closing the browser is fine, stopping the process stops filtering.
+
+Google Testing status can limit users and cause authorization to expire. Your project must permit your test account. This self-host path requires your own Google registration; a stranger cannot use the maintainer's private development client automatically. No AI key is needed.
 
 ## Classifier changes
 
