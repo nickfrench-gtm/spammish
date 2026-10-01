@@ -1,6 +1,6 @@
 {
   "name": "spammish",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A deterministic, local-first Gmail agent that moves confirmed cold sales and obvious spam to The Abyss.",
   "license": "MIT",
   "type": "module",

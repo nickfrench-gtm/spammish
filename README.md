@@ -31,7 +31,7 @@ Spammish itself must keep running on an awake, online Mac. Closing its window le
 - Supports multiple Gmail accounts in the desktop app, with isolated credentials, cursors, The Abyss labels, and processing state. One revoked or slow connection does not stop the others.
 - Creates the recoverable Gmail label **The Abyss** if needed. A match gains that label and loses only the Inbox label.
 - Preserves read/unread state. Gmail content is fetched for local inspection; this does not mark it read.
-- On connection, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. Existing paused accounts remain paused on upgrade; reconnect or click Turn on to resume them.
+- On connection, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. This parser update schedules one fresh Inbox pass to revisit messages previously skipped because of HTML size. Existing paused accounts remain paused on upgrade; reconnect or click Turn on to resume them.
 - Runs in the background while the Mac is awake and online. Pause stops processing; disconnect removes the stored credential and attempts Google revocation. Quit stops processing until the app runs again.
 
 Gmail delivers messages before Spammish can act. The app checks approximately every 20 seconds, so mail or notifications may appear first. It cannot guarantee that every cold email will disappear, or disappear before you see it. Conservative rules intentionally let ambiguous messages through.
