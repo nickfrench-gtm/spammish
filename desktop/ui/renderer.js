@@ -1,50 +1,99 @@
 const byId = (id) => document.getElementById(id);
-const ui = Object.fromEntries(['status', 'email', 'instruction', 'primary', 'cancel', 'notice', 'secondary', 'abyss', 'disconnect', 'background'].map((id) => [id, byId(id)]));
+const ui = Object.fromEntries(['status', 'accounts', 'instruction', 'connect', 'cancel', 'notice', 'background'].map((id) => [id, byId(id)]));
 let state;
-let busy = false;
+let connectingBusy = false;
+const busyAccounts = new Set();
+const blocked = (name, id) => Boolean(state.error) || busyAccounts.has(id) || ((state.connecting || connectingBusy) && name !== 'pause');
 let notice = '';
 const errors = {
   oauth_cancelled: 'Connection cancelled. You can try again whenever you’re ready.',
-  oauth_timeout: 'Google sign-in timed out. Click Connect Gmail to try again.',
+  oauth_timeout: 'Google sign-in timed out. Connect Gmail to try again.',
   operation_cancelled: 'The operation was cancelled.',
   desktop_client_required: 'Gmail connection isn’t available in this preview.',
   secure_storage_unavailable: 'Secure storage is unavailable. Unlock your Mac and reopen Spammish.',
   refresh_token_missing: 'Google could not keep this connection. Reconnect Gmail and approve access.',
-  reconnect_required: 'Google access has expired or been revoked. Reconnect Gmail to continue.',
-  history_expired: 'Spammish was offline too long. Existing mail was left untouched. Turn it on to watch new mail.',
-  connection_interrupted: 'Gmail is temporarily unreachable. Spammish will retry while it’s on.',
+  reconnect_required: 'Google access has expired or been revoked. Reconnect this Gmail to continue.',
+  history_expired: 'Spammish was offline too long. Existing mail was left untouched. Turn this account on to watch new mail.',
+  connection_interrupted: 'Gmail is temporarily unreachable. Spammish will retry while this account is on.',
+  wrong_gmail_account: 'Choose the same Gmail account when reconnecting. Use Add Gmail account for a different address.',
+  account_not_found: 'This Gmail connection is no longer available. Reopen Spammish to refresh.',
 };
+function element(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text) node.textContent = text;
+  return node;
+}
+function control(label, name, id, className = 'text-button') {
+  const button = element('button', className, label);
+  button.type = 'button';
+  button.dataset.operation = name;
+  button.disabled = blocked(name, id);
+  button.addEventListener('click', () => { void action(name, id); });
+  return button;
+}
 function render() {
   if (!state) return;
-  const error = state.error;
-  ui.status.textContent = state.connecting ? 'Connecting' : error ? 'Needs attention' : state.enabled ? 'On' : state.connected ? 'Paused' : 'Not connected';
-  ui.status.dataset.on = String(state.enabled && !error);
-  ui.email.hidden = !state.connected;
-  ui.email.textContent = state.email || '';
-  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser.' : !state.canConnect ? 'Gmail connection isn’t available in this preview.' : state.enabled ? state.sweeping ? 'Checking your existing inbox. You can close this window.' : 'Watching new mail. You can close this window.' : state.connected ? 'Turn it on to clear existing cold email and watch new arrivals.' : 'Connect Gmail, then turn Spammish on.';
-  ui.primary.textContent = busy ? state.connecting ? 'Waiting for Google…' : 'Working…' : !state.connected || error === 'reconnect_required' ? 'Connect Gmail' : state.enabled ? 'Pause Spammish' : 'Turn on Spammish';
-  ui.primary.disabled = busy || state.connecting || !state.canConnect || error === 'secure_storage_unavailable';
+  const accounts = state.accounts || [];
+  const enabled = accounts.filter((account) => account.enabled).length;
+  ui.status.textContent = state.connecting ? 'Connecting' : state.error ? 'Needs attention' : enabled ? `${enabled} ${enabled === 1 ? 'account' : 'accounts'} on` : accounts.length ? 'Paused' : 'Not connected';
+  ui.status.dataset.on = String(enabled > 0 && !state.error);
+  // Reconcile keyed rows so background checks do not steal keyboard focus.
+  const present = new Set(accounts.map((account) => account.id));
+  for (const row of [...ui.accounts.children]) if (!present.has(row.dataset.id)) row.remove();
+  for (const account of accounts) {
+    let row = [...ui.accounts.children].find((candidate) => candidate.dataset.id === account.id);
+    if (!row) {
+      row = element('section', 'account'); row.dataset.id = account.id;
+      row.setAttribute('aria-label', `Gmail account ${account.email}`);
+      const heading = element('div', 'account-heading');
+      const identity = element('div', 'identity');
+      identity.append(element('p', 'email', account.email), element('p', 'account-state'));
+      heading.append(identity, control('Turn on', 'enable', account.id, 'account-toggle'));
+      const instruction = element('p', 'account-instruction');
+      const error = element('p', 'notice'); error.setAttribute('role', 'status');
+      const actions = element('div', 'secondary-actions');
+      actions.append(control('Open The Abyss', 'abyss', account.id), control('Disconnect', 'disconnect', account.id));
+      row.append(heading, instruction, error, actions); ui.accounts.append(row);
+    }
+    row.querySelector('.account-state').textContent = account.error ? 'Needs attention' : account.enabled ? 'On' : 'Paused';
+    row.querySelector('.account-state').dataset.on = String(account.enabled && !account.error);
+    row.querySelector('.account-instruction').textContent = account.enabled ? account.sweeping ? 'Checking this inbox. You can close this window.' : 'Watching new mail. You can close this window.' : 'Turn on to clear cold email and watch new arrivals.';
+    const message = row.querySelector('.notice'); message.textContent = errors[account.error] || ''; message.hidden = !message.textContent;
+    const oldToggle = row.querySelector('.account-toggle');
+    const actionName = account.error === 'reconnect_required' ? 'connect' : account.enabled ? 'pause' : 'enable';
+    // Replace only when the action changes; ongoing sync keeps focused controls intact.
+    if (oldToggle.dataset.action !== actionName) {
+      const replacement = control(actionName === 'connect' ? 'Reconnect' : actionName === 'pause' ? 'Pause' : 'Turn on', actionName, account.id, 'account-toggle');
+      replacement.dataset.action = actionName;
+      replacement.setAttribute('aria-label', `${replacement.textContent} for ${account.email}`);
+      const focused = document.activeElement === oldToggle;
+      oldToggle.replaceWith(replacement); if (focused) replacement.focus();
+    }
+    for (const button of row.querySelectorAll('button')) button.disabled = blocked(button.dataset.operation, account.id);
+  }
+  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser. Existing accounts keep their own settings.' : !state.canConnect ? 'Gmail connection isn’t available in this preview.' : accounts.length ? 'Each account works independently. New connections start paused.' : 'Connect Gmail, then turn Spammish on.';
+  ui.connect.textContent = state.connecting ? 'Waiting for Google…' : accounts.length ? 'Add Gmail account' : 'Connect Gmail';
+  ui.connect.classList.toggle('add-account', accounts.length > 0);
+  ui.connect.disabled = connectingBusy || busyAccounts.size > 0 || state.connecting || !state.canConnect || Boolean(state.error);
   ui.cancel.hidden = !state.connecting;
-  ui.notice.textContent = notice || errors[error] || '';
-  ui.notice.hidden = !ui.notice.textContent;
-  ui.secondary.hidden = !state.connected;
-  ui.disconnect.disabled = busy || state.connecting;
-  ui.background.textContent = state.enabled ? 'Runs quietly while your Mac is awake. Starts with your Mac while enabled.' : 'No AI subscription. Classification stays on this Mac.';
+  ui.notice.textContent = notice || errors[state.error] || ''; ui.notice.hidden = !ui.notice.textContent;
+  ui.background.textContent = enabled ? 'Runs quietly while your Mac is awake. Starts with your Mac while any account is on.' : 'No AI API. Classification stays on this Mac.';
 }
-async function action(name) {
-  if (busy) return;
-  busy = true; notice = ''; render();
+async function action(name, id) {
+  if (name === 'connect') { if (connectingBusy || busyAccounts.size) return; connectingBusy = true; }
+  else { if (blocked(name, id)) return; busyAccounts.add(id); }
+  notice = ''; render();
   try {
-    const result = await window.spammish[name]();
+    const result = await window.spammish[name](id);
     if (result.status) state = result.status;
     if (!result.ok) notice = errors[result.error] || 'Something interrupted the connection. Please try again.';
-    if (result.revokePending) notice = 'Local connection removed. Google was unreachable; you can also revoke Spammish in your Google Account.';
+    else if (result.reconnected) notice = 'Gmail connection refreshed. Its existing progress is preserved; turn it on when ready.';
+    if (result.revokePending) notice = 'This local connection was removed. Google was unreachable; you can also revoke Spammish in your Google Account.';
   } catch { notice = 'Spammish couldn’t finish that action. Reopen the app and try again.'; }
-  finally { busy = false; render(); }
+  finally { if (name === 'connect') connectingBusy = false; else busyAccounts.delete(id); render(); }
 }
-ui.primary.addEventListener('click', () => { void action(!state.connected || state.error === 'reconnect_required' ? 'connect' : state.enabled ? 'pause' : 'enable'); });
+ui.connect.addEventListener('click', () => { void action('connect'); });
 ui.cancel.addEventListener('click', () => { void window.spammish.cancel(); });
-ui.disconnect.addEventListener('click', () => { void action('disconnect'); });
-ui.abyss.addEventListener('click', () => { void action('abyss'); });
 window.spammish.onStatus((next) => { state = next; render(); });
 window.spammish.status().then((next) => { state = next; render(); });

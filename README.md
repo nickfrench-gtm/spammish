@@ -12,7 +12,9 @@ The intended user setup is:
 
 1. Install and open Spammish.
 2. Click **Connect Gmail** and approve Google access in your browser.
-3. Click **Turn on**.
+3. Click **Turn on** for that account.
+
+Use **Add Gmail account** to connect another Gmail. Each account has its own Turn on/Pause, Open The Abyss, and Disconnect controls. New accounts start paused. Connecting another Gmail leaves existing accounts’ settings unchanged. Reconnecting the same Gmail refreshes that connection and preserves its cleanup progress.
 
 A completed packaged release will include the runtime and Google app configuration. Users will not need Node, a terminal, an encryption key, or an AI API key. **That installer is not available yet.** Developers can run the current preview using [development instructions](docs/development.md).
 
@@ -20,6 +22,7 @@ A completed packaged release will include the runtime and Google app configurati
 
 - Classifies locally using deterministic subject/body rules and corroborating sales signals. A generic “Re: quick question” subject is insufficient.
 - Protects messages with important account, payment, security, delivery, and other legitimate-message signals. Incomplete or uncertain messages stay in Inbox.
+- Supports multiple Gmail accounts in the desktop app, with isolated credentials, cursors, The Abyss labels, and processing state. One revoked or slow connection does not stop the others.
 - Creates the recoverable Gmail label **The Abyss** if needed. A match gains that label and loses only the Inbox label.
 - Preserves read/unread state. Gmail content is fetched for local inspection; this does not mark it read.
 - On first enable, checks the existing Inbox and moves high-confidence matches to The Abyss, then watches new arrivals. The sweep resumes after interruptions and does not run again on every pause/resume. Existing desktop accounts receive one sweep when upgraded to this version.
@@ -50,7 +53,7 @@ npm run check
 npm audit
 ```
 
-Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, initial inbox pagination/checkpoint recovery, and OAuth state/PKCE. Real Gmail verification and representative accuracy evaluation remain release requirements. See the [maintainer release guide](docs/releasing.md).
+Tests cover deterministic examples, paginated arrivals, safe label changes, unread preservation in simulated Gmail responses, pause/restart, credential storage, expired history, initial inbox pagination/checkpoint recovery, OAuth state/PKCE, multiple-account isolation, duplicate connections, and migration from the single-account preview. Real Gmail verification and representative accuracy evaluation remain release requirements. See the [maintainer release guide](docs/releasing.md).
 
 ## Website and Cloud
 

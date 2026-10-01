@@ -15,6 +15,8 @@ References: [Google installed-app OAuth](https://developers.google.com/identity/
 
 Use a disposable or explicitly authorized test mailbox. Before enabling Spammish, populate the Inbox with synthetic cold email and legitimate lookalikes; also keep control messages outside Inbox. Enable Spammish and verify the initial sweep, checkpoint recovery, and pause/resume. Deliver synthetic cold email, obvious spam, legitimate business replies, security/account notifications, receipts, ambiguous pitches, and read/unread examples from a separately controlled sender. Spammish itself must never send them. Verify only expected high-confidence existing Inbox matches and new arrivals gain The Abyss and lose Inbox, preserve all other labels and read state, and are recoverable in Gmail. Verify pause, reconnect, restart, sleep/wake, offline recovery, and account revocation. Record anonymized results, not message contents or credentials.
 
+Repeat the acceptance checks with two independently authorized Gmail accounts. Use identical message IDs in simulated tests and separate real mailboxes in live tests. Verify distinct credentials, cursors, The Abyss labels and unread state; add a Gmail while the other is enabled, pause/disconnect/revoke one while the other keeps working, reconnect the same Gmail without duplicating it, reject the wrong account during targeted reconnect, cancel an in-flight connection, and restart after migrating a paused single-account preview. Never connect or enable a real second mailbox without its owner’s authorization.
+
 A handful of examples proves integration behavior, not accuracy. Evaluate a representative, consented corpus separately before making accuracy claims.
 
 ## Mac distribution

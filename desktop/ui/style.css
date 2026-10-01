@@ -34,3 +34,17 @@ details p { margin-top: 12px; }
 @media (prefers-reduced-motion: no-preference) { button { transition: background-color 120ms ease-out; } }
 
 h1 { display: flex; align-items: center; gap: 8px; } h1 img { object-fit: contain; }
+#connect, .account-toggle { border: 0; border-radius: 8px; background: var(--accent); color: #05101a; padding: 11px 16px; font-weight: 600; }
+#connect { display: block; width: 100%; margin-top: 16px; }
+#connect.add-account { background: transparent; border: 1px solid var(--line); color: var(--accent); }
+#connect:hover:not(:disabled), .account-toggle:hover:not(:disabled) { background: #81d7ff; color: #05101a; }
+#connect:disabled, .account-toggle:disabled { background: var(--line); color: var(--muted); cursor: default; }
+.account { border-bottom: 1px solid var(--line); padding: 0 0 20px; margin: 0 0 20px; }
+.account-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.identity { min-width: 0; }
+.account .email { margin: 0; font-size: 14px; }
+.account-toggle { flex-shrink: 0; min-width: 88px; }
+.account-state { font-size: 12px; margin: 4px 0 0; }
+.account-state[data-on='true'] { color: var(--success); }
+.account-instruction { font-size: 13px; margin: 12px 0 0; }
+.account .notice { margin-bottom: 0; }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-01T20:48:41.333080+00:00",
+  "generatedAt": "2026-10-01T21:12:41.285406+00:00",
   "title": "Design System: Spammish",
   "extensions": {
     "colorMeta": {
@@ -325,9 +325,9 @@
       "name": "Desktop primary action",
       "kind": "button",
       "refersTo": "button-desktop",
-      "description": "One full-width connect, enable, or pause action.",
+      "description": "Initial full-width Gmail connection action; account controls share its blue fill and spacing.",
       "html": "<button class=\"ds-desktop\">Connect Gmail</button>",
-      "css": ".ds-desktop{display:block;width:100%;border:0;border-radius:8px;background:var(--accent,#36bdff);color:#05101a;padding:12px 18px;font:600 15px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif;cursor:pointer}.ds-desktop:hover:not(:disabled){background:#81d7ff}.ds-desktop:disabled{background:var(--line,#293342);color:var(--muted,#a7b3c5);cursor:default}.ds-desktop:focus-visible{outline:2px solid var(--accent,#36bdff);outline-offset:4px}@media(prefers-reduced-motion:no-preference){.ds-desktop{transition:background-color 120ms ease-out}}"
+      "css": ".ds-desktop{display:block;width:100%;border:0;border-radius:8px;background:var(--accent,#36bdff);color:#05101a;padding:11px 16px;font:600 15px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif;cursor:pointer}.ds-desktop:hover:not(:disabled){background:#81d7ff}.ds-desktop:disabled{background:var(--line,#293342);color:var(--muted,#a7b3c5);cursor:default}.ds-desktop:focus-visible{outline:2px solid var(--accent,#36bdff);outline-offset:4px}@media(prefers-reduced-motion:no-preference){.ds-desktop{transition:background-color 120ms ease-out}}"
     },
     {
       "name": "Email field",
@@ -347,9 +347,24 @@
     {
       "name": "Desktop status",
       "kind": "custom",
-      "description": "Text and dot make enabled status explicit.",
-      "html": "<p class=\"ds-status\" data-on=\"true\">On</p>",
+      "description": "Aggregate enabled account count with a matching status dot.",
+      "html": "<p class=\"ds-status\" data-on=\"true\">1 account on</p>",
       "css": ".ds-status{margin:0;color:var(--muted,#a7b3c5);font:12px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif}.ds-status::before{content:\"\";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px;vertical-align:1px}.ds-status[data-on=\"true\"]{color:var(--success,#6ed6a5)}"
+    },
+    {
+      "name": "Add Gmail account",
+      "kind": "button",
+      "refersTo": "button-add-account",
+      "description": "Global outline connection action after an account is connected.",
+      "html": "<button class=\"ds-add\">Add Gmail account</button>",
+      "css": ".ds-account,.ds-add{font:15px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif}.ds-toggle,.ds-add{border:0;border-radius:8px;background:var(--accent,#36bdff);color:#05101a;padding:11px 16px;font:600 15px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif;cursor:pointer}.ds-toggle:hover:not(:disabled),.ds-add:hover:not(:disabled){background:#81d7ff;color:#05101a}.ds-toggle:disabled,.ds-add:disabled{background:var(--line,#293342);color:var(--muted,#a7b3c5);cursor:default}.ds-toggle:focus-visible,.ds-add:focus-visible,.ds-text:focus-visible{outline:2px solid var(--accent,#36bdff);outline-offset:4px}@media(prefers-reduced-motion:no-preference){.ds-toggle,.ds-add,.ds-text{transition:background-color 120ms ease-out}}.ds-add{display:block;width:100%;margin-top:16px;background:transparent;border:1px solid var(--line,#293342);color:var(--accent,#36bdff)}"
+    },
+    {
+      "name": "Gmail account row",
+      "kind": "custom",
+      "description": "Keyed flat row with identity, state, account action, and secondary controls. Pause stays available during Google sign-in; conflicting controls are disabled.",
+      "html": "<section class=\"ds-account\" aria-label=\"Gmail account you@company.com\"><div class=\"ds-heading\"><div class=\"ds-identity\"><p class=\"ds-email\">you@company.com</p><p class=\"ds-state\" data-on=\"true\">On</p></div><button class=\"ds-toggle\" aria-label=\"Pause for you@company.com\">Pause</button></div><p class=\"ds-instruction\">Watching new mail. You can close this window.</p><div class=\"ds-actions\"><button class=\"ds-text\">Open The Abyss</button><button class=\"ds-text\">Disconnect</button></div></section>",
+      "css": ".ds-account,.ds-add{font:15px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif}.ds-toggle,.ds-add{border:0;border-radius:8px;background:var(--accent,#36bdff);color:#05101a;padding:11px 16px;font:600 15px/1.5 -apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif;cursor:pointer}.ds-toggle:hover:not(:disabled),.ds-add:hover:not(:disabled){background:#81d7ff;color:#05101a}.ds-toggle:disabled,.ds-add:disabled{background:var(--line,#293342);color:var(--muted,#a7b3c5);cursor:default}.ds-toggle:focus-visible,.ds-add:focus-visible,.ds-text:focus-visible{outline:2px solid var(--accent,#36bdff);outline-offset:4px}@media(prefers-reduced-motion:no-preference){.ds-toggle,.ds-add,.ds-text{transition:background-color 120ms ease-out}}.ds-account{border-bottom:1px solid var(--line,#293342);padding:0 0 20px;margin:0 0 20px}.ds-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.ds-identity{min-width:0}.ds-email{color:var(--ink,#f3f5f8);font-weight:600;overflow-wrap:anywhere;margin:0;font-size:14px}.ds-state{font-size:12px;margin:4px 0 0;color:var(--muted,#a7b3c5)}.ds-state[data-on=\"true\"]{color:var(--success,#6ed6a5)}.ds-toggle{flex-shrink:0;min-width:88px}.ds-instruction{font-size:13px;margin:12px 0 0;color:var(--muted,#a7b3c5)}.ds-actions{display:flex;justify-content:space-between;margin-top:12px}.ds-text{font:inherit;background:transparent;border:0;padding:5px 0;color:var(--muted,#a7b3c5);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.ds-text:hover:not(:disabled){color:var(--ink,#f3f5f8)}.ds-text:disabled{opacity:.6;cursor:default}"
     }
   ],
   "narrative": {

@@ -68,7 +68,12 @@ components:
     backgroundColor: "{colors.accent}"
     textColor: "{colors.action-ink}"
     rounded: "{rounded.action}"
-    padding: "12px 18px"
+    padding: "11px 16px"
+  button-add-account:
+    backgroundColor: "transparent"
+    textColor: "{colors.accent}"
+    rounded: "{rounded.action}"
+    padding: "11px 16px"
   email-field:
     backgroundColor: "{colors.field}"
     textColor: "{colors.foreground}"
@@ -113,7 +118,7 @@ The desktop uses native system sans. Its brand heading is (28px), explanatory he
 
 Website content sits in a centered container with a maximum width (1320px), using the marketing inset token. The hero is a two-column layout with ratio (1.25:1). Repeated content uses three columns for principles and two columns for the available paths. At (800px), horizontal insets reduce to the mobile inset. At (580px), content stacks; the shield becomes a small first-row anchor and actions fill their available width.
 
-The desktop uses one centered column with maximum width (600px) and padding (50px 36px 28px). At (470px), horizontal padding reduces to the mobile inset. Labels, connection instructions, one primary action, secondary text actions, and an optional disclosure retain a compact vertical reading order.
+The desktop uses one centered column with maximum width (600px) and padding (50px 36px 28px). At (470px), horizontal padding reduces to the mobile inset. Account rows retain a compact vertical reading order. Each row places email and state beside its own action, followed by instructions, notices, and secondary text actions. Rows have bottom spacing and separators (20px). The global connection action and optional disclosure follow the account list.
 
 ## Elevation & Depth
 
@@ -129,7 +134,7 @@ Filled actions use gently rounded corners through the action token; the email fi
 
 ### Buttons
 
-Solid and direct. Marketing actions have a minimum height (52px) and weight (650); desktop’s full-width primary action uses weight (600). Primary hover uses the lighter accent. The source action uses pale neutral fill with its own neutral hover. Website disabled actions use the marketing disabled colors and a wait cursor; desktop disabled primary actions use line and muted tokens. Text actions are transparent, underlined, and brighten on hover.
+Solid and direct. Marketing actions have a minimum height (52px) and weight (650); desktop connection and account actions use weight (600), with padding (11px 16px). The initial Connect Gmail action fills the column. With accounts present, Add Gmail account uses a transparent fill, gunmetal border (1px), and blue label. Per-account actions have a minimum width (88px). Primary hover uses the lighter accent. The source action uses pale neutral fill with its own neutral hover. Website disabled actions use the marketing disabled colors and a wait cursor; desktop disabled primary actions use line and muted tokens. Text actions are transparent, underlined, and brighten on hover.
 
 Website interactive controls use a blue focus outline (3px) with offset (5px). Desktop buttons and disclosure summaries use (2px) outlines with offset (4px).
 
@@ -145,9 +150,15 @@ Website navigation is text only (14px), with blue hover and the shared focus out
 
 Website sections and desktop connection content use thin gunmetal rules instead of boxed cards. Preserve the generous website spacing and compact desktop grouping rather than introducing floating panels.
 
+### Gmail account rows
+
+Flat account rows pair the address (14px) with its state (12px) and a blue Turn on, Pause, or Reconnect action. Row headers align identity and action horizontally with a gap (12px); long addresses can wrap. Open The Abyss and Disconnect remain secondary text actions for that account. Account instructions use (13px) text. New connections start paused.
+
+Keep rows keyed to their account identity so status refreshes preserve focused controls. Action labels include the address for assistive technology. During Google sign-in, Pause remains available for enabled accounts; conflicting actions are disabled. Cancel connection is a global text action shown during connection.
+
 ### Status and disclosure
 
-Desktop running status pairs green text with a matching dot. Notices use blue. The expandable “How it works” summary uses muted text and the desktop focus outline. Meaning stays readable in text alongside color.
+Desktop aggregate status pairs text with a dot and counts enabled accounts. Account state is plain text, green when enabled and healthy; attention and paused states remain explicit in words. Notices use blue. The expandable “How it works” summary uses muted text and the desktop focus outline. Meaning stays readable in text alongside color.
 
 ## Do's and Don'ts
 

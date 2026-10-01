@@ -11,6 +11,10 @@ npm run desktop
 
 The desktop preview runs without a Google client, but Connect Gmail is disabled. For a private development connection, create a **Desktop app** OAuth client in your own Google Cloud project with Gmail API enabled. Download its installed-client JSON to `desktop/oauth-client.json` (ignored by Git). A web client is not compatible. Configure your consent screen and permitted test account in Google Cloud. Do not commit credentials or account data.
 
+## Multiple Gmail accounts
+
+The desktop manager in `lib/desktop-accounts.mjs` routes each account to its own existing `DesktopAgent`. `DesktopAccountsStore` writes a versioned `accounts.json` using OS-encrypted credentials, and atomically migrates the legacy `account.json`. Renderer and tray operations pass an account ID; no token is exposed to the renderer. New and refreshed connections start paused.
+
 ## Preview packaging
 
 ```sh
@@ -28,7 +32,7 @@ cp .env.example .env
 npm start
 ```
 
-This separate mode uses a web OAuth client, the loopback redirect documented in `.env.example`, and a generated token-vault key. Protect `.env` and `data/`. Remote hosting is outside this release.
+This legacy developer mode remains single-account per server instance; use the desktop app for multiple Gmail accounts. It uses a web OAuth client, the loopback redirect documented in `.env.example`, and a generated token-vault key. Protect `.env` and `data/`. Remote hosting is outside this release.
 
 ## Classifier changes
 
