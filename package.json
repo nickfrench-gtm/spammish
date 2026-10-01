@@ -1,0 +1,9 @@
+{
+  "name": "spammish",
+  "version": "0.1.0",
+  "description": "A deterministic, local-first Gmail agent that moves confirmed cold sales and obvious spam to The Abyss.",
+  "license": "MIT",
+  "type": "module",
+  "engines": { "node": ">=22.5" },
+  "scripts": { "start": "node server.mjs", "test": "node --test lib/*.test.mjs", "check": "node --check server.mjs && node --check lib/gmail-agent.mjs && node --check lib/spammish-policy.mjs" }
+}
