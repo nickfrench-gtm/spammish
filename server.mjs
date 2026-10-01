@@ -62,8 +62,8 @@ async function sync() {
         const item = added.message;
         if (item.id) ids.add(item.id);
       }
-      if (!result.nextPageToken) break;
       pageToken = result.nextPageToken;
+      if (!pageToken) break;
     }
     if (pageToken) throw new Error("gmail_history_backlog_exceeded");
     for (const id of ids) {

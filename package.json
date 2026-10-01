@@ -5,5 +5,5 @@
   "license": "MIT",
   "type": "module",
   "engines": { "node": ">=22.5" },
-  "scripts": { "start": "node server.mjs", "test": "node --test lib/*.test.mjs", "check": "node --check server.mjs && node --check lib/gmail-agent.mjs && node --check lib/spammish-policy.mjs" }
+  "scripts": { "start": "node --env-file=.env server.mjs", "test": "node --test lib/*.test.mjs", "check": "node --check server.mjs && node --check lib/gmail-agent.mjs && node --check lib/spammish-policy.mjs" }
 }

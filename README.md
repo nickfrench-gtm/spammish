@@ -2,6 +2,8 @@
 
 **Make B2B cold email disappear.** Spammish is an open-source email agent that identifies unsolicited B2B sales email and obvious spam, then moves high-confidence matches out of your inbox into Gmail's recoverable **The Abyss** label.
 
+**Release status: experimental prototype.** Automated rule and label-operation tests pass, but this release has not been verified end to end with a real Gmail account. The tests do not establish classification accuracy on representative real email. Configure and inspect a test mailbox before relying on it.
+
 It has one job: classify and move. It does not reply, click links, unsubscribe, delete messages, summarize mail, or manage your calendar. Uncertain messages stay in the inbox.
 
 Spammish is released under the [MIT License](LICENSE). Out of the box, it uses local deterministic rules, requires no AI API key, and moves only high-confidence matches to **The Abyss**. It never sends or replies to messages. You may modify and redistribute the open-source code; if you run a modified copy or a fork, its behavior and operation are your responsibility. The Spammish maintainers do not control or assume responsibility for third-party modifications or deployments. See the license for the full warranty and liability terms.
