@@ -6,7 +6,7 @@
 
 Your inbox has Spam. **Spammish has The Abyss.**
 
-Spammish watches Gmail and moves mail that earns enough **deterministic, explainable evidence** to **The Abyss**. Cold outreach, unwanted promotions, obvious spam and other qualifying automated mail. Real relationships and important legitimate mail receive strong protection.
+Spammish is a **local-first Gmail filter** that moves mail earning enough **deterministic, explainable evidence** to **The Abyss**, a recoverable Gmail label—not deletion. Cold outreach, unwanted promotions, obvious spam and other qualifying automated mail. Real relationships and important legitimate mail receive strong protection.
 
 Wrong decision? **Rescue it.** The message returns to Inbox and Spammish records a narrow, local correction.
 
