@@ -51,3 +51,5 @@ Rules are in `lib/spammish-policy.mjs`. Add synthetic fixtures for qualifying un
 ## OAuth configuration boundary
 
 BYO OAuth is distribution configuration, not classifier logic. Browser startup maps private environment values to the injected client; desktop startup maps downloaded installed-client JSON to the same client shape. The account engine uses it only for authorization/refresh. Scoring, Gmail label operations, Abyss/Rescue and stored account routing do not depend on who registered the client. A future approved client can use these boundaries without moving mailbox processing into Cloud. Changing client IDs may require human reauthorization because refresh grants belong to their original client; it is not a transparent token migration. No official registration or verification is implemented by this release.
+
+For the canonical builder installation that creates the real macOS app, use [desktop-install.md](desktop-install.md).

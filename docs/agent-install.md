@@ -1,4 +1,4 @@
-# Install with your AI builder
+# Alternative: local browser worker
 
 Give the repository to Codex, Claude Code, Cursor or another capable coding agent:
 
@@ -6,7 +6,9 @@ Give the repository to Codex, Claude Code, Cursor or another capable coding agen
 
 The same steps work manually. An AI builder assists setup; it is not the runtime and can close afterward.
 
-## Primary supported path: local browser worker
+For the canonical **macOS desktop application**, follow [desktop-install.md](desktop-install.md). This page is the alternative for Linux or users who deliberately choose a browser worker. A running Node endpoint alone is not a desktop-app installation.
+
+## Supported browser-worker path
 
 macOS or Linux, Node **22.13+** (24 recommended), internet access and a Gmail account. Windows/local desktop distribution has not been qualified by this path. Keep the Node process running on an awake, online computer. Do not expose the server remotely.
 
@@ -72,7 +74,7 @@ Do not assert successful Gmail authorization until the human completes consent a
 
 Run `npm test`, `npm run check`, `npm audit` for source diagnostics. Do not include raw mailbox content, tokens, `.env` or account stores in issues. See SECURITY.md for private reporting.
 
-## Optional desktop source app
+## Desktop source app
 
 See [development.md](development.md). Use `npm ci`, your own **Desktop app** client in ignored `desktop/oauth-client.json`, `npm run doctor -- --desktop`, then `npm run desktop`. Check actual account/On/error state in the window. Closing the window leaves the menu-bar worker running; Quit stops it. There is no official signed public installer in this release.
 

@@ -10,44 +10,40 @@ Wrong decision? **Rescue it.** The message returns to Inbox and Spammish records
 
 **Free forever. Open source. MIT. No AI API.**
 
-**[Install with your AI builder](#install-with-your-ai-builder)** · [Manual install](#manual-install)
+**[Use the open-source app now](#install-with-your-ai-builder)** · [Want easier setup? Join the waitlist](https://spammish.fly.dev/#cloud)
 
-![Current Spammish local-server setup before Google configuration](docs/images/source-setup-0.4.0.jpg)
-
-*Current source interface with no mailbox connected; no private data.*
+Give the repo to your AI builder. Get the real local app. Connect Gmail.
 
 ## Install with your AI builder
 
-Give [this repository](https://github.com/nickfrench-gtm/spammish) to Codex, Claude Code, Cursor or another capable coding agent:
+Give [this repository](https://github.com/nickfrench-gtm/spammish) to Codex, Cursor or another capable coding agent:
 
-> Install Spammish locally and get it ready to protect my Gmail. Follow AGENTS.md and docs/agent-install.md. Configure and verify everything you can; walk me through only steps requiring my Google authorization. Preserve existing credentials and never print secrets.
+> Clone https://github.com/nickfrench-gtm/spammish, read AGENTS.md, and install the real local Spammish app for my platform. Handle everything you safely can; stop only for Google ownership, authorization or security steps that require me. Verify the intended app is running, preserve existing credentials, and never print secrets.
 
-The repo includes [AGENTS.md](AGENTS.md), a [step-by-step installation contract](docs/agent-install.md), `setup`, `doctor`, and a shared desktop/browser worker. The AI builder helps install it; **it does not need to stay running**.
+The repo includes [AGENTS.md](AGENTS.md), a [step-by-step installation contract](docs/agent-install.md), `setup`, `doctor`, and a macOS desktop app and an alternative browser worker. The AI builder helps install it; **it does not need to stay running**.
 
 **0.4.2 is an agent-native source release with intentional BYO Google OAuth.** Your builder helps configure your client; you complete Google sign-in and consent. Spammish requires no paid Google Workspace subscription. A simpler Spammish-managed authorization flow is planned, with no date or approval promised. Signed/notarized consumer installers are not included.
 
 ## Manual install
 
-Primary path: macOS/Linux local browser worker (fresh installation qualified on macOS; automated CI on Linux), Node **22.13+** (24 recommended).
+Primary path: **macOS desktop app**, Apple Silicon or Intel, Node **22.13+** (24 recommended). This builds the real menu-bar application locally, without a signed consumer installer.
 
 ```sh
 git clone https://github.com/nickfrench-gtm/spammish.git
 cd spammish
-npm ci --ignore-scripts
-npm run setup
+npm ci
 ```
 
-Create your own **Web application** OAuth client with Gmail API enabled and the redirect `http://127.0.0.1:8080/auth/callback`. Configure permitted Google test users as applicable, then:
+Create your own **Desktop app** Google OAuth client with Gmail API enabled. Save its downloaded JSON privately as `desktop/oauth-client.json` (ignored by Git). Then:
 
 ```sh
-npm run setup -- --web-client /absolute/path/to/downloaded-client.json
-npm run doctor
-npm start
+npm run doctor -- --desktop
+SPAMMISH_PREVIEW=1 CSC_IDENTITY_AUTO_DISCOVERY=false node node_modules/electron-builder/cli.js --mac --dir
 ```
 
-Doctor reports **SPAMMISH NOT READY** until setup, startup and consent are complete; that is expected.
+Open the generated `dist/mac-arm64/Spammish.app` (Apple Silicon) or `dist/mac/Spammish.app` (Intel). You can copy it to `~/Applications`. Connect Gmail and complete Google's consent yourself. Desktop doctor checks prerequisites; account health is verified in the actual app. **[Complete desktop install, Google configuration, verification and updates](docs/desktop-install.md).**
 
-Open **http://127.0.0.1:8080**, connect Gmail, and complete Google's consent yourself. From another terminal, `npm run doctor -- --json` verifies setup, runtime, stored connection, recent authorization and enabled worker state. [Full Google configuration and recovery instructions](docs/agent-install.md). [Optional desktop source app](docs/development.md).
+Linux users can use the [local browser worker](docs/agent-install.md), with the same core policy but different startup/lifecycle and a **Web application** OAuth client. Windows desktop installation is not qualified.
 
 ## What it does
 
@@ -76,6 +72,12 @@ Spammish favors precision over recall: some unwanted mail surviving is preferabl
 For builders, the deterministic policy is MIT-licensed source you can inspect and change. Tune the threshold, adjust evidence weights, or change the rules in your own installation. These are **source edits**, not app settings or environment variables. Your inbox. Your Spammish.
 
 [Read the tuning guide](docs/tuning.md) for exact code paths, a worked score, safety boundaries and verification steps. Changing a cutoff will not bypass candidate screening or hard protections.
+
+## Does it need AI?
+
+No. The coding agent installs the software; it can close afterward. Spammish runs its own deterministic worker. No AI key or inference service is needed.
+
+You can add an LLM to **your own fork**, but there is no supported plug-and-play provider integration. External inference can transmit email data to another provider and changes your fork’s privacy, security and costs. [Personal AI augmentation boundaries](docs/tuning.md#optional-ai-in-your-own-fork).
 
 ## The Abyss and Rescue
 
@@ -117,4 +119,4 @@ npm audit
 
 These descriptions apply to the published default source. Third-party modifications are their authors'/operators' responsibility; see the license's warranty and liability terms. Please use synthetic examples in issues, never private mail or credentials.
 
-The [website](https://spammish.fly.dev) links to OSS and a Cloud waitlist. Cloud is not available.
+Prefer easier setup? [Join the existing waitlist](https://spammish.fly.dev/#cloud). It is interest in a future easier experience, not a service available today; no format, price or date is promised.

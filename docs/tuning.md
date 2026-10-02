@@ -118,3 +118,11 @@ Use only consented read-only real evidence and sanitized outcomes to evaluate pe
 For the local browser worker, stop the existing process, update its source, and restart it. For desktop, rebuild your own development artifact using [development.md](development.md); a source edit does not update an already packaged app. Preserve vault keys, credentials and saved account state.
 
 Restarting alone does **not** recheck messages already passed by an ongoing/completed sweep. If your personal policy needs a recheck, change `POLICY_VERSION` to a new value in your fork before restarting. This schedules/restarts a pass, can take time and consume Gmail quota, and preserves paused accounts. Don't change it on every launch. Keep a copy of your original source for rollback; restoring code does not undo Gmail moves. Rescue supplies recoverable correction.
+
+## Optional AI in your own fork
+
+Spammish does not need an LLM. The AI builder installs or edits the application; the application then runs independently. There is no official provider adapter, AI setting or API-key configuration.
+
+MIT lets developers build semantic classification, ambiguous-case review or richer explanations into their **own fork**. That requires implementation and qualification, not simply supplying a key. If an external model receives email bodies, headers or derived evidence, that changes the fork’s privacy/data flow, provider retention, security and costs. Even local models introduce dependencies and may have their own network behavior. Inspect those before making privacy claims.
+
+An agent helping implement a personal extension must first explain the proposed data transmission and cost, obtain authorization for that use, preserve recovery/account isolation and hard protections, and test legitimate counterexamples. Never upload mailbox content merely to discuss a possible extension. The default project remains deterministic; no maintainer subsidizes inference.

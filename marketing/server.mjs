@@ -49,8 +49,8 @@ createServer(async (req, res) => {
    let input; try { input=JSON.parse(body); } catch { return json(res,400,{error:'Please enter a valid email address.'}); }
    if (input.company) return json(res,200,{ok:true});
    const email = String(input.email || '').trim().toLowerCase();
-   if (email.length > 254 || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email) || input.consent !== true) return json(res,400,{error:'Enter your email and agree to receive Cloud launch updates.'});
-   const operation = writes.then(async () => { if (emails.has(email)) return; await appendFile(file, JSON.stringify({email, joinedAt:new Date().toISOString(), consent:'cloud-launch-updates-v1'})+'\n', {mode:0o600, flush:true}); emails.add(email); });
+   if (email.length > 254 || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email) || input.consent !== true) return json(res,400,{error:'Enter your email and agree to receive Spammish availability updates.'});
+   const operation = writes.then(async () => { if (emails.has(email)) return; await appendFile(file, JSON.stringify({email, joinedAt:new Date().toISOString(), consent:'easier-experience-availability-v2'})+'\n', {mode:0o600, flush:true}); emails.add(email); });
    writes = operation.catch(()=>{}); await operation;
    return json(res,200,{ok:true});
   }
