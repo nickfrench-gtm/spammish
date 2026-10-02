@@ -1,6 +1,6 @@
 {
   "name": "spammish",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Make unwanted email disappear with local, deterministic Gmail filtering.",
   "license": "MIT",
   "type": "module",

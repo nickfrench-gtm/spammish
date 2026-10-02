@@ -1,6 +1,6 @@
 # Optional usage milestones — owner review candidate
 
-This candidate is not deployed or released. The current published 0.4.3 app has no telemetry. Approval is required before enabling the collector or publishing the candidate. No new analytics SDK or account service is introduced.
+This 0.4.4 source candidate is not released. The collector deployment is intentionally disabled; deployment qualification is recorded separately. The current published 0.4.3 app has no telemetry. Approval is required before enabling the collector or publishing the candidate. No new analytics SDK or account service is introduced.
 
 ## What we can know
 
@@ -36,7 +36,7 @@ Unpackaged development and Node test runs are suppressed automatically. For **ev
 
 The existing website server can host `/api/milestones`; it stays disabled unless `SPAMMISH_METRICS_ENABLED=yes`. This is a small optional endpoint, not Spammish Cloud. It writes `spammish-milestones.json` beside the private waitlist file on the existing volume, separately from email addresses. There is no public report/export endpoint. Strict schema/size checks, a transient salted-IP rate limiter (60 requests/hour/address), atomic writes, event deduplication, 25,000-receipt cap and startup/hourly retention purge bound operation. A shared IP may undercount. Run only one collector process against a file/volume; scaling it is out of scope.
 
-Raw receipt records expire within 90 days; no permanent aggregates or telemetry backups are created by this implementation. Provider/operator backups could retain copies: exclude the metrics file from backups or enforce the same retention before enabling it. The collector intentionally has no authenticated user account: anonymous submissions can be forged, so treat counts as directional, not certified traction. A reset/new installation can duplicate a person. Exact 7/30-day cohort conversion cannot be inferred simply by dividing all milestone totals; recent starts are not mature cohorts.
+Live receipt records expire after 84 days (with startup/hourly purge). The existing Fly volume has five-day snapshots; the shortened live window leaves room for those copies to expire within the public 90-day limit without weakening waitlist backups. No permanent telemetry aggregates are stored. Keep snapshot retention at five days or less, create no longer-lived manual copies, and recheck this policy before enabling collection. The collector intentionally has no authenticated user account: anonymous submissions can be forged, so treat counts as directional, not certified traction. A reset/new installation can duplicate a person. Exact 7/30-day cohort conversion cannot be inferred simply by dividing all milestone totals; recent starts are not mature cohorts.
 
 On the server (or using a private local copy), run:
 
@@ -50,7 +50,7 @@ Run the `--github` report on an owner-authenticated machine; manually combine th
 
 1. Review the exact candidate commit and privacy/consent language.
 2. Create the owner suppression marker before installing any candidate on the owner's Mac. Keep qualification profiles isolated and suppressed.
-3. Approve the endpoint deployment and app source-release publication explicitly. Existing tags stay immutable; choose the next release version then.
+3. Approve the endpoint deployment and app source-release publication explicitly. Existing tags stay immutable; 0.4.4 is the prepared follow-up version.
 4. Deploy the existing marketing service with collector dependencies and `SPAMMISH_METRICS_ENABLED=yes` on its existing private volume; verify health, schema rejection, deduplication, retention, no access/payload logging, and backup policy. Qualification traffic must use isolated storage, never seed production activation.
 5. Build/qualify the approved app version, commit/version it and publish the follow-up release. Consent defaults remain pending/off. No force-enable or automatic enrollment.
 6. Confirm the owner install shows suppression, then report real opted-in receipts alongside GitHub's separate traffic window.
@@ -59,10 +59,10 @@ Until approval, local tests use only synthetic fixtures and loopback endpoints. 
 
 ## Candidate qualification
 
-- Application suite: 92 passing tests, including consent, persistence/reset, suppression, move/Rescue confirmation, deduplication, elapsed-time return milestones, failed and stalled network requests, and sanitized reporting.
+- Application suite: 93 passing tests, including consent, persistence/reset, suppression, move/Rescue confirmation, deduplication, elapsed-time return milestones, failed and stalled network requests, and sanitized reporting.
 - Website integration: 2 passing tests for disabled/enabled collector, private receipts, schema rejection, existing waitlist and website behavior.
 - Actual loopback HTTP requests captured and inspected: only the four allowlisted payload fields; prohibited extra fields rejected. No production receipts sent.
 - Source syntax checks and dependency audit pass; no credential-pattern findings in candidate files. No new dependencies.
 - Unsigned arm64 Mac app built and launched with an isolated, suppressed profile and no bundled OAuth configuration. Existing owner connections were not used. Actual consent markup/renderer exercised in a local fixture for decline, enable and disable; fixture actions do not emit network telemetry.
-- Docker is unavailable in this environment. Container copy paths/context were inspected; a container build and Fly log/backup/retention verification remain deployment checks after approval.
+- Remote Fly container build and disabled production deployment passed. The deployed image was exercised on Fly using an isolated temporary collector: schema rejection, duplicate suppression, private mode, persistence/restart and 84-day purge passed. Public website/health remain available; the public collector returns 404 while disabled. The production receipt file remains absent and the existing waitlist file is unchanged. See [0.4.4 qualification](acceptance-0.4.4.md).
 - Classifier weights, threshold, protections and Gmail mutation semantics are unchanged. This qualification tests instrumentation against synthetic provider cases; it is not a new real-mail precision study.

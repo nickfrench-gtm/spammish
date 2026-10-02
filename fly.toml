@@ -3,12 +3,14 @@ primary_region = "ord"
 [build]
   dockerfile = "marketing/Dockerfile"
 [env]
+  SPAMMISH_METRICS_ENABLED = "no"
   PORT = "8080"
   WAITLIST_DATA_DIR = "/data/spammish"
   PUBLIC_ORIGIN = "https://spammish.fly.dev"
 [[mounts]]
   source = "spammish_data"
   destination = "/data"
+  snapshot_retention = 5
 [http_service]
   internal_port = 8080
   force_https = true
