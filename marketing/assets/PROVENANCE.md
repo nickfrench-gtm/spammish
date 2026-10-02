@@ -7,3 +7,5 @@ The canonical black-background vortex icon is the owner-supplied square Abyss im
 `social.png` is a deterministic HTML composition using the supplied mail-vortex reference and truthful copy. No private mail or measured performance is shown.
 
 Display font: Manrope variable, google/fonts ofl/manrope, SIL Open Font License; self-hosted with FONT-LICENSE.txt.
+
+`abyss-hero-wide.jpg` is a built-in image-generation edit of the owner-selected mail-vortex reference: all baked text/logos removed, original blue vortex/envelope style retained, dark space preserved for accessible HTML copy. It is rendered as a full-bleed hero background with CSS edge fades, not a framed card.
