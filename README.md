@@ -103,7 +103,7 @@ npm audit
 
 ## Contributing and license
 
-[Contributing](CONTRIBUTING.md) · [MIT License](LICENSE) · [Maintainer release guide](docs/releasing.md).
+[Contributing](CONTRIBUTING.md) · [MIT License](LICENSE) · [Maintainer release guide](docs/releasing.md). Bundled Manrope font retains its [SIL Open Font License](marketing/assets/FONT-LICENSE.txt); [brand provenance](marketing/assets/PROVENANCE.md) is documented separately.
 
 These descriptions apply to the published default source. Third-party modifications are their authors'/operators' responsibility; see the license's warranty and liability terms. Please use synthetic examples in issues, never private mail or credentials.
 

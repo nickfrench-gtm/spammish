@@ -14,3 +14,13 @@ The [27 controlled real-Gmail checks](acceptance-0.4.0.md) are reused for the un
 BYO OAuth is intentional. Installation, reaching human Google configuration/consent, and completing authorization are separate milestones. An authorization-boundary installation result must not be presented as a fresh successful Google grant.
 
 Qualification results and the exact reviewed commit are recorded in the GitHub release. Source release nonblockers remain official OAuth, consumer installers/signing, extension/Cloud, more platforms and numerical accuracy benchmarks. No Phase 2 work is included.
+
+## Fresh installation and checks
+
+Candidate `928be83e7d1569761bbd1561b5fbfbbbb84624a5` was installed from two clean local Git clones, one manual and one by an independent coding agent following repository-local instructions alone. Both ran on macOS with Node 26.9.0; the agent environment was arm64 macOS 26.6.2. No maintainer credentials or existing mailbox configuration were copied.
+
+Both dependency installations, private configuration creation and loopback startup passed. Doctor identified the intended running instance and correctly reported NOT READY with no OAuth client, stored Gmail authorization or active account. The independent agent stopped at human Google configuration/consent without undocumented friction. Both test workers were stopped afterward. The manual clean clone also passed all 67 automated tests, all 30 source syntax checks and npm audit with zero reported vulnerabilities.
+
+The working candidate passed the same suite and a targeted scan of current source and historical Git blobs found no configured credential/private-account/developer-path patterns. This is targeted hygiene evidence, not proof of absence or a security certification. Later changes to this qualification document and README license wording do not change the exercised runtime.
+
+Fresh Google client registration and browser consent completion were not performed in these clean clones. Prior controlled Gmail integration is recorded separately above. Linux CI is a distinct automated qualification; Windows, other coding agents, consumer installers and all supported minimum runtime combinations have not been independently qualified by these fresh installations.
