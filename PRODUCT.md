@@ -1,16 +1,17 @@
-# Spammish
+# Spammish product contract
 
-## Platform
-web marketing and Electron desktop
+## Purpose
 
-## Users and purpose
-People who want unsolicited B2B sales and obvious spam out of Gmail. One job: make B2B cold email disappear into the recoverable The Abyss label. Uncertain mail stays. Preserve unread state. Never send, reply, delete, click, or unsubscribe. Classification is deterministic and local; no paid AI API is required.
+**Make unwanted email disappear.** Spammish uses deterministic, explainable local evidence to move qualifying Gmail messages to the recoverable **The Abyss** label. Cold outreach, unsolicited promotions, obvious spam and other automated mail may qualify. Category alone is not a reason to move a message. Hard relationship, transactional, security and Rescue protections override the Spammish Score. Uncertain or incomplete mail stays in Inbox.
 
-## Release truth
-The MIT open source repository is public. Self-hosting requires the documented Google OAuth setup. Desktop builds are currently unsigned development previews, not approved public installers. Cloud is coming soon; this site collects an email waitlist only. No launch date, pricing, accuracy rate, or hosted functionality is promised.
+Read/unread state and unrelated labels survive. The app implements no send, reply, trash, delete, link clicking or unsubscribe operation. No AI API is used. Rescue restores Inbox and records narrow, account-specific sender correction evidence.
 
-## Confirmed brand and surface
-The user supplied a black/gunmetal shield with an electric blue slash and white Spammish wordmark and requested this branding for the marketing site and app icon/logo. Marketing has exactly two paths: self-hosted repository or Cloud waitlist. Preserve the desktop's simple controls. Multiple Gmail accounts each have independent connection, pause, recovery and disconnect controls; successful connections start cleanup automatically. Preserve existing paused accounts during upgrades; connection or Turn on explicitly starts processing.
+## Distribution
 
-## Stack
-Reuse Node and Fly.io. Marketing is isolated from mailbox processing and credentials; waitlist entries live on the private Fly volume.
+The MIT source is free to use and modify without a Spammish subscription. The primary install path is a coding agent following AGENTS.md and docs/agent-install.md, or a developer following README. A local macOS/Linux browser worker is qualified; the optional Electron desktop shares its engine. BYO OAuth is the intentional 0.4.0 release model. Users configure their own applicable Google OAuth client and personally complete consent. A paid Google Workspace subscription is not required by Spammish. Public signed/notarized installers and maintainer-managed OAuth are not provided.
+
+The worker must stay running, awake and online. Multiple Gmail accounts have isolated state and their own Pause/Disconnect controls. Connection begins a resumable Inbox check; paused accounts remain paused across upgrades. Filtering follows Gmail delivery and cannot guarantee suppression before notifications.
+
+## Public surfaces
+
+README is the source product page. Keep the supplied shield/blue branding, one confirmed-move total and optional recent explanations/Rescue. The separate marketing website links to source and a Cloud waitlist; it does not process mail. Cloud is not available and is not covered by the source's free-use promise. No accuracy rate, perfect filtering, Google endorsement or production certification is claimed.

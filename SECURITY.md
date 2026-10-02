@@ -6,4 +6,4 @@ The desktop renderer is sandboxed and cannot access Node or Gmail credentials. O
 
 Google's Gmail modification grant exceeds the application's narrow operations. Review the code before trusting a build. Only use signed/notarized official releases once they are available; current unsigned previews are development artifacts. Revoke Google access if a credential or computer is compromised.
 
-The advanced loopback server has an encrypted account-state vault with a private local key. Protect its `.env`, database, and vault key. It binds only to loopback, rejects unexpected Host/Origin values, and checks session-bound CSRF tokens. It is not intended for remote public hosting.
+The primary local browser worker has an encrypted account-state vault with a private local key. Protect its `.env`, database, and vault key. It binds only to loopback, rejects unexpected Host/Origin values, and checks session-bound CSRF tokens. It is not intended for remote public hosting.

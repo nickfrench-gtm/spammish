@@ -4,7 +4,7 @@ A standalone Node website. It never loads Gmail credentials or runs mailbox proc
 
 Run `node marketing/server.mjs` and open http://localhost:8080. Set `PUBLIC_ORIGIN` to the exact site origin in production. `WAITLIST_DATA_DIR` defaults to ignored `data/`; production uses the private Fly volume `/data/spammish`. Entries are serialized, deduplicated and persisted in `spammish-waitlist.jsonl`, mode 0600. No public export or admin endpoint exists. Access/export/removal require operator access to the volume. Do not commit entries or backups. No email delivery service is configured.
 
-Deploy from the repo root: `flyctl deploy --config fly.toml`. The marketing application is spammish, using its own spammish_data volume. The old zero-attention address redirects through fly.legacy.toml; its old volume is retained privately. Spammish does not use old Etta data or secrets. Do not restore old mailbox processing accidentally. Back up the volume privately before any future volume removal.
+Deploy from the repo root: `flyctl deploy --config fly.toml`. Keep mailbox credentials and processing out of the marketing service. Back up its private volume before storage changes.
 
 The shield asset was isolated from the user-supplied Spammish brand sheet using image generation. No testimonials, launch dates, pricing or measured accuracy claims are used.
 

@@ -1,6 +1,10 @@
-# Maintainer release guide
+# Source release and optional desktop packaging
 
-Do not publish an unsigned or unconfigured preview as a working public installer.
+Source releases qualify the repository itself. Run tests, source checks, dependency audit, targeted secret/history scans and fresh manual/agent installation to the documented human Google boundary. Review policy claims against code and record sanitized integration outcomes. Keep release notes concise; link evidence rather than pasting internal reports.
+
+Publish the reviewed source commit. Preserve existing published tags; identify any later source revision explicitly in release notes and its source download. Do not upload unsigned previews as official consumer installers. The [0.4.0 acceptance record](acceptance-0.4.0.md) describes actual qualification and its limits.
+
+The remaining sections apply to optional future maintainer-managed desktop distribution. These are not source-release gates.
 
 ## Future maintainer-managed Google app registration
 

@@ -6,9 +6,9 @@ Spammish makes unwanted email disappear using deterministic local evidence and r
 
 For an installation request, read **docs/agent-install.md** first. Follow its primary loopback-server path on macOS or Linux with Node 22.13+ (24 recommended). Do not reverse-engineer setup or use maintainer credentials. The desktop source path is optional, documented in docs/development.md.
 
-Install dependencies, prepare private configuration, run doctor, start the local worker, and verify its `/health` boundary. Stop for human Google sign-in/consent and required Google account security/billing/legal interactions. OAuth client configuration and Gmail authorization are distinct. Do not call a stored connection verified unless doctor reports a recent successful check.
+Install dependencies, prepare private configuration, run doctor, start the local worker, and verify its `/health` boundary. BYO OAuth is intentional for 0.4.0; Spammish requires no paid Google Workspace subscription. Client configuration is injected at startup and must remain separate from classification/corrections. Stop for human Google sign-in/consent and required Google account security/billing/legal interactions. OAuth client configuration and Gmail authorization are distinct. Do not call a stored connection verified unless doctor reports a recent successful check.
 
-Never request a Google password or MFA code, bypass OAuth consent/security warnings, print or commit secrets, upload mailbox contents, weaken controls, send mail, or fabricate successful authorization. `.env`, downloaded OAuth JSON, `data/`, and desktop account stores are private and ignored. Preserve existing vault keys and working connections. Never start a second worker against the same state file.
+Never request a Google password, MFA code or Google session cookie, bypass OAuth consent/security warnings, print or commit secrets, upload mailbox contents, weaken controls, send mail, or fabricate successful authorization. `.env`, downloaded OAuth JSON, `data/`, and desktop account stores are private and ignored. Preserve existing vault keys and working connections. Never start a second worker against the same state file.
 
 ## Changes and verification
 

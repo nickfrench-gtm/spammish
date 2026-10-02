@@ -11,21 +11,23 @@ The same steps work manually. An AI builder assists setup; it is not the runtime
 macOS or Linux, Node **22.13+** (24 recommended), internet access and a Gmail account. Windows/local desktop distribution has not been qualified by this path. Keep the Node process running on an awake, online computer. Do not expose the server remotely.
 
 1. Clone the repo, enter its folder and inspect AGENTS.md. Install with `npm ci --ignore-scripts`. The browser worker needs no Electron download; desktop users should use `npm ci` instead.
-2. Run `npm run setup`. This creates a private `.env` and a random vault key if absent. It never overwrites an existing file. **Do not print `.env`, replace an existing vault key or share OAuth JSON.**
+2. Run `npm run setup`. This creates a private `.env` and a random vault key if absent. It preserves an existing vault key and configured client; it can fill blank Google fields. **Do not print `.env`, replace an existing vault key or share OAuth JSON.**
 3. Run `npm run doctor -- --json`. Missing Google configuration is an expected next step, not a reason to pretend setup is complete.
 
 ## Configure your own Google client (once)
 
-This is developer configuration, **not Gmail authorization**. No maintainer-managed public OAuth service is provided.
+BYO OAuth is the intentional 0.4.0 authentication model. This is developer configuration, **not Gmail authorization**. Spammish does not require a paid Google Workspace subscription. No maintainer-managed public OAuth service is provided. A simpler Spammish-managed flow is planned; no date or Google approval is promised.
+
+A **Cloud project** owns the API/consent configuration; an **OAuth client** identifies your local application. Its downloaded configuration contains the client ID and, for the browser path, client secret. These are not your Google login or the access/refresh tokens later granted after consent. Keep the downloaded JSON private and outside Git.
 
 In your own Google Cloud project:
 
 1. Enable Gmail API.
-2. Configure Google Auth Platform consent/audience with truthful app branding and your own contact. For personal/test use, add the intended Gmail addresses as test users. Google's current verification exceptions/limits govern your project; Testing access may expire. Don't claim it is verified for public distribution.
+2. Configure Google Auth Platform consent/audience with truthful app branding and your own contact. For personal/test use, add the intended Gmail addresses as test users. [Google's verification exceptions](https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification) and testing limits govern your project; Gmail authorizations for an external app in Testing can expire after seven days ([token expiration](https://developers.google.com/identity/protocols/oauth2#expiration)). Don't claim it is verified for public distribution.
 3. Create a **Web application** OAuth client. Register `http://127.0.0.1:8080/auth/callback` as its authorized redirect. Download the client JSON privately. A Desktop client is incompatible with this server path.
 4. Run `npm run setup -- --web-client /absolute/path/to/client.json`. It creates fresh configuration or fills blank Google fields in a template while preserving the existing vault key. It never overwrites an already configured client. If replacing a configured client is explicitly requested, use local file tools to update only the client/redirect/port fields, preserving the vault key. Do not print values or commit them.
 
-An agent may assist browser/API configuration where tools and your permission allow it. The **human** completes Google sign-in, MFA/security challenges, OAuth consent and any account/organization restrictions. Do not request passwords/MFA codes. Do not accept legal agreements, create billing commitments, relax organization policy or broaden permissions to make setup succeed.
+An agent may assist browser/API configuration where tools and your permission allow it. The **human** completes Google sign-in, MFA/security challenges, OAuth consent and any account/organization restrictions. Do not request passwords, MFA codes or Google session cookies. Do not accept legal agreements, create billing commitments, relax organization policy or broaden permissions to make setup succeed.
 
 ## Start, authorize, verify
 
@@ -41,6 +43,8 @@ From another terminal in the same folder:
 ```sh
 npm run doctor -- --json
 ```
+
+Doctor ends with **SPAMMISH READY** or **SPAMMISH NOT READY**. JSON provides `SPAMMISH_READY`; exit 0 means the browser worker is configured, running, has recent verification for every connected account, and has at least one enabled account. Exit 1 is expected before configuration, startup or human consent. It does not certify filtering accuracy. Desktop doctor checks prerequisites only; verify its live state in the app.
 
 Expected milestones:
 

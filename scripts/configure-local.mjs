@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, chmodSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 import { parseEnv } from 'node:util';
 const args=process.argv.slice(2),index=args.indexOf('--web-client');
@@ -13,6 +13,7 @@ if(index!==-1){
 }
 for(const value of [clientId,clientSecret,redirectUri])if(/[\r\n]/.test(value))throw new Error('Invalid Google configuration.');
 if(existsSync('.env')){
+ chmodSync('.env',0o600);
  const original=readFileSync('.env','utf8'),current=parseEnv(original);
  if(!clientId||current.GOOGLE_CLIENT_ID||current.GOOGLE_CLIENT_SECRET){console.log('Existing .env retained. Configured clients are never overwritten by setup.');process.exit(0);}
  // Fill a fresh template while preserving the vault key and all unrelated settings.

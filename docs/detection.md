@@ -16,13 +16,13 @@ No model, AI agent service, Codex session or AI API key runs this pipeline. The 
 | Sequence | Follow-up language plus a prior complete commercial solicitation, no sent message in the thread and no prior outbound to sender |
 | Structure | List-Unsubscribe/Precedence headers; calendar URL; tracking/redirect/recipient parameter patterns inspected locally |
 | Protection | Prior outbound, actual thread participation, rescued sender, known transactional/private-domain relationship, important transactional/security/support/developer notification language, incomplete content and subscription context |
-| Obvious noise | Narrow scam patterns and Etta's exact terminal WBX + three-letter warmup marker |
+| Obvious noise | Narrow scam patterns and the exact terminal WBX + three-letter warmup marker |
 
 There is no Contacts permission, deletion-history inference, external reputation service, DKIM validation or proof of subscription intent. Contacts can be represented by the pure policy interface but the shipped provider does not collect them. Unknown evidence contributes zero. Shared consumer domains such as gmail.com never acquire domain-wide reputation/protection. Gmail Spam labels do not prove a user reported spam.
 
 ## Spammish Score and disposition
 
-`lib/spammish-policy.mjs` is the authoritative weight table. The public label is **Spammish Score**. Score is the evidence sum clamped to 0–100, with a current threshold of **70**. It is a rule score, not a calibrated probability. Positive features must corroborate across at least three independent families and include a CTA or rejection evidence. Narrow obvious-spam/warmup detectors have their own sufficient-evidence path.
+`lib/spammish-policy.mjs` is the authoritative weight table. The public label is **Spammish Score**. Score is the evidence sum clamped to 0–100, with a current threshold of **70**. It is a rule score, not a calibrated probability. Positive features must corroborate across at least three distinct signal families and include a CTA or rejection evidence. Narrow obvious-spam/warmup detectors have their own sufficient-evidence path.
 
 Examples: unknown exact sender +10, unknown private domain +8, no prior outbound +8 (the same lookup never also adds no-reply points), meeting CTA +15, commercial category +15, cold opening +8, commercial headers +5, tracking +4. Compound patterns add +25 for a cold sales sequence, +35 for automated personalized outreach, and +40 for verified unanswered commercial follow-up. These compounds are deliberately inspectable, not independent statistical observations.
 
@@ -46,6 +46,6 @@ Abyss raises future exact-sender rejection evidence; it is not a permanent domai
 
 The single counter counts confirmed app moves, including explicit Abyss, once per retained message receipt. A lost response is reconciled against Gmail labels after restart. Gmail moves performed independently are not counted as app moves. Rescue does not subtract from the lifetime total. Disconnect retains only the account's aggregate contribution. The desktop counter starts at this update; older moves are not inferred. The bounded ledger holds 50,000 receipts; very old messages beyond retention may be counted again if explicitly moved later. Recent explanations retain only the last 50 decision records; older messages can be explained using their **current** evidence, which may differ from historical evidence.
 
-## What was preserved from Etta
+## Conservative tradeoffs
 
-The available Etta source used deterministic category rules and protections, not an LLM. We retained the narrow warmup marker and the principle of protecting consequential legitimate mail. We kept Spammish's safe label operation, account isolation, checkpoint recovery and background lifecycle. General inbox triage, digests, dashboards and proprietary workflow exceptions are absent. This comparison describes the available source checkout, not a measured historical accuracy benchmark.
+The protection vocabulary is deliberately broad: invoice, delivery, security and subscription language can keep unwanted mail in Inbox. It is textual evidence, not proof of legitimacy or subscription intent. Compounds reuse constituent cues as declared heuristic bonuses; they are not independent observations. Novelty, bulk headers and tracking alone cannot divert mail. An ordinary social notification has no special rejection rule. Inspect current evidence or apply a narrow Abyss correction rather than assuming every unwanted category is caught.

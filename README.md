@@ -2,11 +2,17 @@
 
 ## Make unwanted email disappear.
 
+Your inbox has Spam. **Spammish has The Abyss.**
+
 Spammish watches Gmail and moves mail that earns enough **deterministic, explainable evidence** to **The Abyss**. Cold outreach, unwanted promotions, obvious spam and other qualifying automated mail. Real relationships and important legitimate mail receive strong protection.
 
 Wrong decision? **Rescue it.** The message returns to Inbox and Spammish records a narrow, local correction.
 
 **Free forever. Open source. MIT. No AI API.**
+
+![Current Spammish local-server setup before Google configuration](docs/images/source-setup-0.4.0.jpg)
+
+*Current source interface with no mailbox connected; no private data.*
 
 ## Install with your AI builder
 
@@ -16,7 +22,7 @@ Give [this repository](https://github.com/nickfrench-gtm/spammish) to Codex, Cla
 
 The repo includes [AGENTS.md](AGENTS.md), a [step-by-step installation contract](docs/agent-install.md), `setup`, `doctor`, and a shared desktop/browser worker. The AI builder helps install it; **it does not need to stay running**.
 
-**0.4.0 is a source release.** You currently need your own applicable Google OAuth client. An agent can assist configuration; the human completes Google sign-in and consent. There is no public signed/notarized Mac installer or frictionless Spammish-managed OAuth flow yet. Those are future distribution improvements, not source-release requirements.
+**0.4.0 is an agent-native source release with intentional BYO Google OAuth.** Your builder helps configure your client; you complete Google sign-in and consent. Spammish requires no paid Google Workspace subscription. A simpler Spammish-managed authorization flow is planned, with no date or approval promised. Signed/notarized consumer installers are not included.
 
 ## Manual install
 
@@ -37,11 +43,9 @@ npm run doctor
 npm start
 ```
 
+Doctor reports **SPAMMISH NOT READY** until setup, startup and consent are complete; that is expected.
+
 Open **http://127.0.0.1:8080**, connect Gmail, and complete Google's consent yourself. From another terminal, `npm run doctor -- --json` verifies setup, runtime, stored connection, recent authorization and enabled worker state. [Full Google configuration and recovery instructions](docs/agent-install.md). [Optional desktop source app](docs/development.md).
-
-![Current Spammish local-server setup before Google configuration](docs/images/source-setup-0.4.0.jpg)
-
-*Current source interface with no mailbox connected; no private data.*
 
 ## What it does
 
@@ -57,7 +61,7 @@ Message features + mailbox relationship evidence + your corrections → **Spammi
 
 Evidence includes sender/domain familiarity, prior outbound communication, actual thread participation, commercial/promotional language, outreach CTAs, verified unanswered sequences, bulk headers, locally inspected tracking/calendar URLs, Spam-labeled history and explicit corrections.
 
-Current automatic threshold: **70**, with corroboration requirements and hard protections. Existing relationships, important transactional/account messages, Rescue feedback and incomplete content can keep a message in Inbox even with a high score. **Score ≠ probability.** [Inspect the model and limitations](docs/detection.md).
+**Spammish Score is a rule total, never a percentage.** Current automatic threshold: **70**, with corroboration requirements and hard protections. Existing relationships, important transactional/account messages, Rescue feedback and incomplete content can keep a message in Inbox even with a high score. **Score ≠ probability.** [Inspect the model and limitations](docs/detection.md).
 
 This is broader than a B2B-only filter, but it is not a blanket category cleaner. A social-network notification, newsletter or promotion does **not** qualify merely because of its category. Legitimate subscription context is protected. Other messages need sufficient supported evidence; conservative misses are intentional. Spammish does not know your preferences magically.
 
@@ -71,7 +75,7 @@ Gmail has Inbox and Spam. Spammish adds a recoverable destination for mail its o
 
 ## Why Spammish
 
-Local, deterministic, explainable and correctable. No AI bill, maintainer-funded classifier, telemetry, paid gate or subscription. The complete core is MIT and free forever; forks can extend it at their operators' responsibility.
+Local, deterministic, explainable and correctable. No AI bill, maintainer-funded classifier, telemetry, paid gate or subscription. The published MIT source is free to use and modify without a Spammish subscription; forks can extend it at their operators' responsibility.
 
 It started with B2B cold email: “It isn't technically spam. We don't care.” That remains an example of the larger purpose: **make unwanted email disappear**.
 
@@ -101,4 +105,4 @@ npm audit
 
 These descriptions apply to the published default source. Third-party modifications are their authors'/operators' responsibility; see the license's warranty and liability terms. Please use synthetic examples in issues, never private mail or credentials.
 
-The [website](https://spammish.fly.dev) links to OSS and a Cloud waitlist. No Chrome extension or Cloud service is included in this source release.
+The [website](https://spammish.fly.dev) links to OSS and a Cloud waitlist. Cloud is not available.

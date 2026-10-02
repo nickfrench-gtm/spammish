@@ -68,8 +68,12 @@ The first controlled run failed recovery because its fixture router identified a
 
 64 automated tests passed, including the deduplication regression. All 30 source syntax checks passed. A clean Git clone installed dependencies, generated configuration, passed all 64 tests and the dependency audit (zero vulnerabilities), started the loopback worker and reported its actual state through doctor. The targeted scan found no credentials/private-account matches in 70 source files and 190 historical blobs before integrating the owner’s README-only update. Final history is rescanned before publication. The source setup guide explains own Google registration, awake/online runtime requirements and notification-before-filtering limits.
 
-Public signed/notarized Mac binary and maintainer-hosted frictionless OAuth are forthcoming distribution work. They are not shipped by 0.4.0. Phase 2 and Cloud are not implemented.
+BYO OAuth is the intentional 0.4.0 authentication model. Maintainer-managed OAuth and signed/notarized desktop distribution remain future work; no date or approval is promised. Neither is a source-release gate.
 
 ## Installation acceptance
 
 A separate coding agent received only the repository and the install request in a fresh source directory without maintainer configuration. It installed dependencies, generated a private vault configuration, started the loopback service and verified health/doctor. It correctly stopped at the human Google Cloud/OAuth boundary without claiming Gmail authorization. Own Google configuration and consent remain required. Manual fresh-source installation independently passed the same documented boundary. Both paths were verified at source commit 21029e95c0b9b1c571151cc6b275aeac3b15ccff; subsequent integration changes only release documentation and reconciles the owner’s README wording with the current broader product definition. No Gmail authorization was fabricated.
+
+## Public convergence follow-up
+
+The broader public audit aligns the product contract, local-browser privacy description, BYO OAuth model, score terminology and readiness result. It removes an obsolete icon generator that would overwrite the current brand. Classifier/provider/account/Abyss/Rescue code is unchanged from the controlled Gmail acceptance. The follow-up suite has 65 passing tests and 29 syntax-checked sources; dependency audit reports zero vulnerabilities. The reviewed follow-up source commit and final fresh-install results are identified in the release notes without moving the original published tag.

@@ -25,25 +25,29 @@ npm run package:preview
 
 This produces an unsigned Mac preview in `dist/`. It is not a public production installer. It includes the Google client only if the ignored local configuration exists.
 
-## Advanced local server
+## Primary local browser worker
 
 The loopback server uses the **same multi-account engine** as the desktop app. It is suitable for an awake local machine with a running process; it is not a hosted service.
 
-1. Install Node 22.13+ (Node 24 recommended) and run `npm ci`.
+1. Install Node 22.13+ (Node 24 recommended) and run `npm ci --ignore-scripts`.
 2. In your Google Cloud project enable Gmail API, configure the consent screen and test users, and create a **Web application** OAuth client. Register `http://127.0.0.1:8080/auth/callback` as its redirect URI. Download its JSON.
 3. Configure and run:
 
 ```sh
-npm run configure -- --web-client /absolute/path/to/downloaded-client.json
+npm run setup -- --web-client /absolute/path/to/downloaded-client.json
 npm start
 ```
 
 Open **http://127.0.0.1:8080**, choose Connect another Gmail, and approve your own account. Cleanup starts immediately; Pause stops it. Add more Gmail accounts from the same page. Review filtering shows recent explanations and Rescue. In Gmail use Move to → The Abyss for missed mail; move mail back to Inbox for a correction. These external changes are observed while processing runs or on resume while Gmail history remains available.
 
-`configure` creates a private `.env` and vault key. It preserves an existing vault key and configured client; it can fill blank Google fields in an existing template. Running it without a client creates a configuration template; add your web-client values before connecting. Protect `.env` and `data/`; the vault key encrypts all saved server state. Losing it prevents access to saved accounts. The server listens only on loopback, validates Host and protects actions against cross-site requests. Keep the process running to filter mail; closing the browser is fine, stopping the process stops filtering.
+`setup` creates a private `.env` and vault key. It preserves an existing vault key and configured client; it can fill blank Google fields in an existing template. Running it without a client creates a configuration template; add your web-client values before connecting. Protect `.env` and `data/`; the vault key encrypts all saved server state. Losing it prevents access to saved accounts. The server listens only on loopback, validates Host and protects actions against cross-site requests. Keep the process running to filter mail; closing the browser is fine, stopping the process stops filtering.
 
 Google Testing status can limit users and cause authorization to expire. Your project must permit your test account. This self-host path requires your own Google registration; a stranger cannot use the maintainer's private development client automatically. No AI key is needed.
 
 ## Classifier changes
 
-Rules are in `lib/spammish-policy.mjs`. Add synthetic fixtures for both cold email and legitimate lookalikes. A single generic subject phrase must not trigger diversion. Incomplete messages stay in the inbox. Never commit real email.
+Rules are in `lib/spammish-policy.mjs`. Add synthetic fixtures for qualifying unwanted mail and legitimate lookalikes. A single generic subject phrase must not trigger diversion. Incomplete messages stay in the inbox. Never commit real email.
+
+## OAuth configuration boundary
+
+BYO OAuth is distribution configuration, not classifier logic. Browser startup maps private environment values to the injected client; desktop startup maps downloaded installed-client JSON to the same client shape. The account engine uses it only for authorization/refresh. Scoring, Gmail label operations, Abyss/Rescue and stored account routing do not depend on who registered the client. A future approved client can use these boundaries without moving mailbox processing into Cloud. Changing client IDs may require human reauthorization because refresh grants belong to their original client; it is not a transparent token migration. No official registration or verification is implemented by this release.
