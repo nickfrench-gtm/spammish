@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('spammish', Object.freeze({
   setupGuide: () => ipcRenderer.invoke('spammish:setupGuide'),
+  tractionChoice: (choice) => ipcRenderer.invoke('spammish:tractionChoice', choice),
   status: () => ipcRenderer.invoke('spammish:status'),
   connect: (id) => ipcRenderer.invoke('spammish:connect', id),
   cancel: () => ipcRenderer.invoke('spammish:cancel'),

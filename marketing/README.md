@@ -13,3 +13,7 @@ Keep one Fly application Machine/writer with its attached volume. Accepted recor
 New records use `easier-experience-availability-v2`; existing `cloud-launch-updates-v1` records retain their narrower original purpose. Duplicate signup does not rewrite or broaden existing consent. Do not send broader updates to old records without fresh consent. Qualification records at example.com are synthetic, not customers. Removal needs operator-controlled maintenance with writes paused; never race a live writer by rewriting the file.
 
 Run the isolated backend qualification with `node --test marketing/waitlist.test.mjs`. It creates and removes only a temporary test store; it does not access the production volume.
+
+## Optional milestone collector (unreleased candidate)
+
+Disabled unless `SPAMMISH_METRICS_ENABLED=yes`; no production deployment is authorized by adding it. The existing service can receive six strict installation milestones at `/api/milestones`, stored separately from the waitlist. See [privacy, retention, reporting and deployment approval](../docs/traction.md). Never join installation IDs to waitlist email addresses. No public reporting endpoint or analytics dashboard exists.

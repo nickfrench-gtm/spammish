@@ -51,6 +51,7 @@ Verify the process executable path points inside the app you built/installed (a 
 
 ```sh
 mkdir -m 700 /absolute/private/qualification-profile
+touch /absolute/private/qualification-profile/suppress-traction
 /absolute/path/Spammish.app/Contents/MacOS/Spammish --user-data-dir=/absolute/private/qualification-profile
 ```
 
@@ -83,3 +84,7 @@ The app adds **The Abyss** and removes **Inbox** on qualifying messages, preserv
 - Needs attention: follow the actual account error. Offline/quota waits retry; rejected grants require human reconnect. Do not hammer Google or discard cleanup checkpoints.
 
 Source diagnostics: `npm test`, `npm run check`, `npm audit`. Bug reports contain version, OS, sanitized signal names/score/protections and expected/actual disposition, never private email or credentials. See SECURITY.md.
+
+## Optional usage milestones
+
+The unreleased traction candidate adds opt-in desktop milestones. Gmail works without sharing. Owner and packaged qualification profiles must contain `suppress-traction` before launch, or launch with `SPAMMISH_TELEMETRY_SUPPRESS=1`. Unpackaged development/test runs are suppressed automatically. Do not consent or seed production metrics during qualification. See [exact collection and limits](traction.md).

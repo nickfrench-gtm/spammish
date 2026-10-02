@@ -2,9 +2,12 @@ import { createServer } from 'node:http';
 import { readFile, mkdir, appendFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
+import { TractionCollector } from '../lib/traction-collector.mjs';
 const root = new URL('./', import.meta.url);
 const data = process.env.WAITLIST_DATA_DIR || new URL('../data/', root).pathname;
 await mkdir(data, { recursive: true, mode: 0o700 });
+const metrics = new TractionCollector({ file: join(data, 'spammish-milestones.json'), enabled: process.env.SPAMMISH_METRICS_ENABLED === 'yes' });
+const purgeMetrics = setInterval(() => { if (metrics.enabled) void metrics.purge().catch(() => {}); }, 3600_000); purgeMetrics.unref();
 const file = join(data, 'spammish-waitlist.jsonl');
 const emails = new Set();
 try {
@@ -35,6 +38,7 @@ createServer(async (req, res) => {
    if (req.method !== 'GET' && req.method !== 'HEAD') return json(res,409,{error:'Spammish has moved to https://spammish.fly.dev. Open the new site to join the waitlist.'});
    res.writeHead(308,{...headers,location:new URL(url.pathname+url.search,process.env.REDIRECT_ORIGIN).href,'cache-control':'no-store'}); res.end(); return;
   }
+  if (await metrics.handle(req, res)) return;
   if (url.pathname === '/api/waitlist' && req.method === 'POST') {
    if (process.env.WAITLIST_PAUSED === 'yes') return json(res,503,{error:'We’re moving the waitlist. Please try again shortly.'});
    const expected = process.env.PUBLIC_ORIGIN || `http://${req.headers.host}`;

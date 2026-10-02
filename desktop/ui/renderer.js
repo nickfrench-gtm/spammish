@@ -41,6 +41,11 @@ function control(label, name, id, className = 'text-button') {
 }
 function render() {
   if (!state) return;
+  const metrics = state.traction;
+  byId('traction-choice').hidden = !metrics?.available || metrics.suppressed || metrics.choice !== 'pending';
+  byId('traction-state').textContent = metrics?.suppressed ? 'Sharing suppressed for this owner, development or qualification installation.' : !metrics?.available ? 'Usage sharing unavailable. Gmail is unaffected.' : metrics.choice === 'on' ? 'Usage milestone sharing is on.' : 'Usage milestone sharing is off.';
+  byId('traction-toggle').textContent = metrics?.choice === 'on' ? 'Turn sharing off & remove local ID' : 'Share usage milestones';
+  byId('traction-toggle').disabled = !metrics?.available || metrics.suppressed;
   const accounts = state.accounts || [];
   if (accounts.length && !reviewInitialized) { reviewInitialized = true; void loadReview(); }
   const moved = Number.isSafeInteger(state.movedCount) ? state.movedCount : 0;
@@ -160,3 +165,18 @@ byId('rescue-open').addEventListener('click', () => {
   review.scrollIntoView({ block: 'start', behavior: 'auto' });
   reviewLoad.focus(); void loadReview();
 });
+
+async function chooseTraction(choice) {
+  const controls = ['traction-share','traction-decline','traction-toggle'].map(byId);
+  controls.forEach(b => { b.disabled = true; });
+  byId('traction-error').hidden = true;
+  try {
+    const result = await window.spammish.tractionChoice(choice);
+    if (!result.ok) throw new Error('unavailable');
+    state = result.status;
+  } catch { byId('traction-error').hidden = false; byId('traction-error').textContent = 'Could not save your sharing choice. Nothing new will be shared. Gmail is unaffected.'; }
+  finally { controls.forEach(b => { b.disabled = false; }); render(); }
+}
+byId('traction-share').addEventListener('click', () => { void chooseTraction('on'); });
+byId('traction-decline').addEventListener('click', () => { void chooseTraction('off'); });
+byId('traction-toggle').addEventListener('click', () => { void chooseTraction(state.traction?.choice === 'on' ? 'off' : 'on'); });

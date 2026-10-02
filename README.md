@@ -91,7 +91,7 @@ Gmail has Inbox and Spam. Spammish adds a recoverable destination for mail its o
 
 ## Why Spammish
 
-Local, deterministic, explainable and correctable. No AI bill, maintainer-funded classifier, telemetry, paid gate or subscription. The published MIT source is free to use and modify without a Spammish subscription; forks can extend it at their operators' responsibility.
+Local, deterministic, explainable and correctable. No AI bill, maintainer-funded classifier, required telemetry, paid gate or subscription. Desktop usage milestones are optional and off until you opt in; see [exact collection and controls](PRIVACY.md#optional-desktop-usage-milestones). The published MIT source is free to use and modify without a Spammish subscription; forks can extend it at their operators' responsibility.
 
 It started with B2B cold email: “It isn't technically spam. We don't care.” That remains an example of the larger purpose: **make unwanted email disappear**.
 

@@ -3,3 +3,7 @@
 !marketing/**
 marketing/.impeccable/
 marketing/*.test.mjs
+
+!lib/
+!lib/traction-collector.mjs
+!lib/traction-schema.mjs

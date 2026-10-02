@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog, Menu, nativeImage, net, powerMonitor, protocol, safeStorage, session, shell, Tray } from 'electron';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { Traction } from '../lib/traction.mjs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readDesktopClient, importDesktopClient } from '../lib/desktop-client-config.mjs';
@@ -17,6 +18,7 @@ let window;
 let tray;
 let agent;
 let client;
+let traction;
 let oauthAttempt;
 let connecting = false;
 let quitting = false;
@@ -32,7 +34,7 @@ else {
   app.whenReady().then(start).catch(() => { fatalError = 'startup_failed'; if (window) publish(); else app.quit(); });
 }
 
-const status = () => ({ ...(agent?.status() || { connected: false, enabled: false, canConnect: Boolean(client), accounts: [] }), connecting, error: fatalError || null });
+const status = () => ({ ...(agent?.status() || { connected: false, enabled: false, canConnect: Boolean(client), accounts: [] }), connecting, error: fatalError || null, traction: traction?.status() || { choice: 'pending', suppressed: true, available: false } });
 function showWindow() { if (window) { window.show(); window.focus(); } }
 function publish() {
   clearTimeout(sweepTimer);
@@ -91,6 +93,10 @@ function handler(name, action) {
 }
 
 async function start() {
+  const dataDir = app.getPath('userData');
+  const suppressed = !app.isPackaged || process.env.NODE_ENV === 'test' || Boolean(process.env.NODE_TEST_CONTEXT) || process.env.SPAMMISH_TELEMETRY_SUPPRESS === '1' || existsSync(join(dataDir, 'suppress-traction'));
+  traction = new Traction({ file: join(dataDir, 'traction.json'), version: JSON.parse(readFileSync(join(directory, '..', 'package.json'), 'utf8')).version, suppressed });
+  void traction.ready.then(() => { traction.observe('app_started'); publish(); });
   const config = app.isPackaged ? join(process.resourcesPath, 'google-oauth.json') : join(directory, 'oauth-client.json');
   const localConfig = join(app.getPath('userData'), 'google-oauth.json');
   try { if (existsSync(localConfig)) client = readDesktopClient(localConfig); else if (existsSync(config)) client = readDesktopClient(config); }
@@ -98,7 +104,7 @@ async function start() {
   try {
     const store = new DesktopAccountsStore(app.getPath('userData'), safeStorage);
     if (!store.available()) throw new Error('secure_storage_unavailable');
-    agent = new DesktopAccounts({ store, client, onChange: publish });
+    agent = new DesktopAccounts({ store, client, onChange: publish, onMilestone: name => traction.observe(name) });
   } catch { fatalError = 'secure_storage_unavailable'; }
 
   protocol.handle('spammish', (request) => {
@@ -130,6 +136,7 @@ async function start() {
     { role: 'windowMenu' },
   ]));
   handler('status', () => status());
+  handler('tractionChoice', async choice => { const ok = await traction.choose(choice); publish(); return { ok, status: status() }; });
   handler('connect', (id) => invoke(async () => {
     if (id != null) agent?.get(id);
     if (connecting) throw new Error('operation_cancelled');
@@ -189,6 +196,7 @@ app.on('before-quit', (event) => {
   event.preventDefault();
   if (quitStarted) return;
   quitStarted = true;
+  traction?.close();
   clearInterval(interval);
   clearTimeout(sweepTimer);
   oauthAttempt?.cancel();
