@@ -10,6 +10,8 @@ Wrong decision? **Rescue it.** The message returns to Inbox and Spammish records
 
 **Free forever. Open source. MIT. No AI API.**
 
+**[Install with your AI builder](#install-with-your-ai-builder)** · [Manual install](#manual-install)
+
 ![Current Spammish local-server setup before Google configuration](docs/images/source-setup-0.4.0.jpg)
 
 *Current source interface with no mailbox connected; no private data.*
