@@ -13,7 +13,7 @@ export function cleanupInstruction(account) {
 }
 
 export function quotaNotice(account) {
-  if (!isQuotaWait(account)) return '';
+  if (!account.enabled || !isQuotaWait(account)) return '';
   const when = account.retryAt ? new Date(account.retryAt).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}) : null;
   return when ? `Gmail is limiting requests. Next retry after ${when}; progress is saved.`
     : 'Gmail is limiting requests. Spammish will retry; progress is saved.';

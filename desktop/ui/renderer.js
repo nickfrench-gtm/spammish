@@ -64,7 +64,7 @@ function render() {
       actions.append(control('Open The Abyss', 'abyss', account.id), control('Disconnect', 'disconnect', account.id));
       row.append(heading, instruction, error, actions); ui.accounts.append(row);
     }
-    row.querySelector('.account-state').textContent = isQuotaWait(account) ? 'Waiting for Gmail' : account.error ? 'Needs attention' : account.enabled ? 'On' : 'Paused';
+    row.querySelector('.account-state').textContent = !account.enabled ? 'Paused' : isQuotaWait(account) ? 'Waiting for Gmail' : account.error ? 'Needs attention' : account.enabled ? 'On' : 'Paused';
     row.querySelector('.account-state').dataset.on = String(account.enabled && !account.error);
     row.querySelector('.account-instruction').textContent = cleanupInstruction(account);
     const message = row.querySelector('.notice'); message.textContent = isQuotaWait(account)
