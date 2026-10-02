@@ -101,14 +101,14 @@ async function start() {
 
   protocol.handle('spammish', (request) => {
     const url = new URL(request.url);
-    const allowed = { '/': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js', '/progress.mjs': 'progress.mjs', '/shield.png': 'shield.png', '/explain.mjs': '../lib/explain.mjs' };
+    const allowed = { '/': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js', '/progress.mjs': 'progress.mjs', '/abyss.png': 'abyss.png', '/explain.mjs': '../lib/explain.mjs', '/review-presentation.mjs': '../lib/review-presentation.mjs' };
     if (url.host !== 'app' || !allowed[url.pathname]) return new Response('Not found', { status: 404 });
-    return net.fetch(pathToFileURL(url.pathname === '/explain.mjs' ? join(directory, '../lib/explain.mjs') : join(renderer, allowed[url.pathname])).toString());
+    return net.fetch(pathToFileURL(['/explain.mjs', '/review-presentation.mjs'].includes(url.pathname) ? join(directory, '..', 'lib', url.pathname.slice(1)) : join(renderer, allowed[url.pathname])).toString());
   });
   session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
   session.defaultSession.setPermissionCheckHandler(() => false);
   window = new BrowserWindow({
-    width: 540, height: 620, minWidth: 440, minHeight: 550,
+    width: 780, height: 780, minWidth: 440, minHeight: 550,
     title: 'Spammish', backgroundColor: '#080b10', show: false,
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     webPreferences: { preload: join(directory, 'preload.cjs'), sandbox: true, contextIsolation: true, nodeIntegration: false, webSecurity: true },
@@ -149,9 +149,9 @@ async function start() {
   handler('review', () => invoke(async () => {
     const moves = [];
     for (const account of agent.status().accounts) {
-      for (const row of await agent.get(account.id).recentMoves()) moves.push({ ...row, accountId: account.id, accountEmail: account.email });
+      for (const row of await agent.get(account.id).recentActivity()) moves.push({ ...row, accountId: account.id, accountEmail: account.email });
     }
-    return { moves: moves.sort((a,b) => b.time - a.time).slice(0,10) };
+    return { moves: moves.sort((a,b) => b.time - a.time).slice(0,20) };
   }));
   handler('explainMessage', (id, messageId) => invoke(async () => ({ decision: await agent.get(id).explain(messageId) })));
   handler('abyssMessage', (id, messageId) => invoke(async () => { await agent.get(id).abyssMessage(messageId); return { corrected: true }; }));

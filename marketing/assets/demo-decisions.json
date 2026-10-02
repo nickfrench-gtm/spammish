@@ -1,0 +1,194 @@
+[
+  {
+    "id": "demo0",
+    "subject": "Quick question",
+    "from": "Demo outreach <outreach@example.com>",
+    "accountId": "demo-account",
+    "accountEmail": "demo@example.com",
+    "time": 3,
+    "stage": "full",
+    "wasMoved": true,
+    "inAbyss": true,
+    "inInbox": false,
+    "decision": {
+      "divert": true,
+      "destination": "The Abyss",
+      "score": 79,
+      "rawScore": 79,
+      "threshold": 70,
+      "evidence": [
+        {
+          "code": "value_proposition",
+          "family": "commercial",
+          "points": 8
+        },
+        {
+          "code": "commercial_category",
+          "family": "commercial",
+          "points": 15
+        },
+        {
+          "code": "meeting_cta",
+          "family": "cta",
+          "points": 15
+        },
+        {
+          "code": "cold_subject",
+          "family": "subject",
+          "points": 8
+        },
+        {
+          "code": "calendar_link",
+          "family": "structure",
+          "points": 8
+        },
+        {
+          "code": "cold_sales_sequence",
+          "family": "compound",
+          "points": 25
+        }
+      ],
+      "signals": {
+        "obviousSpam": false,
+        "warmup": false,
+        "listUnsubscribe": false,
+        "bulkPrecedence": false,
+        "salesOffer": true,
+        "salesCategory": true,
+        "salesCallToAction": true,
+        "coldOpening": false,
+        "businessPain": false,
+        "socialProof": false,
+        "coldSubjectPhrase": true,
+        "coldBodyPhraseCount": 1,
+        "followup": false,
+        "realThreadMarker": false,
+        "replyLikeSubject": false,
+        "importantGuard": false,
+        "calendarLink": true,
+        "trackingLink": false,
+        "unknownSender": false,
+        "unknownDomain": false,
+        "noPriorOutbound": false,
+        "noPriorReply": false,
+        "senderSpam": false,
+        "senderRejected": false,
+        "domainSpam": false,
+        "sender": "outreach@example.com"
+      },
+      "reason": "corroborated_unwanted_outreach",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "demo1",
+    "subject": "Re: Thursday’s draft",
+    "from": "Demo colleague <colleague@example.com>",
+    "accountId": "demo-account",
+    "accountEmail": "demo@example.com",
+    "time": 2,
+    "stage": "full",
+    "wasMoved": false,
+    "inAbyss": false,
+    "inInbox": true,
+    "decision": {
+      "divert": false,
+      "destination": "Inbox",
+      "score": 0,
+      "rawScore": -120,
+      "threshold": 70,
+      "evidence": [
+        {
+          "code": "prior_outbound",
+          "family": "protection",
+          "points": -60
+        },
+        {
+          "code": "existing_thread",
+          "family": "protection",
+          "points": -60
+        }
+      ],
+      "signals": {
+        "obviousSpam": false,
+        "warmup": false,
+        "listUnsubscribe": false,
+        "bulkPrecedence": false,
+        "salesOffer": false,
+        "salesCategory": false,
+        "salesCallToAction": false,
+        "coldOpening": false,
+        "businessPain": false,
+        "socialProof": false,
+        "coldSubjectPhrase": false,
+        "coldBodyPhraseCount": 0,
+        "followup": false,
+        "realThreadMarker": false,
+        "replyLikeSubject": true,
+        "importantGuard": false,
+        "calendarLink": false,
+        "trackingLink": false,
+        "unknownSender": false,
+        "unknownDomain": false,
+        "noPriorOutbound": false,
+        "noPriorReply": false,
+        "senderSpam": false,
+        "senderRejected": false,
+        "domainSpam": false,
+        "sender": "colleague@example.com"
+      },
+      "reason": "existing_relationship",
+      "confidence": "uncertain"
+    }
+  },
+  {
+    "id": "demo2",
+    "subject": "A question about your project",
+    "from": "Demo contact <contact@example.com>",
+    "accountId": "demo-account",
+    "accountEmail": "demo@example.com",
+    "time": 1,
+    "stage": "screening",
+    "wasMoved": false,
+    "inAbyss": false,
+    "inInbox": true,
+    "decision": {
+      "divert": false,
+      "destination": "Inbox",
+      "score": 0,
+      "rawScore": 0,
+      "threshold": 70,
+      "evidence": [],
+      "signals": {
+        "obviousSpam": false,
+        "warmup": false,
+        "listUnsubscribe": false,
+        "bulkPrecedence": false,
+        "salesOffer": false,
+        "salesCategory": false,
+        "salesCallToAction": false,
+        "coldOpening": false,
+        "businessPain": false,
+        "socialProof": false,
+        "coldSubjectPhrase": false,
+        "coldBodyPhraseCount": 0,
+        "followup": false,
+        "realThreadMarker": false,
+        "replyLikeSubject": false,
+        "importantGuard": false,
+        "calendarLink": false,
+        "trackingLink": false,
+        "unknownSender": false,
+        "unknownDomain": false,
+        "noPriorOutbound": false,
+        "noPriorReply": false,
+        "senderSpam": false,
+        "senderRejected": false,
+        "domainSpam": false,
+        "sender": "contact@example.com"
+      },
+      "reason": "insufficient_confidence",
+      "confidence": "uncertain"
+    }
+  }
+]

@@ -10,8 +10,8 @@
 </head>
 <body>
   <main>
-    <header><h1><img src="/shield.png" width="42" height="42" alt="">Spammish</h1><p class="status" id="status" role="status">Starting…</p></header>
-    <section class="intro"><h2>Make unwanted email disappear.</h2><p>Unwanted outreach and obvious spam go to <strong>The Abyss.</strong> Everything uncertain stays in your inbox.</p><p class="abyss-total" id="moved" aria-live="polite">0 emails sent to The Abyss</p></section>
+    <header><h1><img src="/abyss.png" width="42" height="42" alt="">Spammish</h1><p class="status" id="status" role="status">Starting…</p></header>
+    <section class="intro"><h2>Make unwanted email disappear.</h2><p>Unwanted outreach and obvious spam go to <strong>The Abyss.</strong> Everything uncertain stays in your inbox.</p><p class="abyss-total" id="moved" aria-live="polite">0 emails sent to The Abyss</p><div class="recovery"><span>Nothing deleted.</span><button class="text-button" id="rescue-open" type="button" aria-controls="review">Rescue a mistake</button></div></section>
     <section class="connection" aria-label="Gmail accounts">
       <div id="accounts"></div>
       <p class="instruction" id="instruction">Connecting Gmail starts inbox cleanup automatically.</p>
@@ -21,7 +21,7 @@
     </section>
     <footer>
       <p id="background">No AI subscription. Classification stays on this Mac.</p>
-      <details id="review"><summary>Review filtering</summary><p>Move a missed email to The Abyss in Gmail to reject it. Move a false positive back to Inbox to rescue it. Spammish records these corrections while running.</p><p>The counter starts with this update; earlier moves aren’t guessed.</p><button class="text-button" id="review-load">Show recent moves and reasons</button><p class="notice" id="review-notice" role="status" hidden></p><div id="review-items"></div></details>
+      <section id="review" aria-labelledby="review-title"><div class="review-heading"><h2 id="review-title">Recent decisions</h2><button class="text-button" id="review-load">Refresh</button></div><p>Move a missed email to The Abyss in Gmail to reject it. Move a false positive back to Inbox to rescue it. Spammish records these corrections while running.</p><p class="review-help">Up to 20 recent records across accounts. Scores are rule totals, not probabilities. Screening scores omit relationship searches. Older decisions are not reconstructed.</p><p class="notice" id="review-notice" role="status">Connect Gmail to see recent decisions.</p><div id="review-items"></div></section>
       <details><summary>How it works</summary><p>Connecting Gmail starts a check of its existing inbox, then watches new mail while your Mac is awake and online. Each Gmail account has its own pause control and The Abyss label. Close this window to keep it running in the menu bar; Quit stops processing. It inspects message text locally without changing unread state, then moves only high-confidence matches to Gmail’s recoverable The Abyss label.</p><p>It never sends, replies, deletes, clicks email links, or unsubscribes. Gmail may show a message briefly before the next check.</p></details>
     </footer>
   </main>

@@ -68,7 +68,7 @@ Connection begins a resumable Inbox cleanup and then polls new arrivals. Large i
 - human consent actually completed, or not exercised;
 - live per-account Gmail health actually verified, or not exercised.
 
-The app adds **The Abyss** and removes **Inbox** on qualifying messages, preserving unread/read state and unrelated labels. It implements no send/reply/trash/delete. Google's gmail.modify scope technically permits more than those implemented operations. Rescue returns a recorded message to Inbox and records narrow correction evidence. See README/PRIVACY.md for retention and feedback semantics.
+The app adds **The Abyss** and removes **Inbox** on qualifying messages, preserving unread/read state and unrelated labels. It implements no send/reply/trash/delete. Google's gmail.modify scope technically permits more than those implemented operations. Recent decisions shows up to 20 records with scores, evidence and current disposition. Use Rescue on a row still in The Abyss to return it to Inbox and record narrow correction evidence. Older kept-mail decisions are not backfilled. See README/PRIVACY.md for retention and feedback semantics.
 
 ## Keep running, stop, update and recover
 

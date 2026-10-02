@@ -1,3 +1,5 @@
+<img src="marketing/assets/abyss-mark.png" width="80" height="80" alt="Spammish Abyss vortex">
+
 # Spammish
 
 ## Make unwanted email disappear.
@@ -22,7 +24,7 @@ Give [this repository](https://github.com/nickfrench-gtm/spammish) to Codex, Cur
 
 The repo includes [AGENTS.md](AGENTS.md), a [step-by-step installation contract](docs/agent-install.md), `setup`, `doctor`, and a macOS desktop app and an alternative browser worker. The AI builder helps install it; **it does not need to stay running**.
 
-**0.4.2 is an agent-native source release with intentional BYO Google OAuth.** Your builder helps configure your client; you complete Google sign-in and consent. Spammish requires no paid Google Workspace subscription. A simpler Spammish-managed authorization flow is planned, with no date or approval promised. Signed/notarized consumer installers are not included.
+**This 0.4.3 visual candidate retains the agent-native source model and intentional BYO Google OAuth; the public runtime release is 0.4.2 until this candidate is approved.** Your builder helps configure your client; you complete Google sign-in and consent. Spammish requires no paid Google Workspace subscription. A simpler Spammish-managed authorization flow is planned, with no date or approval promised. Signed/notarized consumer installers are not included.
 
 ## Manual install
 
@@ -50,7 +52,7 @@ Linux users can use the [local browser worker](docs/agent-install.md), with the 
 - Checks the existing Inbox on connection, then polls new arrivals. Cleanup resumes after interruptions.
 - Supports multiple Gmail accounts with isolated credentials, history, corrections and Pause/Disconnect controls.
 - Moves qualifying messages to the recoverable **The Abyss** label, removing only Inbox. Read/unread state and other labels remain unchanged.
-- Shows one lifetime total: confirmed emails sent to The Abyss, with recent reasons available under Review filtering. Older desktop moves are not guessed.
+- Shows one lifetime total: confirmed emails sent to The Abyss, with recent scores, outcomes and reasons visible under Recent decisions. Older desktop moves are not guessed.
 - Implements no sending, replying, trashing, deletion, link clicking, unsubscribing, summaries or general inbox dashboard.
 
 ## How it works
@@ -85,7 +87,7 @@ Gmail has Inbox and Spam. Spammish adds a recoverable destination for mail its o
 
 **Abyss:** move missed unwanted mail to The Abyss in Gmail while Spammish is enabled. This records narrow exact-sender rejection evidence. The core exposes an explicit Abyss method as well.
 
-**Rescue:** use Review filtering → Rescue, or move a recorded message back to Inbox. It retracts that sender's rejection and strongly protects it. A later explicit Abyss can supersede that protection. One correction never blocks or whitelists an entire domain. Own automatic moves do not reinforce themselves as explicit rejection.
+**Rescue:** use Recent decisions → Rescue, or move a recorded message back to Inbox. It retracts that sender's rejection and strongly protects it. A later explicit Abyss can supersede that protection. One correction never blocks or whitelists an entire domain. Own automatic moves do not reinforce themselves as explicit rejection.
 
 ## Why Spammish
 

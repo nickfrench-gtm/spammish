@@ -1,6 +1,6 @@
 ---
 name: Spammish
-description: A dark interface grounded in the supplied gunmetal shield and electric-blue slash.
+description: A restrained local utility with a black-center, electric-blue Abyss vortex.
 colors:
   canvas: "#080b10"
   foreground: "#f3f5f8"
@@ -85,20 +85,13 @@ components:
 
 ## Overview
 
-**Creative North Star: "Spammish shield"**
+**Creative North Star: "The Abyss"**
 
-The supplied Spammish shield defines the identity: black and gunmetal facets, an ascending electric-blue slash, and a bold white wordmark. The interface carries that contrast into a near-black canvas, bright blue actions, and restrained white type. Marketing uses self-hosted Manrope under the CSS family name SpammishDisplay; the desktop uses native system sans.
+The supplied vortex defines the identity: an almost black central void and electric-blue accretion ring. Spammish is the product; The Abyss is its recoverable destination. Use the cleaned circular mark for interface identity and icons; the richer supplied source is preserved as a web derivative. No stars, galaxy backgrounds, HUDs or decorative glowing panels.
 
-The shield supplies the material detail. Interface surfaces stay flat, with thin separators and generous space on the website and compact controls in the desktop app. Existing controls and typography provide the reusable system; the asset is preserved rather than redrawn.
+Marketing retains self-hosted Manrope; desktop keeps native type. Flat near-black surfaces, restrained white/slate copy and separators remain. Blue is for identity/actions; green, amber and red retain semantic meaning. The mark can indicate actual cleanup state only; static fallback and reduced motion are required.
 
-**Key Characteristics:**
-
-- Black canvas and gunmetal identity.
-- Electric blue for primary actions and emphasis.
-- Flat sections with visible separators.
-- Bold headlines and quiet supporting text.
-
-**The Supplied Shield Rule.** Use the supplied shield asset; retain its gunmetal facets, black slash, and electric-blue edge. Pair it with the existing bold white Spammish wordmark.
+**The Supplied Abyss Rule.** Preserve the black center, asymmetric electric-blue ring and dark surround. Small assets simplify detail. The menu-bar template is a monochrome vortex silhouette, not a shield.
 
 ## Colors
 
@@ -116,19 +109,19 @@ The desktop uses native system sans. Its brand heading is (28px), explanatory he
 
 ## Layout
 
-Website content sits in a centered container with a maximum width (1320px), using the marketing inset token. The hero is a two-column layout with ratio (1.25:1). Repeated content uses three columns for principles and two columns for the available paths. At (800px), horizontal insets reduce to the mobile inset. At (580px), content stacks; the shield becomes a small first-row anchor and actions fill their available width.
+Website content sits in a centered container with a maximum width (1320px), using the marketing inset token. The hero is a two-column layout with ratio (1.25:1). Repeated content uses three columns for principles and two columns for the available paths. At (800px), horizontal insets reduce to the mobile inset. At (580px), content stacks; the mark becomes a small first-row anchor and actions fill their available width.
 
 The desktop uses one centered column with maximum width (600px) and padding (50px 36px 28px). At (470px), horizontal padding reduces to the mobile inset. Account rows retain a compact vertical reading order. Each row places email and state beside its own action, followed by instructions, notices, and secondary text actions. Rows have bottom spacing and separators (20px). The global connection action and optional disclosure follow the account list.
 
 ## Elevation & Depth
 
-**The Flat Interface Rule.** Keep interface surfaces flat. The metallic shield carries depth; sections and controls use tonal contrast and borders.
+**The Flat Interface Rule.** Keep interface surfaces flat. The vortex carries depth; sections and controls use tonal contrast and borders.
 
 No interface box shadows are present. The field surface and neutral button fill create the only panel-like tonal layers. Desktop button color transitions run (120ms ease-out) when reduced motion is not requested. Marketing smooth scrolling is disabled for reduced motion.
 
 ## Shapes
 
-Filled actions use gently rounded corners through the action token; the email field uses the field token. Sections use straight thin separator lines (1px). The desktop status dot is circular (6px). Keep the distinctive silhouette inside the supplied shield asset rather than copying it into containers.
+Filled actions use gently rounded corners through the action token; the email field uses the field token. Sections use straight thin separator lines (1px). The desktop status dot is circular (6px). Keep the distinctive silhouette inside the supplied Abyss mark asset rather than copying it into containers.
 
 ## Components
 
@@ -164,14 +157,18 @@ Desktop aggregate status pairs text with a dot and counts enabled accounts. Acco
 
 ### Do:
 
-- Do preserve the supplied shield and bold white wordmark.
+- Do preserve the supplied Abyss mark and bold white wordmark.
 - Do use blue to identify actions, focus, and selected emphasis.
 - Do pair clear labels with visible interaction and status states.
 - Do preserve the desktop’s simple connect, enable, and pause controls.
 
 ### Don't:
 
-- Don't replace the supplied mark with a new shield or symbol.
+- Don't replace the Abyss mark with an unrelated symbol.
 - Don't apply shadows or decorative gradients to interface panels.
 - Don't carry the retired paper and rust palette into Spammish.
 - Don't represent planned Cloud AI as an available open-source feature.
+
+## Compact native decisions
+
+The native utility uses the system font with 12/13/14px metadata, 20px section headings and a 34px product heading. Marketing uses the existing larger display ramp. Compact 8px button corners and semantic blue/green row tints are intentional; the product list is functional mail evidence, not a marketing card grid.

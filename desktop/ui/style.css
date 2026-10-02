@@ -52,3 +52,31 @@ h1 { display: flex; align-items: center; gap: 8px; } h1 img { object-fit: contai
 .abyss-total { margin-top: 18px; margin-bottom: 0; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 
 #review { margin-bottom: 16px; } .review-item { border-top: 1px solid var(--line); padding: 16px 0; } .review-subject { color: var(--ink); font-weight: 600; overflow-wrap: anywhere; } .review-sender { overflow-wrap: anywhere; } .review-item ul { padding-left: 18px; color: var(--muted); }
+
+.recovery{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:6px}
+.recovery .text-button{color:var(--accent);font-weight:600;min-height:32px}
+#review>summary{color:var(--ink);font-weight:600;min-height:32px}
+.review-item>button{color:var(--accent);font-weight:600;min-height:36px}
+body{scrollbar-color:#45627a var(--paper)}
+.status[data-on='true']{color:var(--success)}
+@media(prefers-reduced-motion:no-preference){header[data-processing='true'] h1 img{animation:abyss-turn 24s linear infinite}@keyframes abyss-turn{to{transform:rotate(360deg)}}}
+
+main{max-width:820px}
+#review{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
+.review-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}
+.review-heading h2{font-size:20px;line-height:1.25;margin:0;letter-spacing:-.02em}
+.review-help{font-size:12px;max-width:65ch}
+.review-item{padding:18px 14px;margin-inline:-14px}
+.review-item[data-outcome='abyss']{background:#0c1722}
+.review-item[data-outcome='protected'],.review-item[data-outcome='rescued']{background:#0c1918}
+.decision-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.decision-identity{min-width:0}.decision-outcome{flex-shrink:0;text-align:right}
+.review-sender{font-weight:600;color:var(--ink);margin-bottom:4px}
+.review-subject{font-size:16px;margin-bottom:6px}.decision-score{font-size:12px;margin-bottom:2px}
+.decision-destination{font-weight:600;font-size:13px;margin:0;color:var(--muted)}
+[data-outcome='abyss'] .decision-destination{color:var(--accent)}
+[data-outcome='protected'] .decision-destination,[data-outcome='rescued'] .decision-destination{color:var(--success)}
+.decision-account{font-size:11px;margin-bottom:8px;overflow-wrap:anywhere}
+.decision-evidence{font-size:13px;margin-bottom:8px}
+.review-item details{font-size:12px}.review-item>button{margin-top:10px;padding:7px 12px;background:#152c3b;border-radius:6px;text-decoration:none}
+@media(max-width:580px){.decision-heading{flex-direction:column;gap:6px}.decision-outcome{text-align:left;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}}

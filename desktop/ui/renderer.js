@@ -1,4 +1,5 @@
 import { explainDecision } from './explain.mjs';
+import { reviewPresentation } from './review-presentation.mjs';
 import { cleanupInstruction, quotaNotice, isQuotaWait } from './progress.mjs';
 const byId = (id) => document.getElementById(id);
 const ui = Object.fromEntries(['status', 'moved', 'accounts', 'instruction', 'connect', 'cancel', 'notice', 'background'].map((id) => [id, byId(id)]));
@@ -6,12 +7,13 @@ let state;
 let connectingBusy = false;
 const busyAccounts = new Set();
 const blocked = (name, id) => (Boolean(state.error) && name !== 'pause' && name !== 'abyss') || busyAccounts.has(id) || ((state.connecting || connectingBusy) && name !== 'pause');
+let reviewInitialized = false;
 let notice = '';
 const errors = {
   oauth_cancelled: 'Connection cancelled. You can try again whenever you’re ready.',
   oauth_timeout: 'Google sign-in timed out. Connect Gmail to try again.',
   operation_cancelled: 'The operation was cancelled.',
-  desktop_client_required: 'Gmail connection isn’t available in this preview.',
+  desktop_client_required: 'Add your Desktop OAuth client and rebuild to connect Gmail. See the repository’s desktop install guide.',
   secure_storage_unavailable: 'Secure storage is unavailable. Unlock your Mac and reopen Spammish.',
   refresh_token_missing: 'Google could not keep this connection. Reconnect Gmail and approve access.',
   reconnect_required: 'Google access has expired or been revoked. Reconnect this Gmail to continue.',
@@ -40,12 +42,14 @@ function control(label, name, id, className = 'text-button') {
 function render() {
   if (!state) return;
   const accounts = state.accounts || [];
+  if (accounts.length && !reviewInitialized) { reviewInitialized = true; void loadReview(); }
   const moved = Number.isSafeInteger(state.movedCount) ? state.movedCount : 0;
   ui.moved.textContent = `${moved.toLocaleString()} ${moved === 1 ? 'email' : 'emails'} sent to The Abyss`;
   ui.moved.title = 'Confirmed moves since this counter was introduced. Includes disconnected accounts; older moves are not guessed.';
   const enabled = accounts.filter((account) => account.enabled).length;
   ui.status.textContent = state.connecting ? 'Connecting' : state.error ? 'Needs attention' : enabled ? `${enabled} ${enabled === 1 ? 'account' : 'accounts'} on` : accounts.length ? 'Paused' : 'Not connected';
   ui.status.dataset.on = String(enabled > 0 && !state.error);
+  document.querySelector('header').dataset.processing = String(accounts.some(account => account.enabled && account.sweeping && !account.error && !isQuotaWait(account)) && !state.error);
   // Reconcile keyed rows so background checks do not steal keyboard focus.
   const present = new Set(accounts.map((account) => account.id));
   for (const row of [...ui.accounts.children]) if (!present.has(row.dataset.id)) row.remove();
@@ -84,7 +88,7 @@ function render() {
     }
     for (const button of row.querySelectorAll('button')) button.disabled = blocked(button.dataset.operation, account.id);
   }
-  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser. Existing accounts keep their own settings.' : !state.canConnect ? 'Gmail connection isn’t available in this preview.' : accounts.length ? 'Connecting Gmail starts inbox cleanup. Each account has its own Pause control.' : 'Connecting Gmail starts inbox cleanup automatically.';
+  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser. Existing accounts keep their own settings.' : !state.canConnect ? 'Add your Desktop OAuth client and rebuild to connect Gmail. See the repository’s desktop install guide.' : accounts.length ? 'Connecting Gmail starts inbox cleanup. Each account has its own Pause control.' : 'Connecting Gmail starts inbox cleanup automatically.';
   ui.connect.textContent = state.connecting ? 'Waiting for Google…' : accounts.length ? 'Add Gmail account' : 'Connect Gmail';
   ui.connect.classList.toggle('add-account', accounts.length > 0);
   ui.connect.disabled = connectingBusy || busyAccounts.size > 0 || state.connecting || !state.canConnect || Boolean(state.error);
@@ -112,18 +116,22 @@ window.spammish.status().then((next) => { state = next; render(); });
 
 const reviewLoad = byId('review-load'), reviewItems = byId('review-items'), reviewNotice = byId('review-notice');
 async function loadReview() {
-  reviewLoad.disabled = true; reviewNotice.hidden = false; reviewNotice.textContent = 'Loading recent moves…';
+  reviewLoad.disabled = true; reviewNotice.hidden = false; reviewNotice.textContent = 'Loading recent decisions…';
   try {
     const result = await window.spammish.review();
     if (!result.ok) throw new Error(result.error);
     reviewItems.replaceChildren();
-    reviewNotice.textContent = result.moves.length ? '' : 'No recorded moves yet. Recording starts with this update.';
+    reviewNotice.textContent = result.moves.length ? '' : 'No recent decisions recorded yet. New checks will appear here.';
     reviewNotice.hidden = Boolean(result.moves.length);
     for (const move of result.moves) {
       const row = element('section','review-item');
-      row.append(element('p','review-subject',move.subject),element('p','review-sender',`${move.from || 'Sender unavailable'} · ${move.accountEmail}`));
+      const presentation = reviewPresentation(move); row.dataset.outcome = presentation.kind;
+      const heading = element('div', 'decision-heading');
+      const identity = element('div', 'decision-identity'); identity.append(element('p','review-sender',move.from || 'Sender unavailable'),element('p','review-subject',move.subject));
+      const outcome = element('div','decision-outcome'); outcome.append(element('p','decision-score',presentation.scoreLabel),element('p','decision-destination',presentation.destination));
+      heading.append(identity,outcome);row.append(heading,element('p','decision-account',move.accountEmail),element('p','decision-evidence',presentation.evidence));
       const explanation = explainDecision(move.decision);
-      const details = element('details');details.append(element('summary','',explanation.title),element('p','',explanation.summary));
+      const details = element('details');details.append(element('summary','',move.stage === 'screening' ? presentation.scoreLabel : explanation.title),element('p','',explanation.summary));
       const list = element('ul');
       for (const factor of explanation.factors) list.append(element('li','',`${factor.points > 0 ? '+' : ''}${factor.points} ${factor.label}`));
       details.append(list);row.append(details);
@@ -133,13 +141,20 @@ async function loadReview() {
           rescue.disabled=true;
           try { const result=await window.spammish.rescueMessage(move.accountId,move.id);
             if(!result.ok)throw new Error(result.error);
+            row.dataset.outcome='rescued'; outcome.querySelector('.decision-destination').textContent='Back in Inbox';
             rescue.replaceWith(element('p','notice','Rescued. This sender is now protected.'));
           } catch { rescue.disabled=false;reviewNotice.hidden=false;reviewNotice.textContent='Rescue failed. Try again, or move the email back to Inbox in Gmail.'; }
         });row.append(rescue);
-      } else row.append(element('p','notice','Already outside The Abyss.'));
+      } else if (move.wasMoved) row.append(element('p','notice','Outside The Abyss now.'));
       reviewItems.append(row);
     }
-  } catch { reviewNotice.textContent='Could not load recent moves. Check your Gmail connection and try again.'; }
+  } catch { reviewNotice.hidden=false;reviewNotice.textContent='Could not load recent decisions. Check your Gmail connection and try again.'; }
   finally { reviewLoad.disabled=false; }
 }
 reviewLoad.addEventListener('click',()=>{void loadReview();});
+
+byId('rescue-open').addEventListener('click', () => {
+  const review = byId('review');
+  review.scrollIntoView({ block: 'start', behavior: 'auto' });
+  reviewLoad.focus(); void loadReview();
+});
