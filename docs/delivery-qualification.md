@@ -4,7 +4,7 @@ October 2, 2026. Application version **0.4.2**. This pass changes installation/p
 
 ## Fresh agent
 
-An independent coding agent used only a fresh checkout and the public README installation instruction on macOS arm64, Node 26.9.0. It discovered AGENTS.md and the desktop guide, installed dependencies, built the real unsigned `Spammish.app`, and launched that exact executable with an isolated empty private profile. Bundle version was 0.4.2; actual UI showed Not connected, zero moves and unavailable Connect without client configuration. No hidden maintainer client or mailbox state was supplied.
+A newly spawned coding agent with no conversation history used only a fresh checkout and the public README installation instruction on macOS arm64, Node 26.9.0. It discovered AGENTS.md and the desktop guide, installed dependencies, built the real unsigned `Spammish.app`, and launched that exact executable with an isolated empty private profile. Bundle version was 0.4.2; actual UI showed Not connected, zero moves and unavailable Connect without client configuration. No hidden maintainer client or mailbox state was supplied.
 
 | Milestone | Result |
 | --- | --- |
@@ -14,7 +14,7 @@ An independent coding agent used only a fresh checkout and the public README ins
 | Fresh Google user consent | NOT EXERCISED |
 | Fresh connected-account health | NOT EXERCISED |
 
-Desktop doctor correctly reported missing client and readiness false. About dialog interaction could not be verified through the UI automation tool; bundle metadata and exact running executable identified the artifact. The repo-only agent also correctly explained conservative threshold 70, screening versus scoring, protected counterexamples, personal source tuning/rebuild/recheck, and that LLM augmentation is personal development with different privacy/cost properties—not a shipped setting.
+Desktop doctor correctly reported missing client and readiness false. About Spammish visibly showed Version 0.4.2 (0.4.2), matching bundle metadata and the exact running executable. The test installed its own separately named app, then Quit stopped only that isolated process; the owner’s existing app remained running. The repo-only agent also correctly explained conservative threshold 70, screening versus scoring, protected counterexamples, personal source tuning/rebuild/recheck, and that LLM augmentation is personal development with different privacy/cost properties—not a shipped setting.
 
 ## Manual checkout and checks
 
