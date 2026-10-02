@@ -6,6 +6,8 @@ Gmail Inbox message → bounded local text/header/URL features → candidate scr
 
 No model, AI agent service, Codex session or AI API key runs this pipeline. The application is the worker. It must remain running on an awake, online computer. Both desktop and loopback server share the same engine.
 
+The official defaults are conservative by design. Tuning is optional and currently requires source edits; see the [developer tuning guide](tuning.md).
+
 ## Evidence implemented
 
 | Family | Observable evidence |
@@ -18,7 +20,7 @@ No model, AI agent service, Codex session or AI API key runs this pipeline. The 
 | Protection | Prior outbound, actual thread participation, rescued sender, known transactional/private-domain relationship, important transactional/security/support/developer notification language, incomplete content and subscription context |
 | Obvious noise | Narrow scam patterns and the exact terminal WBX + three-letter warmup marker |
 
-There is no Contacts permission, deletion-history inference, external reputation service, DKIM validation or proof of subscription intent. Contacts can be represented by the pure policy interface but the shipped provider does not collect them. Unknown evidence contributes zero. Shared consumer domains such as gmail.com never acquire domain-wide reputation/protection. Gmail Spam labels do not prove a user reported spam.
+There is no Contacts permission, deletion-history inference, external reputation service, DKIM validation or proof of subscription intent. Contacts can be represented by the pure policy interface but the shipped provider does not collect them. Unknown evidence contributes zero. Previously received messages remove novelty points; they do not establish reciprocity or trigger a relationship protection. Prior outbound or actual thread participation is different evidence. Shared consumer domains such as gmail.com never acquire domain-wide reputation/protection. Gmail Spam labels do not prove a user reported spam.
 
 ## Spammish Score and disposition
 

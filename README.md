@@ -67,6 +67,16 @@ Evidence includes sender/domain familiarity, prior outbound communication, actua
 
 This is broader than a B2B-only filter, but it is not a blanket category cleaner. A social-network notification, newsletter or promotion does **not** qualify merely because of its category. Legitimate subscription context is protected. Automatic candidate screening is intentionally narrower than every possible unwanted category. Exact-sender rejection is considered before candidate screening; it still needs sufficient evidence and cannot override hard protections. Other messages need sufficient supported evidence; conservative misses are intentional. Spammish does not know your preferences magically.
 
+## Conservative by default. Yours to tune.
+
+Spammish favors precision over recall: some unwanted mail surviving is preferable to an important message disappearing. The default Abyss threshold is **70**, with corroboration requirements and hard protections.
+
+**You do not need to tune anything to use Spammish.** Connect Gmail after setup and let the default policy run.
+
+For builders, the deterministic policy is MIT-licensed source you can inspect and change. Tune the threshold, adjust evidence weights, or change the rules in your own installation. These are **source edits**, not app settings or environment variables. Your inbox. Your Spammish.
+
+[Read the tuning guide](docs/tuning.md) for exact code paths, a worked score, safety boundaries and verification steps. Changing a cutoff will not bypass candidate screening or hard protections.
+
 ## The Abyss and Rescue
 
 Gmail has Inbox and Spam. Spammish adds a recoverable destination for mail its own evidence model says should leave normal Inbox attention; Gmail does not have to call it spam.

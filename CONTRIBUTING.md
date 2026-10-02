@@ -10,3 +10,5 @@ Keep Spammish focused on one task: identify unwanted email using corroborated ev
 - Do not submit real email, credentials, tokens, personal data, or private screenshots/logs.
 
 Small, focused pull requests are easiest to review. Describe what changed and how you verified it.
+
+For personal policy changes, start with the [tuning guide](docs/tuning.md). The official defaults favor precision over recall; upstream proposals need evidence and legitimate-mail counterexamples, not just higher move counts. Share sanitized version, score, feature codes, protective reason and expected/actual disposition. Keep private message content and account identifiers out of public issues.

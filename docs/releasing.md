@@ -4,6 +4,8 @@ Source releases qualify the repository itself. Run tests, source checks, depende
 
 Publish a tag and release whose source archives resolve to the exact reviewed commit. Preserve existing published tags. Runtime follow-ups require a new version; do not replace published source archives or silently retarget a tag. The historical 0.4.0 supplemental archive is explicitly identified separately from its original tag archives. Do not upload unsigned previews as official consumer installers. The [0.4.0 acceptance record](acceptance-0.4.0.md) describes actual qualification and its limits.
 
+Documentation/marketing-only updates can publish to the default branch without manufacturing a runtime version or moving existing tags. Keep the published runtime version unchanged when behavior is unchanged.
+
 The remaining sections apply to optional future maintainer-managed desktop distribution. These are not source-release gates.
 
 ## Future maintainer-managed Google app registration
