@@ -8,7 +8,7 @@ Six explicit opt-in installation milestones; no analytics SDK, account system, m
 
 ## Qualification
 
-- 93 application tests and 2 website integration tests pass; 44 source-file syntax checks pass; dependency audit reports zero vulnerabilities.
+- 93 application tests and 2 website integration tests pass; 44 source-file syntax checks pass; dependency audit reports zero vulnerabilities. A clean source export independently completed npm ci, all 93 application tests and syntax checks; package/lockfile versions agree at 0.4.4. npm notes an unapproved electron-winstaller Windows install script; Windows packaging is not qualified and this did not block the Mac build.
 - Loopback HTTP capture confirms exactly four transmitted fields; strict extra-field rejection, consent/reset, owner/test suppression, successful move/Rescue confirmation, stalled/unreachable networking, duplicate handling and elapsed-time return milestones are covered.
 - 0.4.4 unsigned arm64 macOS app built and launched with isolated state, no bundled OAuth credentials and no owner mailbox access. About reports 0.4.4. A persistent suppression marker alone suppresses sharing and disables the opt-in control. The same marker was placed in the owner's existing live user-data directory before any future update; the live app was not replaced.
 - Fly remote container build passed. Approved disabled deployment uses image digest `sha256:ab71a01fe200ec1fb4eaf5411edad2528ca0d9d045169420425a68da500ad7ec` on the existing single machine/private volume.
