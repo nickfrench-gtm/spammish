@@ -16,7 +16,7 @@ macOS or Linux, Node **22.13+** (24 recommended), internet access and a Gmail ac
 
 ## Configure your own Google client (once)
 
-BYO OAuth is the intentional 0.4.0 authentication model. This is developer configuration, **not Gmail authorization**. Spammish does not require a paid Google Workspace subscription. No maintainer-managed public OAuth service is provided. A simpler Spammish-managed flow is planned; no date or Google approval is promised.
+BYO OAuth is the intentional source-release authentication model. This is developer configuration, **not Gmail authorization**. Spammish does not require a paid Google Workspace subscription. No maintainer-managed public OAuth service is provided. A simpler Spammish-managed flow is planned; no date or Google approval is promised.
 
 A **Cloud project** owns the API/consent configuration; an **OAuth client** identifies your local application. Its downloaded configuration contains the client ID and, for the browser path, client secret. These are not your Google login or the access/refresh tokens later granted after consent. Keep the downloaded JSON private and outside Git.
 
@@ -51,7 +51,7 @@ Expected milestones:
 | Field | Meaning |
 | --- | --- |
 | SETUP_COMPLETE | Supported Node, valid-shaped web client/redirect and local vault key configured; not proof Google approved the client |
-| SPAMMISH_RUNNING | The expected source version responds at the local `/health` endpoint |
+| SPAMMISH_RUNNING | The expected source version and a challenge proof match this checkout, configured vault, OAuth client and state file |
 | GMAIL_CONNECTION_STORED | At least one account was saved after OAuth; not proof it remains authorized |
 | GMAIL_AUTHORIZED | Every connected account has a successful check within two minutes and no current error; recent verification, not a perpetual guarantee |
 | BACKGROUND_WORKER_ACTIVE | At least one account is enabled in the running worker; an outage/cooldown can still delay checks |
@@ -74,4 +74,6 @@ Run `npm test`, `npm run check`, `npm audit` for source diagnostics. Do not incl
 
 ## Optional desktop source app
 
-See [development.md](development.md). Use `npm ci`, your own **Desktop app** client in ignored `desktop/oauth-client.json`, `npm run doctor -- --desktop`, then `npm run desktop`. Check actual account/On/error state in the window. Closing the window leaves the menu-bar worker running; Quit stops it. There is no official signed public installer in 0.4.0.
+See [development.md](development.md). Use `npm ci`, your own **Desktop app** client in ignored `desktop/oauth-client.json`, `npm run doctor -- --desktop`, then `npm run desktop`. Check actual account/On/error state in the window. Closing the window leaves the menu-bar worker running; Quit stops it. There is no official signed public installer in this release.
+
+Changing OAuth clients can require fresh human authorization; saved grants belong to their client. Preserve the vault key, but do not promise old refresh tokens will migrate to a future official client.

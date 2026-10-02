@@ -9,3 +9,7 @@ The current public audit also reconciles PRODUCT.md, installation/doctor termino
 Gmail scope permits more than implemented label operations. Desktop credentials use OS encryption while metadata relies on OS/disk protection; the local browser state uses a private AES-GCM vault key. Bodies are transient, not retained or sent to a maintainer/AI provider. Disconnect clears active account state but backups may retain prior data. See the policies for the full data inventory.
 
 Nonblocking limitations: own Google registration/consent and applicable testing limits, awake/online worker, Gmail delivery before polling, quota delays, no signed/notarized consumer installer and no representative labeled accuracy benchmark. No Chrome extension or hosted Cloud service is included.
+
+## 0.4.1 source follow-up
+
+The readiness-instance fix and final pipeline/privacy clarifications are qualified in [acceptance-0.4.1.md](acceptance-0.4.1.md). Runtime follow-ups receive a new immutable tag. The original 0.4.0 remains unchanged.

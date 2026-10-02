@@ -2,7 +2,7 @@
 
 Source releases qualify the repository itself. Run tests, source checks, dependency audit, targeted secret/history scans and fresh manual/agent installation to the documented human Google boundary. Review policy claims against code and record sanitized integration outcomes. Keep release notes concise; link evidence rather than pasting internal reports.
 
-Publish the reviewed source commit. Preserve existing published tags; identify any later source revision explicitly in release notes and its source download. Do not upload unsigned previews as official consumer installers. The [0.4.0 acceptance record](acceptance-0.4.0.md) describes actual qualification and its limits.
+Publish a tag and release whose source archives resolve to the exact reviewed commit. Preserve existing published tags. Runtime follow-ups require a new version; do not replace published source archives or silently retarget a tag. The historical 0.4.0 supplemental archive is explicitly identified separately from its original tag archives. Do not upload unsigned previews as official consumer installers. The [0.4.0 acceptance record](acceptance-0.4.0.md) describes actual qualification and its limits.
 
 The remaining sections apply to optional future maintainer-managed desktop distribution. These are not source-release gates.
 

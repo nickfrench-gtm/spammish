@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, statSync, accessSync, constants } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { parseEnv } from 'node:util';
+import { randomBytes, timingSafeEqual } from 'node:crypto';
+import { runtimeProof } from '../lib/runtime-proof.mjs';
 import { installedClient } from '../lib/desktop-oauth.mjs';
 const desktop=process.argv.includes('--desktop'), json=process.argv.includes('--json');
 const version=process.versions.node.split('.').map(Number);
@@ -38,11 +40,14 @@ if(desktop){
  if(!valid)report.blockers.push('Configure your own Web application OAuth client and matching loopback redirect. See docs/agent-install.md.');
  if(key.length!==32)report.blockers.push('The local vault key must decode to 32 bytes. Preserve any existing key; changing it loses access to saved state.');
  if(Number.isInteger(port)&&port>0&&port<=65535){try{
-  const response=await fetch(`http://127.0.0.1:${port}/health`,{signal:AbortSignal.timeout(3000)});
+  const challenge=randomBytes(32).toString('hex');
+  const response=await fetch(`http://127.0.0.1:${port}/health?challenge=${challenge}`,{signal:AbortSignal.timeout(3000)});
   if(!response.ok)throw new Error('unavailable');const h=await response.json();
   if(h.application!=='spammish'||h.version!==JSON.parse(readFileSync('package.json','utf8')).version)throw new Error('wrong_runtime');
+  const expected=runtimeProof(config,challenge,process.cwd());
+  if(typeof h.runtimeProof!=='string'||!/^[a-f0-9]{64}$/.test(h.runtimeProof)||!expected||!timingSafeEqual(Buffer.from(h.runtimeProof),Buffer.from(expected)))throw new Error('wrong_instance');
   report.SPAMMISH_RUNNING=true;report.GMAIL_CONNECTION_STORED=h.connectedAccounts>0;report.GMAIL_AUTHORIZED=h.gmailAuthorized===true;report.BACKGROUND_WORKER_ACTIVE=h.workerActive===true;report.RECONNECT_REQUIRED=h.reconnectRequired===true;report.LAST_SUCCESSFUL_CHECK=h.lastSuccessfulCheck||null;
- }catch{report.blockers.push('Start this source version with npm start; keep it running. If the port is occupied, choose another port and matching Google redirect.');}}
+ }catch{report.blockers.push('Start this checkout with its configured client, vault and state file using npm start; keep it running. If the port is occupied, choose another port and matching Google redirect.');}}
  if(report.SPAMMISH_RUNNING&&!report.GMAIL_CONNECTION_STORED)report.blockers.push('Open the local page and let the human complete Google OAuth consent. No password or MFA code belongs in Spammish.');
  if(report.GMAIL_CONNECTION_STORED&&!report.GMAIL_AUTHORIZED)report.blockers.push('Authorization has not been verified in a recent successful check. Check Pause/reconnect/provider errors in the local page.');
  if(report.GMAIL_CONNECTION_STORED&&!report.BACKGROUND_WORKER_ACTIVE)report.blockers.push('Turn on an account in the local page to enable filtering.');

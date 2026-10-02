@@ -2,7 +2,7 @@
 
 ## Pipeline
 
-Gmail message → bounded local text/header/URL features → bounded mailbox relationship queries for plausible candidates → weighted evidence and hard protections → recoverable label change.
+Gmail Inbox message → bounded local text/header/URL features → candidate screening → bounded mailbox relationship queries for admitted candidates → weighted evidence and hard protections → recoverable label change.
 
 No model, AI agent service, Codex session or AI API key runs this pipeline. The application is the worker. It must remain running on an awake, online computer. Both desktop and loopback server share the same engine.
 
@@ -49,3 +49,9 @@ The single counter counts confirmed app moves, including explicit Abyss, once pe
 ## Conservative tradeoffs
 
 The protection vocabulary is deliberately broad: invoice, delivery, security and subscription language can keep unwanted mail in Inbox. It is textual evidence, not proof of legitimacy or subscription intent. Compounds reuse constituent cues as declared heuristic bonuses; they are not independent observations. Novelty, bulk headers and tracking alone cannot divert mail. An ordinary social notification has no special rejection rule. Inspect current evidence or apply a narrow Abyss correction rather than assuming every unwanted category is caught.
+
+## Candidate screening limits
+
+Before relationship queries and stored sender rejection are applied, the worker admits messages with an initial score of at least 30, an obvious-spam/warmup marker, or a CTA paired with a cold subject/opening. Incomplete content, subscription context and important-mail guards stay protected. An exact-sender rejection does not bypass this screening or the final corroboration requirements. Ordinary social notifications may therefore remain in Inbox even after feedback. A score shown by Explain is a current assessment; it does not imply the message was admitted by automatic screening.
+
+Initial discovery collects all Inbox IDs before inspection, then processes resumable batches. The temporary ID list grows with mailbox size; only per-request and per-batch work is bounded. It is discarded when the sweep finishes.
