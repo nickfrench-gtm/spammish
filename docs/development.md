@@ -25,7 +25,7 @@ npm run package:preview
 
 This produces an unsigned Mac preview in `dist/`. It is not a public production installer. It includes the Google client only if the ignored local configuration exists.
 
-## Primary local browser worker
+## Alternative local browser worker
 
 The loopback server uses the **same multi-account engine** as the desktop app. It is suitable for an awake local machine with a running process; it is not a hosted service.
 

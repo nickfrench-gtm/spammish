@@ -1,6 +1,6 @@
 # Alternative: local browser worker
 
-Give the repository to Codex, Claude Code, Cursor or another capable coding agent:
+Give the repository to Codex, Cursor or another capable coding agent:
 
 > Install Spammish locally and get it ready to protect my Gmail. Follow AGENTS.md and docs/agent-install.md. Configure and verify everything you can; walk me through only steps requiring my Google authorization. Preserve existing credentials and never print secrets.
 

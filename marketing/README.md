@@ -11,3 +11,5 @@ The shield asset was isolated from the user-supplied Spammish brand sheet using 
 Keep one Fly application Machine/writer with its attached volume. Accepted records are synced to disk before success. An interrupted final record is backed up privately and repaired on restart; unexpected corruption elsewhere fails closed. Back up the volume privately: a single local volume is not replicated database storage. Do not scale to independent writers without shared persistence.
 
 New records use `easier-experience-availability-v2`; existing `cloud-launch-updates-v1` records retain their narrower original purpose. Duplicate signup does not rewrite or broaden existing consent. Do not send broader updates to old records without fresh consent. Qualification records at example.com are synthetic, not customers. Removal needs operator-controlled maintenance with writes paused; never race a live writer by rewriting the file.
+
+Run the isolated backend qualification with `node --test marketing/waitlist.test.mjs`. It creates and removes only a temporary test store; it does not access the production volume.
