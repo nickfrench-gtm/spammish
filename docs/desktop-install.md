@@ -35,7 +35,7 @@ In your own Google project:
 2. Configure Google Auth Platform branding, audience and contact truthfully. For applicable personal/test use, add the intended Gmail accounts as test users. Request only `https://www.googleapis.com/auth/gmail.modify`.
 3. Create an OAuth client of type **Desktop app**. The app uses an ephemeral loopback callback; do not configure the browser worker's fixed Web-client redirect here.
 4. Download the JSON privately and save it as `desktop/oauth-client.json`, mode 600. It is ignored by Git. Never print it, put it in an issue or commit it.
-5. Run `npm run doctor -- --desktop --json`, then rebuild with the command above. The downloaded client is copied into the local app's resources; rebuild when replacing it. No maintainer client is distributed in this repository.
+5. Either include that JSON in your local build using the command above, or launch a build without configuration and use **Connect Gmail** to import the downloaded JSON. Import does not require a rebuild. Desktop doctor checks the repository configuration; it does not inspect an app’s imported configuration. No maintainer client is distributed in this repository.
 
 An agent may assist configuration with available tools and permission, but the human owns Google login, MFA, consent and account/security decisions. Never request passwords, MFA codes or session cookies. Do not relax Google/organization controls or pretend public verification exists. Review [Google installed-app OAuth](https://developers.google.com/identity/protocols/oauth2/native-app), [scope semantics](https://developers.google.com/workspace/gmail/api/auth/scopes), [verification requirements/exceptions](https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification) and [token expiration](https://developers.google.com/identity/protocols/oauth2#expiration). External apps in Testing with Gmail scopes can have refresh grants expire after seven days; reconnect if Google rejects the grant. Changing clients can also require fresh consent.
 
@@ -58,6 +58,8 @@ This Electron profile override isolates saved accounts and the single-instance l
 
 ## 4. Human authorization and account health
 
+If your build has no OAuth configuration, choose **Connect Gmail** and select your downloaded Desktop OAuth JSON in the native file picker. The app saves only the client ID/secret in its private local application folder; no rebuild is required. The Google setup guide button explains how to create the client. A configured build skips this file picker. Imported configuration remains locally after disconnect; account tokens are handled separately.
+
 Choose Connect Gmail. The **human** completes Google's authentication/consent for the intended account. The app validates the Gmail account and saves tokens using OS encryption; it refuses unavailable secure storage. Then verify the intended account is shown, enabled, has a recent successful check and no current error. Connect additional Gmail accounts with the same procedure; each has isolated Pause/Disconnect state.
 
 Connection begins a resumable Inbox cleanup and then polls new arrivals. Large inboxes take time; progress and Google cooldown/error messages are in the app. A saved account or OAuth browser returning alone does not prove a successful ongoing Gmail check. Qualification must record these separately:
@@ -76,7 +78,7 @@ The app adds **The Abyss** and removes **Inbox** on qualifying messages, preserv
 - Quit Spammish: filtering stops. Sleep, power off, offline or Google cooldown delays filtering. Packaged apps request open-at-login while any account is enabled; inspect macOS Login Items if startup is blocked. Polling cannot prevent Gmail notifications from appearing first.
 - Pause/Disconnect: use only the intended account's controls. Never delete the account store to fix setup.
 - Update/tune: preserve Google JSON and account state; review/pull source, run `npm ci`, tests and checks, rebuild, Quit the previous copy and replace/reopen your installed app. Policy changes require the [tuning guide](tuning.md)'s recheck/version semantics; rebuilding alone does not magically reclassify completed history.
-- Connect unavailable: correct Desktop-client JSON, desktop doctor, rebuild; a Web client is not interchangeable.
+- First connection: use Connect Gmail to import your Desktop-client JSON if the app has none; a Web client is not interchangeable. Connected accounts retain their current OAuth client; do not switch clients under existing tokens.
 - Secure storage unavailable: resolve the OS keychain/storage requirement. Never fall back to plaintext tokens.
 - Needs attention: follow the actual account error. Offline/quota waits retry; rejected grants require human reconnect. Do not hammer Google or discard cleanup checkpoints.
 

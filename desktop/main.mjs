@@ -1,10 +1,11 @@
-import { app, BrowserWindow, ipcMain, Menu, nativeImage, net, powerMonitor, protocol, safeStorage, session, shell, Tray } from 'electron';
-import { readFileSync, existsSync } from 'node:fs';
+import { app, BrowserWindow, ipcMain, dialog, Menu, nativeImage, net, powerMonitor, protocol, safeStorage, session, shell, Tray } from 'electron';
+import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { readDesktopClient, importDesktopClient } from '../lib/desktop-client-config.mjs';
 import { DesktopAccounts } from '../lib/desktop-accounts.mjs';
 import { DesktopAccountsStore } from '../lib/desktop-store.mjs';
-import { beginDesktopOAuth, installedClient } from '../lib/desktop-oauth.mjs';
+import { beginDesktopOAuth } from '../lib/desktop-oauth.mjs';
 
 const directory = dirname(fileURLToPath(import.meta.url));
 const renderer = join(directory, 'ui');
@@ -66,7 +67,7 @@ function loginItem(enabled) {
 async function invoke(action) {
   try { const value = await action(); publish(); return { ok: true, status: status(), ...value }; }
   catch (error) {
-    const known = ['oauth_cancelled', 'oauth_timeout', 'operation_cancelled', 'secure_storage_unavailable', 'refresh_token_missing', 'desktop_client_required', 'wrong_gmail_account', 'account_not_found'];
+    const known = ['oauth_cancelled', 'oauth_timeout', 'operation_cancelled', 'secure_storage_unavailable', 'refresh_token_missing', 'desktop_client_required', 'wrong_gmail_account', 'account_not_found', 'desktop_client_already_configured'];
     return { ok: false, error: known.includes(error.message) ? error.message : error.oauthError === 'invalid_grant' ? 'reconnect_required' : 'connection_interrupted', status: status() };
   }
 }
@@ -91,7 +92,8 @@ function handler(name, action) {
 
 async function start() {
   const config = app.isPackaged ? join(process.resourcesPath, 'google-oauth.json') : join(directory, 'oauth-client.json');
-  try { if (existsSync(config)) client = installedClient(JSON.parse(readFileSync(config, 'utf8'))); }
+  const localConfig = join(app.getPath('userData'), 'google-oauth.json');
+  try { if (existsSync(localConfig)) client = readDesktopClient(localConfig); else if (existsSync(config)) client = readDesktopClient(config); }
   catch { fatalError = 'desktop_client_required'; }
   try {
     const store = new DesktopAccountsStore(app.getPath('userData'), safeStorage);
@@ -131,7 +133,16 @@ async function start() {
   handler('connect', (id) => invoke(async () => {
     if (id != null) agent?.get(id);
     if (connecting) throw new Error('operation_cancelled');
-    if (!client) throw new Error('desktop_client_required');
+    if (!client) {
+      if (!agent || fatalError && fatalError !== 'desktop_client_required') throw new Error('secure_storage_unavailable');
+      // Do not switch the OAuth client under already-connected accounts.
+      if (agent.records.size) throw new Error('desktop_client_required');
+      const selected = await dialog.showOpenDialog(window, { title: 'Set up Gmail — choose your Google Desktop OAuth JSON', buttonLabel: 'Use configuration', properties: ['openFile'], filters: [{ name: 'Google OAuth configuration', extensions: ['json'] }] });
+      if (selected.canceled || !selected.filePaths.length) throw new Error('operation_cancelled');
+      client = importDesktopClient(selected.filePaths[0], app.getPath('userData'));
+      agent.client = client;
+      if (fatalError === 'desktop_client_required') fatalError = null;
+    }
     if (!agent || fatalError) throw new Error('secure_storage_unavailable');
     connecting = true; publish();
     try {
@@ -143,6 +154,7 @@ async function start() {
       return result;
     } finally { connecting = false; oauthAttempt = null; publish(); }
   }));
+  handler('setupGuide', () => shell.openExternal('https://github.com/nickfrench-gtm/spammish/blob/main/docs/desktop-install.md'));
   handler('cancel', () => invoke(async () => { oauthAttempt?.cancel(); await agent?.cancelConnection(); }));
   handler('enable', (id) => invoke(async () => { await agent.enable(id); void syncBackground(); }));
   handler('pause', (id) => invoke(async () => { await agent.pause(id); }));

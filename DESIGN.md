@@ -172,3 +172,7 @@ Desktop aggregate status pairs text with a dot and counts enabled accounts. Acco
 ## Compact native decisions
 
 The native utility uses the system font with 12/13/14px metadata, 20px section headings and a 34px product heading. Marketing uses the existing larger display ramp. Compact 8px button corners and semantic blue/green row tints are intentional; the product list is functional mail evidence, not a marketing card grid.
+
+## Owner-selected final reference
+
+Use the supplied blue mail-vortex composition and square black-background Abyss icon. Preserve its luminous blue streams, envelopes and dark center. This supersedes the earlier simplified transparent ribbon derivative. Functional mail rows remain quiet and readable; the branding image supplies the energy.

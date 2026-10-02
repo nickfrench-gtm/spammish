@@ -13,7 +13,7 @@ const errors = {
   oauth_cancelled: 'Connection cancelled. You can try again whenever you’re ready.',
   oauth_timeout: 'Google sign-in timed out. Connect Gmail to try again.',
   operation_cancelled: 'The operation was cancelled.',
-  desktop_client_required: 'Add your Desktop OAuth client and rebuild to connect Gmail. See the repository’s desktop install guide.',
+  desktop_client_required: 'Choose Connect Gmail and select the Desktop OAuth JSON downloaded from your Google Cloud project. No rebuild needed.',
   secure_storage_unavailable: 'Secure storage is unavailable. Unlock your Mac and reopen Spammish.',
   refresh_token_missing: 'Google could not keep this connection. Reconnect Gmail and approve access.',
   reconnect_required: 'Google access has expired or been revoked. Reconnect this Gmail to continue.',
@@ -88,10 +88,11 @@ function render() {
     }
     for (const button of row.querySelectorAll('button')) button.disabled = blocked(button.dataset.operation, account.id);
   }
-  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser. Existing accounts keep their own settings.' : !state.canConnect ? 'Add your Desktop OAuth client and rebuild to connect Gmail. See the repository’s desktop install guide.' : accounts.length ? 'Connecting Gmail starts inbox cleanup. Each account has its own Pause control.' : 'Connecting Gmail starts inbox cleanup automatically.';
+  ui.instruction.textContent = state.connecting ? 'Finish connecting in your browser. Existing accounts keep their own settings.' : !state.canConnect ? 'Choose Connect Gmail and select the Desktop OAuth JSON downloaded from your Google Cloud project. No rebuild needed.' : accounts.length ? 'Connecting Gmail starts inbox cleanup. Each account has its own Pause control.' : 'Connecting Gmail starts inbox cleanup automatically.';
   ui.connect.textContent = state.connecting ? 'Waiting for Google…' : accounts.length ? 'Add Gmail account' : 'Connect Gmail';
   ui.connect.classList.toggle('add-account', accounts.length > 0);
-  ui.connect.disabled = connectingBusy || busyAccounts.size > 0 || state.connecting || !state.canConnect || Boolean(state.error);
+  ui.connect.disabled = connectingBusy || busyAccounts.size > 0 || state.connecting || Boolean(state.error && state.error !== 'desktop_client_required');
+  byId('setup-guide').hidden = Boolean(state.canConnect);
   ui.cancel.hidden = !state.connecting;
   ui.notice.textContent = notice || errors[state.error] || ''; ui.notice.hidden = !ui.notice.textContent;
   ui.background.textContent = enabled ? 'Runs quietly while your Mac is awake. Starts with your Mac while any account is on.' : 'No AI API. Classification stays on this Mac.';
@@ -109,6 +110,7 @@ async function action(name, id) {
   } catch { notice = 'Spammish couldn’t finish that action. Reopen the app and try again.'; }
   finally { if (name === 'connect') connectingBusy = false; else busyAccounts.delete(id); render(); }
 }
+byId('setup-guide').addEventListener('click', () => { void window.spammish.setupGuide(); });
 ui.connect.addEventListener('click', () => { void action('connect'); });
 ui.cancel.addEventListener('click', () => { void window.spammish.cancel(); });
 window.spammish.onStatus((next) => { state = next; render(); });

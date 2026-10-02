@@ -24,7 +24,7 @@ Give [this repository](https://github.com/nickfrench-gtm/spammish) to Codex, Cur
 
 The repo includes [AGENTS.md](AGENTS.md), a [step-by-step installation contract](docs/agent-install.md), `setup`, `doctor`, and a macOS desktop app and an alternative browser worker. The AI builder helps install it; **it does not need to stay running**.
 
-**This 0.4.3 visual candidate retains the agent-native source model and intentional BYO Google OAuth; the public runtime release is 0.4.2 until this candidate is approved.** Your builder helps configure your client; you complete Google sign-in and consent. Spammish requires no paid Google Workspace subscription. A simpler Spammish-managed authorization flow is planned, with no date or approval promised. Signed/notarized consumer installers are not included.
+**Spammish 0.4.3 is an agent-native source release with intentional BYO Google OAuth.** Your builder helps configure your client; you complete Google sign-in and consent. Spammish requires no paid Google Workspace subscription. A simpler Spammish-managed authorization flow is planned, with no date or approval promised. Signed/notarized consumer installers are not included.
 
 ## Manual install
 
@@ -36,7 +36,7 @@ cd spammish
 npm ci
 ```
 
-Create your own **Desktop app** Google OAuth client with Gmail API enabled. Save its downloaded JSON privately as `desktop/oauth-client.json` (ignored by Git). Then:
+Create your own **Desktop app** Google OAuth client with Gmail API enabled. Save its downloaded JSON privately. You can import it in the app through **Connect Gmail**, without rebuilding. Alternatively, save it as `desktop/oauth-client.json` (ignored by Git) to include it in your own local build. Then:
 
 ```sh
 npm run doctor -- --desktop

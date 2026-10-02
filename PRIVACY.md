@@ -15,3 +15,5 @@ Pause stops the selected account. Stopping the local server stops all processing
 These statements describe the default source in this repository. Modified versions and forks can behave differently and are their operators' responsibility. Google's own services are governed by Google's privacy policy.
 
 The application has no auto-update service. Installing dependencies/build runtimes contacts package registries and vendors; those services and Google process their own request metadata. Optional OS launch-at-login settings are used by the packaged desktop. The separate website has a distinct waitlist privacy notice. No claim is made that all network traffic remains on the device.
+
+Desktop OAuth configuration can be bundled in a private local build or imported using the native file picker. Imported configuration stores only the client ID and client secret in a permissions-restricted local application file. It is not a Google password or mailbox access token and remains after account disconnect. It is not uploaded to Spammish.
