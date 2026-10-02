@@ -24,7 +24,7 @@ Give [this repository](https://github.com/nickfrench-gtm/spammish) to Codex, Cla
 
 The repo includes [AGENTS.md](AGENTS.md), a [step-by-step installation contract](docs/agent-install.md), `setup`, `doctor`, and a shared desktop/browser worker. The AI builder helps install it; **it does not need to stay running**.
 
-**0.4.1 is an agent-native source release with intentional BYO Google OAuth.** Your builder helps configure your client; you complete Google sign-in and consent. Spammish requires no paid Google Workspace subscription. A simpler Spammish-managed authorization flow is planned, with no date or approval promised. Signed/notarized consumer installers are not included.
+**0.4.2 is an agent-native source release with intentional BYO Google OAuth.** Your builder helps configure your client; you complete Google sign-in and consent. Spammish requires no paid Google Workspace subscription. A simpler Spammish-managed authorization flow is planned, with no date or approval promised. Signed/notarized consumer installers are not included.
 
 ## Manual install
 
@@ -65,7 +65,7 @@ Evidence includes sender/domain familiarity, prior outbound communication, actua
 
 **Spammish Score is a rule total, never a percentage.** Current automatic threshold: **70**, with corroboration requirements and hard protections. Existing relationships, important transactional/account messages, Rescue feedback and incomplete content can keep a message in Inbox even with a high score. **Score ≠ probability.** [Inspect the model and limitations](docs/detection.md).
 
-This is broader than a B2B-only filter, but it is not a blanket category cleaner. A social-network notification, newsletter or promotion does **not** qualify merely because of its category. Legitimate subscription context is protected. Automatic candidate screening is intentionally narrower than every possible unwanted category. Exact-sender rejection adds evidence for admitted candidates; it is not an unconditional sender block. Other messages need sufficient supported evidence; conservative misses are intentional. Spammish does not know your preferences magically.
+This is broader than a B2B-only filter, but it is not a blanket category cleaner. A social-network notification, newsletter or promotion does **not** qualify merely because of its category. Legitimate subscription context is protected. Automatic candidate screening is intentionally narrower than every possible unwanted category. Exact-sender rejection is considered before candidate screening; it still needs sufficient evidence and cannot override hard protections. Other messages need sufficient supported evidence; conservative misses are intentional. Spammish does not know your preferences magically.
 
 ## The Abyss and Rescue
 
@@ -93,7 +93,7 @@ Keep Spammish running on an awake, online computer. Closing the browser is fine;
 
 Gmail delivers before Spammish polls, so mail or notifications may appear before filtering. Large inboxes take time, and Google throttling can delay checks. No claim of perfect detection, complete spam coverage, calibrated probability or numerical accuracy is made.
 
-[0.4.1 qualification](docs/acceptance-0.4.1.md) and [0.4.0 Gmail acceptance record](docs/acceptance-0.4.0.md): controlled real-Gmail integration, existing-mail observations, and explicitly labeled injected failure/recovery boundaries. This is not a representative accuracy benchmark or public installer certification.
+[0.4.2 correction evidence](docs/acceptance-0.4.2.md) and [0.4.1 qualification](docs/acceptance-0.4.1.md) and [0.4.0 Gmail acceptance record](docs/acceptance-0.4.0.md): controlled real-Gmail integration, existing-mail observations, and explicitly labeled injected failure/recovery boundaries. This is not a representative accuracy benchmark or public installer certification.
 
 ```sh
 npm test

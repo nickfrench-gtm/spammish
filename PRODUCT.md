@@ -8,7 +8,7 @@ Read/unread state and unrelated labels survive. The app implements no send, repl
 
 ## Distribution
 
-The MIT source is free to use and modify without a Spammish subscription. The primary install path is a coding agent following AGENTS.md and docs/agent-install.md, or a developer following README. A local macOS/Linux browser worker is qualified; the optional Electron desktop shares its engine. BYO OAuth is the intentional source-release release model. Users configure their own applicable Google OAuth client and personally complete consent. A paid Google Workspace subscription is not required by Spammish. Public signed/notarized installers and maintainer-managed OAuth are not provided.
+The MIT source is free to use and modify without a Spammish subscription. The primary install path is a coding agent following AGENTS.md and docs/agent-install.md, or a developer following README. A local macOS/Linux browser worker is qualified; the optional Electron desktop shares its engine. BYO OAuth is the intentional source-release model. Users configure their own applicable Google OAuth client and personally complete consent. A paid Google Workspace subscription is not required by Spammish. Public signed/notarized installers and maintainer-managed OAuth are not provided.
 
 The worker must stay running, awake and online. Multiple Gmail accounts have isolated state and their own Pause/Disconnect controls. Connection begins a resumable Inbox check; paused accounts remain paused across upgrades. Filtering follows Gmail delivery and cannot guarantee suppression before notifications.
 

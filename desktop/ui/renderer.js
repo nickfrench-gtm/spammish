@@ -1,4 +1,5 @@
 import { explainDecision } from './explain.mjs';
+import { cleanupInstruction, quotaNotice, isQuotaWait } from './progress.mjs';
 const byId = (id) => document.getElementById(id);
 const ui = Object.fromEntries(['status', 'moved', 'accounts', 'instruction', 'connect', 'cancel', 'notice', 'background'].map((id) => [id, byId(id)]));
 let state;
@@ -63,11 +64,11 @@ function render() {
       actions.append(control('Open The Abyss', 'abyss', account.id), control('Disconnect', 'disconnect', account.id));
       row.append(heading, instruction, error, actions); ui.accounts.append(row);
     }
-    row.querySelector('.account-state').textContent = account.error ? 'Needs attention' : account.enabled ? 'On' : 'Paused';
+    row.querySelector('.account-state').textContent = isQuotaWait(account) ? 'Waiting for Gmail' : account.error ? 'Needs attention' : account.enabled ? 'On' : 'Paused';
     row.querySelector('.account-state').dataset.on = String(account.enabled && !account.error);
-    row.querySelector('.account-instruction').textContent = account.enabled && account.error ? 'Waiting to retry this inbox. You can pause at any time.' : account.enabled ? account.sweeping ? 'Checking this inbox. You can close this window.' : 'Watching new mail. You can close this window.' : 'Turn on to check unwanted mail and watch new arrivals.';
-    const message = row.querySelector('.notice'); message.textContent = account.error === 'connection_interrupted' && ['rateLimitExceeded', 'userRateLimitExceeded', 'dailyLimitExceeded', 'quotaExceeded'].includes(account.failureReason)
-      ? 'Google is limiting Gmail requests. Spammish will retry while this account is on.'
+    row.querySelector('.account-instruction').textContent = cleanupInstruction(account);
+    const message = row.querySelector('.notice'); message.textContent = isQuotaWait(account)
+      ? quotaNotice(account)
       : account.error === 'connection_interrupted' && ['forbidden', 'domainPolicy', 'insufficientPermissions'].includes(account.failureReason)
         ? 'Google denied this Gmail request. Check the app’s Gmail access and your account’s Google policy.'
         : errors[account.error] || ''; message.hidden = !message.textContent;

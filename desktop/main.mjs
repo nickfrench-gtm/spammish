@@ -101,7 +101,7 @@ async function start() {
 
   protocol.handle('spammish', (request) => {
     const url = new URL(request.url);
-    const allowed = { '/': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js', '/shield.png': 'shield.png', '/explain.mjs': '../lib/explain.mjs' };
+    const allowed = { '/': 'index.html', '/style.css': 'style.css', '/renderer.js': 'renderer.js', '/progress.mjs': 'progress.mjs', '/shield.png': 'shield.png', '/explain.mjs': '../lib/explain.mjs' };
     if (url.host !== 'app' || !allowed[url.pathname]) return new Response('Not found', { status: 404 });
     return net.fetch(pathToFileURL(url.pathname === '/explain.mjs' ? join(directory, '../lib/explain.mjs') : join(renderer, allowed[url.pathname])).toString());
   });

@@ -13,3 +13,7 @@ Nonblocking limitations: own Google registration/consent and applicable testing 
 ## 0.4.1 source follow-up
 
 The readiness-instance fix and final pipeline/privacy clarifications are qualified in [acceptance-0.4.1.md](acceptance-0.4.1.md). Runtime follow-ups receive a new immutable tag. The original 0.4.0 remains unchanged.
+
+## 0.4.2 dogfooding correction
+
+The [0.4.2 record](acceptance-0.4.2.md) separates full-inbox dogfooding observations from prior controlled fixtures. It qualifies the new recurring-bulk invitation evidence, correction-screening fix and truthful cleanup status. Prior 0.4.0 integration remains historical evidence; it does not certify the changed classifier or full-inbox recall.
